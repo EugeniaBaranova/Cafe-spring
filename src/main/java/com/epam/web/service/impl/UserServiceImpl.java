@@ -23,7 +23,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> login(String login, String password) throws ServiceException {
         try {
-            return getUserRepository().queryForSingleResult(new UserByLoginAndPasswordSpec(login, password));
+            if (login!=null & password!=null){
+                return getUserRepository().queryForSingleResult(new UserByLoginAndPasswordSpec(login, password));
+            }
+            return Optional.empty();
         } catch (RepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);

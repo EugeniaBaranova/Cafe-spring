@@ -19,7 +19,6 @@ public class UnnecessaryParameterFilter implements Filter {
         HttpSession session = ((HttpServletRequest) servletRequest).getSession(true);
         removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_REGISTRATION);
         removeAttributeIfExist(session, SessionAttribute.UNKNOWN_USER);
-        removeAttributeIfExist(session, SessionAttribute.CATEGORY_PRODUCTS);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

@@ -25,40 +25,37 @@ public class ShowCategoryProductsCommandTest {
 
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
-    private HttpSession session = mock(HttpSession.class);
     private ProductService productService = mock(ProductService.class);
 
     private ShowCategoryProductsCommand categoryProductsCommand = new ShowCategoryProductsCommand(productService);
 
     @Test
-    public void shouldRedirectToMenuPageWhenCategoryProductsAreExist() throws ServiceException {
+    public void shouldForwardToMenuPageWhenCategoryProductsAreExist() throws ServiceException {
         //given
         List<Product> categoryProducts = Collections.singletonList(
                 new ProductBuilder()
                 .createProduct());
         when(request.getParameter(any(String.class))).thenReturn(null);
         when(productService.findByCategory(null)).thenReturn(categoryProducts);
-        when(request.getSession(true)).thenReturn(session);
-        doNothing().when(session).setAttribute(any(String.class), any(Object.class));
+        doNothing().when(request).setAttribute(any(String.class), any(Object.class));
         //when
         CommandResult result = categoryProductsCommand.execute(request, response);
         //then
-        Assert.assertTrue(result.isRedirect());
+        Assert.assertFalse(result.isRedirect());
         Assert.assertThat(result.getPage(), is(Pages.MENU_PAGE));
     }
 
     @Test
-    public void shouldRedirectToPageNotFoundWhenCategoryProductsAreNotExist() throws ServiceException {
+    public void shouldForwardToPageNotFoundWhenCategoryProductsAreNotExist() throws ServiceException {
         //given
         List<Product> categoryProducts = Collections.emptyList();
         when(request.getParameter(any(String.class))).thenReturn(null);
         when(productService.findByCategory(null)).thenReturn(categoryProducts);
-        when(request.getSession()).thenReturn(session);
-        doNothing().when(session).setAttribute(any(String.class), any(Object.class));
+        doNothing().when(request).setAttribute(any(String.class), any(Object.class));
         //when
         CommandResult result = categoryProductsCommand.execute(request, response);
         //then
-        Assert.assertTrue(result.isRedirect());
+        Assert.assertFalse(result.isRedirect());
         Assert.assertThat(result.getPage(), is(Pages.PAGE_NOT_FOUND));
     }
 }

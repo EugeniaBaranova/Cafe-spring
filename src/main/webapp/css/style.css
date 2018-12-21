@@ -1,6 +1,7 @@
 /*img back*/
 body {
     background-image: url(../img/back.jpg);
+    background-attachment: fixed;
 }
 
 
@@ -90,7 +91,7 @@ body {
 }
 
 /* Set a style for all buttons */
-.login_btn {
+.form_submit_btn {
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -99,7 +100,7 @@ body {
     cursor: pointer;
     width: 100%;
 }
-.login_btn:hover {
+.form_submit_btn:hover {
     opacity: 0.8;
 }
 
@@ -109,7 +110,7 @@ body {
     background-color: white;
 }*/
 
-.login_form {
+.form-group {
     padding: 10px;
     border: 1px solid black;
     background-color: white;
@@ -118,16 +119,104 @@ body {
     margin-top: 150px;
 }
 
-.login_form hr {
+.form-group hr {
     width:100px;
 }
 
-.login_form h2 {
+.form-group h2 {
     text-align: center
+}
+
+/*registration page*/
+.form-group h1 {
+    text-align: center
+}
+
+.container p {
+    color: red;
 }
 
 /*main page*/
 .welcome_title h1{
+    font-family: 'Sofia';
+    font-size: 40px;
     text-align: center;
     margin-top: 50px;
+}
+
+/*menu page*/
+.cards * {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.column {
+    float: left;
+    width: 25%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+/* Style the counter cards */
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    background-color: rgba(255, 213, 178, 0.96);
+}
+
+.card p{
+    color: darkred;
+}
+
+.card-img {
+    width: 100%;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+.cards {
+    margin-top: 50px;
+}
+
+.info_btn {
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: #4CAF50;
+}
+
+.add_btn {
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: #4CAF50;
 }

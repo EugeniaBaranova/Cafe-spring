@@ -3,7 +3,7 @@ package com.epam.web.controller.constant;
 public class RequestParameter {
 
     public static final String COMMAND = "command";
-
+    public static final String LANGUAGE = "language";
     public static final String PRODUCT_CATEGORY = "category";
 
     public static final String LOGIN = "login";

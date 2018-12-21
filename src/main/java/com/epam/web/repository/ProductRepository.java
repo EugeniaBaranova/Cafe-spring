@@ -49,12 +49,14 @@ public class ProductRepository extends AbstractRepository<Product> {
         super.query(specification);
         Product cola = new ProductBuilder()
                 .setId(1L)
-                .setName("Cola")
+                .setName("Coca-cola")
                 .setCost(BigDecimal.valueOf(1.95))
                 .setAmount(12)
                 .setCategory(ProductCategory.DRINK)
+                .setDescription("Coca-cola drink.")
+                .setImageReference("../../img/products/Coca-cola.jpg")
                 .createProduct();
-        List<Product> products = new ArrayList<>(Arrays.asList(cola, cola, cola));
+        List<Product> products = new ArrayList<>(Arrays.asList(cola, cola, cola, cola, cola, cola, cola, cola, cola));
         return products;
     }
 }

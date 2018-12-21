@@ -5,10 +5,20 @@ import com.epam.web.repository.factory.RepositoryFactory;
 import com.epam.web.service.impl.ProductServiceImpl;
 import com.epam.web.service.impl.UserServiceImpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CommandFactory {
 
+    private Map<CommandName, Command> commands = new HashMap<>();
+    
 
+    private CommandFactory() {
 
+    }
+    
+    
+    
     public static Command create(String command) {
 
         switch (command) {

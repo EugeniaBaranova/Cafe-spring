@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <fmt:setLocale value="${language}" />
-<fmt:setBundle basename="header" />
+<fmt:setBundle basename="menu" />
 <!DOCTYPE html>
 <html>
 <header>
@@ -16,7 +16,7 @@
         TODO
         <form action="/controller" method="post">
             <input type="hidden" name="command" value="add_product">
-            <input type="submit" value="Add product">
+            <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>
         </form>
     </c:if>
     <div class="row">
@@ -30,17 +30,17 @@
                         </div>
 
                         <h3>${product.name}</h3>
-                        <p>Cost: ${product.cost} rub.</p>
+                        <p><fmt:message key="menu.product.cost"/>: ${product.cost} <fmt:message key="menu.product.currency"/>.</p>
 
                         <form action="/menu/product?id=${product.id}" method="get">
                             <input type="hidden" name="command" value="show_product">
-                            <button class="info_btn" type="submit">More information</button>
+                            <button class="info_btn" type="submit"><fmt:message key="menu.button.info"/></button>
                         </form>
 
                         <c:if test="${sessionScope.user_role ne 'guest'}">
                         <form action="/controller" method="post">
                             <input type="hidden" name="command" value="add_to_cart">
-                            <button class="add_btn" type="submit">Add to cart</button>
+                            <button class="add_btn" type="submit"><fmt:message key="menu.cart.add"/></button>
                         </form>
                         </c:if>
                     </div>

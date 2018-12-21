@@ -44,6 +44,7 @@ public class LoginCommand implements Command {
             }
             return CommandResult.redirect(Pages.MAIN_PAGE);
         }
+        // TODO: 21.12.2018 forward
         session.setAttribute(SessionAttribute.UNKNOWN_USER, true);
         return CommandResult.redirect(Pages.LOGIN_PAGE);
     }

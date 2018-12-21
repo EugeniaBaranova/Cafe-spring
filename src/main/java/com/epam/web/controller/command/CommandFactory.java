@@ -10,30 +10,18 @@ import java.util.Map;
 
 public class CommandFactory {
 
-    private Map<CommandName, Command> commands = new HashMap<>();
-    
+    private static Map<String, Command> commands = new HashMap<>();
 
-    private CommandFactory() {
-
+    // TODO: 21.12.2018 better?
+    static {
+        commands.put(CommandName.LOG_IN, new LoginCommand(new UserServiceImpl(RepositoryFactory.getUserRepository())));
+        commands.put(CommandName.REGISTRATION, new RegistrationCommand(new UserServiceImpl(RepositoryFactory.getUserRepository())));
+        commands.put(CommandName.LOG_OUT, new LogOutCommand());
+        commands.put(CommandName.SHOW_CATEGORY_PRODUCTS, new ShowCategoryProductsCommand(new ProductServiceImpl(RepositoryFactory.getProductRepository())));
     }
-    
-    
-    
-    public static Command create(String command) {
 
-        switch (command) {
-            case CommandName.LOG_IN:
-                return new LoginCommand(new UserServiceImpl(RepositoryFactory.getUserRepository()));
-            case CommandName.REGISTRATION:
-                return new RegistrationCommand(new UserServiceImpl(RepositoryFactory.getUserRepository()));
-            case CommandName.LOG_OUT:
-                return new LogOutCommand();
-            case CommandName.SHOW_CATEGORY_PRODUCTS:
-                return new ShowCategoryProductsCommand(new ProductServiceImpl(RepositoryFactory.getProductRepository()));
-            default: {
-                throw new UnsupportedOperationException("Unknown command" + command);
-            }
-        }
-
+    public static Command create(String commandName) {
+        // TODO: 21.12.2018 check if null?
+        return commands.get(commandName);
     }
 }

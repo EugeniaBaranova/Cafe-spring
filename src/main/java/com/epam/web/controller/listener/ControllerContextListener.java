@@ -28,7 +28,6 @@ public class ControllerContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {
             connectionPool.closeAll();
-            //https://stackoverflow.com/questions/3320400/to-prevent-a-memory-leak-the-jdbc-driver-has-been-forcibly-unregistered
         } catch (ConnectionPoolException e) {
             //TODO throw something(unchecked) or not?
             logger.error(e.getMessage(), e);

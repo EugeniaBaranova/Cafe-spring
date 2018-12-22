@@ -1,6 +1,8 @@
 package com.epam.web.repository.connections;
 
+import com.epam.web.repository.exception.CloseConnectionException;
 import com.epam.web.repository.exception.ConnectionPoolException;
+import org.apache.log4j.Logger;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -8,8 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayDeque;
 
 public class ConnectionWrapper implements Closeable {
+
+    private static final Logger logger = Logger.getLogger(ConnectionWrapper.class);
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
@@ -24,7 +29,8 @@ public class ConnectionWrapper implements Closeable {
         try {
             connectionPool.returnConnection(connection);
         } catch (ConnectionPoolException e) {
-            //TODO ???
+            logger.error(e.getMessage(), e);
+            throw new CloseConnectionException(e.getMessage(), e);
         }
     }
 

@@ -31,12 +31,18 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     public Optional<User> queryForSingleResult(Specification specification) throws RepositoryException {
-        super.queryForSingleResult(specification);
+        if (specification != null) {
+            //TODO return
+            super.queryForSingleResult(specification);
+        }
         return Optional.empty();
     }
 
     public List<User> query(Specification specification) throws RepositoryException {
-        super.query(specification);
+        if (specification != null) {
+            //TODO return
+            super.query(specification);
+        }
         return Collections.emptyList();
     }
 }

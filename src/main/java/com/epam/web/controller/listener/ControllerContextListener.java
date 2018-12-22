@@ -16,21 +16,11 @@ public class ControllerContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        try {
-            connectionPool.init();
-        } catch (ConnectionPoolException e) {
-            //TODO throw something(unchecked) or not?
-            logger.error(e.getMessage(), e);
-        }
+        connectionPool.init();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        try {
-            connectionPool.closeAll();
-        } catch (ConnectionPoolException e) {
-            //TODO throw something(unchecked) or not?
-            logger.error(e.getMessage(), e);
-        }
+        connectionPool.closeAll();
     }
 }

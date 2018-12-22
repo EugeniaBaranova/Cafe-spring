@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.utils.StringUtils;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
@@ -30,19 +31,20 @@ public class LoginCommand implements Command {
 
         String login = req.getParameter(RequestParameter.LOGIN);
         String password = req.getParameter(RequestParameter.PASSWORD);
+        //TODO StringUtils where?
+        if (!StringUtils.isEmpty(login) && !StringUtils.isEmpty(password)) {
+            Optional<User> userOptional = userService.login(login, password);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
 
-        Optional<User> userOptional = userService.login(login, password);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            session.setAttribute(SessionAttribute.USER_ROLE, user.getRole());
-            session.setAttribute(SessionAttribute.USER_BLOCK, user.isBlocked());
-            session.setAttribute(SessionAttribute.USER_ID, user.getId());
-
-            if (user.isBlocked()) {
-                return CommandResult.redirect(Pages.LOGIN_PAGE);
+                session.setAttribute(SessionAttribute.USER_BLOCK, user.isBlocked());
+                if (user.isBlocked()) {
+                    return CommandResult.redirect(Pages.LOGIN_PAGE);
+                }
+                session.setAttribute(SessionAttribute.USER_ID, user.getId());
+                session.setAttribute(SessionAttribute.USER_ROLE, user.getRole());
+                return CommandResult.redirect(Pages.MAIN_PAGE);
             }
-            return CommandResult.redirect(Pages.MAIN_PAGE);
         }
         // TODO: 21.12.2018 forward
         session.setAttribute(SessionAttribute.UNKNOWN_USER, true);

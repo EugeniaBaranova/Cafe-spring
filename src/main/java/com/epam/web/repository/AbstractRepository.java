@@ -32,10 +32,17 @@ public class AbstractRepository<T extends Entity> implements Repository<T> {
         this.converter = converter;
     }
 
-    private List<T> executeQuery(String query, List parameters) throws RepositoryException {
+    private List<T> executeQuery(String query, List<String> parameters) throws RepositoryException {
         try (ConnectionWrapper connectionWrapper = new ConnectionWrapper(connectionPool.getConnection());
              PreparedStatement preparedStatement = connectionWrapper.prepareStatement(query)
         ) {
+            if (parameters != null) {
+                int parameterPosition = 1;
+                for (String parameter: parameters) {
+                    preparedStatement.setString(parameterPosition, parameter);
+                    parameterPosition++;
+                }
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
 
             List<T> entities = new ArrayList<>();
@@ -50,7 +57,7 @@ public class AbstractRepository<T extends Entity> implements Repository<T> {
         }
     }
 
-    private Optional<T> executeForSingleResult(String query, List parameters) throws RepositoryException {
+    private Optional<T> executeForSingleResult(String query, List<String> parameters) throws RepositoryException {
         List<T> entities = executeQuery(query, parameters);
         if (!entities.isEmpty()) {
             T entity = entities.get(FIRST_LIST_ELEMENT);
@@ -79,9 +86,9 @@ public class AbstractRepository<T extends Entity> implements Repository<T> {
     public Optional<T> queryForSingleResult(Specification specification) throws RepositoryException {
         //TODO
         String query = specification.toSql();
-        List parameters = specification.getParameters();
+        List<String> parameters = specification.getParameters();
         if (query != null && parameters != null) {
-            executeForSingleResult(query, parameters);
+            return executeForSingleResult(query, parameters);
         }
         return Optional.empty();
     }
@@ -89,10 +96,10 @@ public class AbstractRepository<T extends Entity> implements Repository<T> {
     @Override
     public List<T> query(Specification specification) throws RepositoryException {
         //TODO
-        List parameters = specification.getParameters();
+        List<String> parameters = specification.getParameters();
         String query = specification.toSql();
         if (query != null && parameters != null) {
-            executeQuery(query, parameters);
+            return executeQuery(query, parameters);
         }
         return Collections.emptyList();
     }

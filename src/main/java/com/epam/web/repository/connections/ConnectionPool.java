@@ -1,6 +1,8 @@
 package com.epam.web.repository.connections;
 
+import com.epam.web.repository.exception.CloseConnectionException;
 import com.epam.web.repository.exception.ConnectionPoolException;
+import com.epam.web.repository.exception.ConnectionPoolInitializationException;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -24,7 +26,6 @@ public class ConnectionPool {
 
     private BlockingQueue<Connection> connectionPool;
 
-    //TODO or boolean??
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
     private ConnectionPool() {
@@ -34,7 +35,7 @@ public class ConnectionPool {
         return instance;
     }
 
-    public void init() throws ConnectionPoolException {
+    public void init() {
         try {
             if (!initialized.get()) {
                 connectionPool = new ArrayBlockingQueue<>(CONNECTION_POOL_SIZE);
@@ -46,7 +47,7 @@ public class ConnectionPool {
             }
         } catch (ClassNotFoundException | ConnectionPoolException e) {
             logger.error(e.getMessage(), e);
-            throw new ConnectionPoolException(e.getMessage(), e);
+            throw new ConnectionPoolInitializationException(e.getMessage(), e);
         }
     }
 
@@ -80,7 +81,7 @@ public class ConnectionPool {
         }
     }
 
-    public void closeAll() throws ConnectionPoolException {
+    public void closeAll() {
         try {
             if (!connectionPool.isEmpty()) {
                 for (Connection connection : connectionPool) {
@@ -89,7 +90,7 @@ public class ConnectionPool {
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ConnectionPoolException(e.getMessage(), e);
+            throw new CloseConnectionException(e.getMessage(), e);
         }
     }
 

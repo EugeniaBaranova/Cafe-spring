@@ -15,7 +15,6 @@ public final class RepositoryFactory {
     private UserRepository userRepository = new UserRepositoryImpl();
     private ProductRepository productRepository =
             new ProductRepositoryImpl(new ProductConverter());
-
     private final Map<Class<? extends Repository>, Repository> repositories
             = new HashMap<>();
 

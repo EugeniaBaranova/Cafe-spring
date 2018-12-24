@@ -3,7 +3,7 @@ package com.epam.web.service.impl;
 import com.epam.web.entity.User;
 import com.epam.web.entity.UserBuilder;
 import com.epam.web.repository.Repository;
-import com.epam.web.repository.UserRepository;
+import com.epam.web.repository.impl.UserRepositoryImpl;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.specification.Specification;
 import com.epam.web.service.exception.ServiceException;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class UserServiceImplTest {
 
-    private Repository<User> userRepository = mock(UserRepository.class);
+    private Repository<User> userRepository = mock(UserRepositoryImpl.class);
 
     private UserServiceImpl userService = new UserServiceImpl(userRepository);
 

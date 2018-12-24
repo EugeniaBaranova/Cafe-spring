@@ -34,8 +34,7 @@ public class FrontController extends HttpServlet {
             CommandResult commandResult = action.execute(req, resp);
             sendResponse(req, resp, commandResult);
         } catch (Exception e) {
-            req.setAttribute(RequestAttribute.ERROR_MASSAGE, e.getMessage());
-            dispatch(req, resp, Pages.ERROR_PAGE);
+            resp.sendError(404);
         }
     }
 

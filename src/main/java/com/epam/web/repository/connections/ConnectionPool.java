@@ -56,7 +56,7 @@ public class ConnectionPool {
             if (connectionPool.isEmpty()) {
                 return createSingleConnection();
             }
-            return connectionPool.take();
+            return new ConnectionWrapper(connectionPool.take());
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
             throw new ConnectionPoolException(e.getMessage(), e);
@@ -107,10 +107,10 @@ public class ConnectionPool {
 
     private Connection createSingleConnection() throws ConnectionPoolException {
         try {
-            return DriverManager.getConnection(
+            return new ConnectionWrapper( DriverManager.getConnection(
                     resourceBundle.getString(DatabasePropertyName.URL),
                     resourceBundle.getString(DatabasePropertyName.LOGIN),
-                    resourceBundle.getString(DatabasePropertyName.PASSWORD));
+                    resourceBundle.getString(DatabasePropertyName.PASSWORD)));
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new ConnectionPoolException(e.getMessage(), e);

@@ -1,19 +1,18 @@
 package com.epam.web.repository.specification;
 
+import java.util.Formatter;
 import java.util.List;
 
-public class ProductsByCategorySpec implements Specification{
-    
-    private String productCategory;
-    
-    public ProductsByCategorySpec(String productCategory) {
-        this.productCategory = productCategory;
-    }
+public class ProductsByCategorySpec implements Specification {
+
+
 
 
     @Override
     public String toSql() {
-        return null;
+
+        return "SELECT id,name,image_reference,cost,amount,category,description" +
+                " FROM product WHERE category=?";
     }
 
     @Override

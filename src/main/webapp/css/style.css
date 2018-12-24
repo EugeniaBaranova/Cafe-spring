@@ -213,10 +213,28 @@ body {
     background-color: #4CAF50;
 }
 
+.info_btn:hover {
+    opacity: 0.8;
+}
+
 .add_btn {
     border: none; /* Remove borders */
     color: white; /* Add a text color */
     padding: 14px 28px; /* Add some padding */
     cursor: pointer; /* Add a pointer cursor on mouse-over */
     background-color: #4CAF50;
+}
+
+.add_btn:hover {
+    opacity: 0.8;
+}
+
+.add_new_btn {
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: #4CAF50;
+    margin-bottom: 45px;
+    margin-left: 5px;
 }

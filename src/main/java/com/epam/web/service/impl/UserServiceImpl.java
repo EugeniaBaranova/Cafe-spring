@@ -3,6 +3,7 @@ package com.epam.web.service.impl;
 import com.epam.web.entity.User;
 import com.epam.web.repository.Repository;
 import com.epam.web.repository.exception.RepositoryException;
+import com.epam.web.repository.factory.RepositoryFactory;
 import com.epam.web.repository.specification.UserByLoginAndPasswordSpec;
 import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;
@@ -15,6 +16,8 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     private Repository<User> userRepository;
+
+    private RepositoryFactory repositoryFactory;
 
     public UserServiceImpl(Repository<User> userRepository) {
         this.userRepository = userRepository;

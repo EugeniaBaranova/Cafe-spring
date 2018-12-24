@@ -18,7 +18,7 @@ public class UserByLoginAndPasswordSpec implements Specification {
     @Override
     public String toSql() {
         //TODO check in BD
-        return "SELECT id, name, email, login, password, loyaltyPoints, blocked, role FROM user WHERE login = '?' AND password = '?'";
+        return "SELECT id, name, login, password, blocked, role FROM user WHERE login = ? AND password = ?";
     }
 
     @Override

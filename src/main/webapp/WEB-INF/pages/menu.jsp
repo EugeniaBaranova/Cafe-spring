@@ -13,7 +13,6 @@
 <div class="cards">
 
     <c:if test="${sessionScope.user_role eq 'admin'}">
-        TODO
         <form action="/controller" method="post">
             <input type="hidden" name="command" value="add_product">
             <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>

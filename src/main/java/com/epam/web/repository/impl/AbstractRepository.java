@@ -1,6 +1,7 @@
-package com.epam.web.repository;
+package com.epam.web.repository.impl;
 
 import com.epam.web.entity.Entity;
+import com.epam.web.repository.Repository;
 import com.epam.web.repository.connections.ConnectionPool;
 import com.epam.web.repository.connections.ConnectionWrapper;
 import com.epam.web.repository.converter.Converter;
@@ -10,9 +11,7 @@ import com.epam.web.repository.specification.Specification;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

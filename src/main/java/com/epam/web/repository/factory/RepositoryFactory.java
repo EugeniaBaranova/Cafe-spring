@@ -12,7 +12,8 @@ import java.util.Map;
 public final class RepositoryFactory {
     private final static RepositoryFactory INSTANCE = new RepositoryFactory();
     private UserRepository userRepository = new UserRepositoryImpl();
-    private ProductRepository productRepository = new ProductRepositoryImpl();
+    private ProductRepository productRepository =
+            new ProductRepositoryImpl();
     private final Map<Class<? extends Repository>, Repository> repositories
             = new HashMap<>();
 

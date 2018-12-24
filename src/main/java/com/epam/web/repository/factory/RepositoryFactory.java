@@ -2,6 +2,7 @@ package com.epam.web.repository.factory;
 
 
 import com.epam.web.repository.*;
+import com.epam.web.repository.converter.ProductConverter;
 import com.epam.web.repository.exception.UnsupportedFactoryTypeException;
 import com.epam.web.repository.impl.ProductRepositoryImpl;
 import com.epam.web.repository.impl.UserRepositoryImpl;
@@ -13,7 +14,7 @@ public final class RepositoryFactory {
     private final static RepositoryFactory INSTANCE = new RepositoryFactory();
     private UserRepository userRepository = new UserRepositoryImpl();
     private ProductRepository productRepository =
-            new ProductRepositoryImpl();
+            new ProductRepositoryImpl(new ProductConverter());
     private final Map<Class<? extends Repository>, Repository> repositories
             = new HashMap<>();
 

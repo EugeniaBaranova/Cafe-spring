@@ -13,6 +13,7 @@ import java.util.Map;
 public final class RepositoryFactory {
     private final static RepositoryFactory INSTANCE = new RepositoryFactory();
     private UserRepository userRepository = new UserRepositoryImpl();
+
     private ProductRepository productRepository =
             new ProductRepositoryImpl(new ProductConverter());
     private final Map<Class<? extends Repository>, Repository> repositories

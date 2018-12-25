@@ -16,7 +16,7 @@ public class ProductsByCategorySpec implements Specification {
     }
 
     @Override
-    public List<String> getParameters() {
+    public List<Object> getParameters() {
         return null;
     }
 }

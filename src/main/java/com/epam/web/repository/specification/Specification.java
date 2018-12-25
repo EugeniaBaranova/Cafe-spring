@@ -6,5 +6,5 @@ public interface Specification {
 
     String toSql();
 
-    List<String> getParameters();
+    List<Object> getParameters();
 }

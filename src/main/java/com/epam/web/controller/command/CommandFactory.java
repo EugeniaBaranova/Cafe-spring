@@ -12,14 +12,18 @@ public class CommandFactory {
     private ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
     public CommandFactory() {
-        commands.put(CommandName.LOG_IN, new LoginCommand(serviceFactory.getService(UserService.class)));
-        commands.put(CommandName.REGISTRATION, new RegistrationCommand(serviceFactory.getService(UserService.class)));
+        commands.put(CommandName.LOG_IN, new LoginCommand(getServiceFactory().getService(UserService.class)));
+        commands.put(CommandName.REGISTRATION, new RegistrationCommand(getServiceFactory().getService(UserService.class)));
         commands.put(CommandName.LOG_OUT, new LogOutCommand());
         commands.put(CommandName.SHOW_CATEGORY_PRODUCTS, new ShowCategoryProductsCommand(
-                serviceFactory.getService(ProductService.class)));
+                getServiceFactory().getService(ProductService.class)));
     }
 
     public Command getCommand(String commandName) {
         return commands.get(commandName);
+    }
+
+    private ServiceFactory getServiceFactory(){
+        return serviceFactory;
     }
 }

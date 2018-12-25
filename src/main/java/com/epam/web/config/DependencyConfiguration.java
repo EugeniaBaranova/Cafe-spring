@@ -41,17 +41,11 @@ public class DependencyConfiguration {
     }
 
     private ProductRepository productRepository() {
-        ProductRepositoryImpl productRepository = new ProductRepositoryImpl(productConverter());
-        productRepository.setConverter(productConverter());
-        productRepository.setConnectionPool(connectionPool());
-        return productRepository;
+        return new ProductRepositoryImpl(connectionPool(),productConverter());
     }
 
     private UserRepository userRepository() {
-        UserRepositoryImpl userRepository = new UserRepositoryImpl();
-        userRepository.setConnectionPool(connectionPool());
-        userRepository.setUserConverter(userConverter());
-        return userRepository;
+        return new UserRepositoryImpl(connectionPool(),userConverter());
     }
 
 

@@ -4,7 +4,6 @@ import com.epam.web.entity.Product;
 import com.epam.web.entity.ProductBuilder;
 import com.epam.web.entity.enums.ProductCategory;
 import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.factory.RepositoryFactory;
 import com.epam.web.repository.specification.ProductByIdSpec;
 import com.epam.web.repository.specification.ProductsByCategorySpec;
 import com.epam.web.service.ProductService;
@@ -21,9 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ProductServiceImpl implements ProductService {
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class.getName());
-    private RepositoryFactory factory = RepositoryFactory.getInstance();
-    private ProductRepository productRepository = factory.getRepository(ProductRepository.class);
-    private ReentrantLock reentrantLock = new ReentrantLock();
+    private ProductRepository productRepository;
+    private ReentrantLock reentrantLock;
 
 
     @Override
@@ -147,5 +145,14 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductRepository getProductRepository() {
         return productRepository;
+    }
+
+
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public void setReentrantLock(ReentrantLock reentrantLock) {
+        this.reentrantLock = reentrantLock;
     }
 }

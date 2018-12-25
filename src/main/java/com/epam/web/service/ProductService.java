@@ -8,7 +8,7 @@ import com.epam.web.service.exception.ServiceException;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductService {
+public interface ProductService extends Service{
 
     List<Product> findByCategory(String productCategory) throws ServiceException;
 

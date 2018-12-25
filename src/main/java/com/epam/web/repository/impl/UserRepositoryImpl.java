@@ -2,6 +2,8 @@ package com.epam.web.repository.impl;
 
 import com.epam.web.entity.User;
 import com.epam.web.repository.UserRepository;
+import com.epam.web.repository.connections.ConnectionPool;
+import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.converter.UserConverter;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.impl.AbstractRepository;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserRepositoryImpl extends AbstractRepository<User> implements UserRepository {
+    private Converter<User> userConverter;
+    private ConnectionPool connectionPool;
 
     public UserRepositoryImpl() {
         super(new UserConverter());
@@ -46,5 +50,14 @@ public class UserRepositoryImpl extends AbstractRepository<User> implements User
             super.query(specification);
         }
         return Collections.emptyList();
+    }
+
+
+    public void setUserConverter(Converter<User> userConverter) {
+        this.userConverter = userConverter;
+    }
+
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 }

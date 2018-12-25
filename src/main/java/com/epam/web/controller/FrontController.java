@@ -3,11 +3,11 @@ package com.epam.web.controller;
 import com.epam.web.controller.command.Command;
 import com.epam.web.controller.command.CommandFactory;
 import com.epam.web.controller.command.CommandResult;
-import com.epam.web.controller.constant.Pages;
-import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.controller.constant.RequestParameter;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +16,14 @@ import java.io.IOException;
 
 
 public class FrontController extends HttpServlet {
+    private CommandFactory commandFactory;
+
+    public FrontController(CommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
+    }
+
+    public FrontController() {
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,7 +38,7 @@ public class FrontController extends HttpServlet {
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String command = req.getParameter(RequestParameter.COMMAND);
-            Command action = CommandFactory.create(command);
+            Command action = getCommandFactory().getCommand(command);
             CommandResult commandResult = action.execute(req, resp);
             sendResponse(req, resp, commandResult);
         } catch (Exception e) {
@@ -52,4 +60,18 @@ public class FrontController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
+
+    private CommandFactory getCommandFactory() {
+        return commandFactory;
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        ServletContext servletContext = config.getServletContext();
+        Object commandFactory = servletContext.getAttribute("commandFactory");
+        if (commandFactory != null) {
+            this.commandFactory = (CommandFactory) commandFactory;
+        }
+        super.init(config);
+    }
 }

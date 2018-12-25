@@ -6,9 +6,7 @@ import com.epam.web.entity.enums.ProductCategory;
 import com.epam.web.repository.ProductRepository;
 import com.epam.web.repository.connections.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
-import com.epam.web.repository.converter.ProductConverter;
 import com.epam.web.repository.exception.RepositoryException;
-import com.epam.web.repository.factory.EntityConverterFactory;
 import com.epam.web.repository.specification.Specification;
 import com.epam.web.utils.SqlUtils;
 
@@ -23,11 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProductRepositoryImpl extends AbstractRepository<Product> implements ProductRepository {
-
-    private EntityConverterFactory converterFactory = EntityConverterFactory.getInstance();
-    private Converter<Product> converter = converterFactory.getConverter(ProductConverter.class);
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
-
+    private Converter<Product> converter;
+    private ConnectionPool connectionPool;
 
     public ProductRepositoryImpl(Converter<Product> converter) {
         super(converter);
@@ -109,11 +104,21 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
 
 
 
-    public Converter<Product> getConverter() {
+    private Converter<Product> getConverter() {
         return converter;
     }
 
-    public ConnectionPool getConnectionPool() {
+    private ConnectionPool getConnectionPool() {
         return connectionPool;
     }
+
+    public void setConverter(Converter<Product> converter) {
+        this.converter = converter;
+    }
+
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
+
+
 }

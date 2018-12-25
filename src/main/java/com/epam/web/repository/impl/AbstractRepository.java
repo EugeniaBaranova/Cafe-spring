@@ -50,7 +50,7 @@ public class AbstractRepository<T extends Entity> implements Repository<T> {
                 entities.add(entity);
             }
             return entities;
-        } catch (ConnectionPoolException | IOException | SQLException e) {
+        } catch (ConnectionPoolException | SQLException e) {
             logger.error(e.getMessage(), e);
             throw new RepositoryException(e.getMessage(), e);
         }

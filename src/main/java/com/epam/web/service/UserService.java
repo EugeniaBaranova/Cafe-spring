@@ -5,7 +5,7 @@ import com.epam.web.service.exception.ServiceException;
 
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends Service{
 
     Optional<User> login(String login, String password) throws ServiceException;
 

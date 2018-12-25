@@ -21,7 +21,7 @@ public class UserServiceImplTest {
 
     private Repository<User> userRepository = mock(UserRepositoryImpl.class);
 
-    private UserServiceImpl userService = new UserServiceImpl(userRepository);
+    private UserServiceImpl userService = new UserServiceImpl();
 
     @Test
     public void shouldLoginAndReturnUserOptionalWhenLoginAndPasswordIsNotNull() throws ServiceException, RepositoryException {

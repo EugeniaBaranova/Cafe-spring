@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
             }
         } catch (Exception e) {
             String errorMessage = getErrorFormatter()
-                    .format("[findByCategory] Exception while execution method.Method parameter:'%s'")
+                    .format("[findByCategory] Exception while execution method. Method parameter:'%s'", productCategory)
                     .toString();
             throw new ServiceException(errorMessage, e);
         }
@@ -126,7 +126,8 @@ public class ProductServiceImpl implements ProductService {
     private boolean isAvailableCategory(String categoryName) {
         if (StringUtils.isNotEmpty(categoryName)) {
             for (ProductCategory category : ProductCategory.values()) {
-                if (category.name().equals(categoryName)) {
+                /*String upperCategoryName = categoryName.toUpperCase();*/
+                if (category.name().equals(categoryName.toUpperCase())) {
                     return true;
                 }
             }

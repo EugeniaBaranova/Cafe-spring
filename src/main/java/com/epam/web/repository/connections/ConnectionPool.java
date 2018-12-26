@@ -121,6 +121,7 @@ public class ConnectionPool {
 
     private void loadProperties() throws ConnectionPoolException {
         try {
+            //TODO close
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
             properties.load(inputStream);
         } catch (IOException e) {

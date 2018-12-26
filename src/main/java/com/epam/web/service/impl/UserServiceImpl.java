@@ -8,6 +8,7 @@ import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;
 import org.apache.log4j.Logger;
 
+import java.util.Formatter;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -24,8 +25,10 @@ public class UserServiceImpl implements UserService {
             }
             return Optional.empty();
         } catch (RepositoryException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            String errorMessage = getErrorFormatter()
+                    .format("[login] Exception while execution method. Method parameters:'%s', '%s'", login, password)
+                    .toString();
+            throw new ServiceException(errorMessage, e);
         }
     }
 
@@ -35,15 +38,22 @@ public class UserServiceImpl implements UserService {
             if(user != null){
                 return getUserRepository().add(user);
             }
-            return user;
+            return null;
         } catch (RepositoryException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            String errorMessage = getErrorFormatter()
+                    .format("[addUser] Exception while execution method. User to save:'%s'", user)
+                    .toString();
+            throw new ServiceException(errorMessage, e);
         }
     }
 
     private Repository<User> getUserRepository() {
         return userRepository;
+    }
+
+    private Formatter getErrorFormatter() {
+        //using new instance every call of the method cause java.util.Formatter is not thread safe class.
+        return new Formatter();
     }
 
     public void setUserRepository(Repository<User> userRepository) {

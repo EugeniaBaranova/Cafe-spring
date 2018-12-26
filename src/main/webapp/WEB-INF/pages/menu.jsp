@@ -25,7 +25,9 @@
                 <div class="column">
                     <div class="card">
                         <div class="imgcontainer">
-                            <img src="${product.imageReference}" class="card-img">
+                            <div class="child_imgcontainer">
+                                <img src="${product.imageReference}" class="card-img">
+                            </div>
                         </div>
 
                         <h3>${product.name}</h3>

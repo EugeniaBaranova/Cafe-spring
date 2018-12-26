@@ -11,6 +11,15 @@
 
     <display-name>Archetype Created Web Application</display-name>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/not_found</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/internal_error</location>
+    </error-page>
+
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.jpg</url-pattern>
@@ -68,6 +77,24 @@
     <servlet-mapping>
         <servlet-name>MenuPage</servlet-name>
         <url-pattern>/menu</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotFoundError</servlet-name>
+        <jsp-file>/WEB-INF/pages/error_not_found.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotFoundError</servlet-name>
+        <url-pattern>/not_found</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InternalError</servlet-name>
+        <jsp-file>/WEB-INF/pages/internal_error.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InternalError</servlet-name>
+        <url-pattern>/internal_error</url-pattern>
     </servlet-mapping>
 
     <listener>

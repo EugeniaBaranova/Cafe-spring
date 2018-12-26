@@ -14,6 +14,8 @@ public class ControllerContextListener implements ServletContextListener {
 
     private static final Logger logger = Logger.getLogger(ControllerContextListener.class);
 
+    private static final String COMMAND_FACTORY_ATTRIBUTE = "commandFactory";
+
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     @Override

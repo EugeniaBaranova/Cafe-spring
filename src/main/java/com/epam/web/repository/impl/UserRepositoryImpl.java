@@ -22,31 +22,29 @@ public class UserRepositoryImpl extends AbstractRepository<User> implements User
     }
 
     @Override
-    <T extends Entity> PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException {
-        User user = (User) object;
-
+     PreparedStatement getReadyPreparedStatement(User user, PreparedStatement preparedStatement) throws SQLException {
         String name = user.getName();
         if (name != null) {
-            pStatement.setString(1, name);
+            preparedStatement.setString(1, name);
         }
 
         String email = user.getEmail();
         if (email != null) {
-            pStatement.setString(2, email);
+            preparedStatement.setString(2, email);
         }
         String login = user.getLogin();
         if (StringUtils.isNotEmpty(login)) {
-            pStatement.setString(3, login);
+            preparedStatement.setString(3, login);
         }
         String password = user.getPassword();
         if (StringUtils.isNotEmpty(password)) {
-            pStatement.setString(4, password);
+            preparedStatement.setString(4, password);
         }
 
-        pStatement.setInt(5, user.getLoyaltyPoints());
-        pStatement.setBoolean(6, user.isBlocked());
-        pStatement.setString(7, user.getRole().name());
-        return pStatement;
+        preparedStatement.setInt(5, user.getLoyaltyPoints());
+        preparedStatement.setBoolean(6, user.isBlocked());
+        preparedStatement.setString(7, user.getRole().name());
+        return preparedStatement;
     }
 
     @Override

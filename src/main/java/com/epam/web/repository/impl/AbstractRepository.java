@@ -114,7 +114,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
 
-    private <T extends Entity> T saveOrUpdate(T entity) throws ConnectionPoolException, SQLException {
+    private T saveOrUpdate(T entity) throws ConnectionPoolException, SQLException {
         try (Connection connection = getConnectionPool().getConnection();
              PreparedStatement pStatement = connection.prepareStatement(
                      SqlUtils.getInsertOrUpdateStatement(getTable(), getFields()),
@@ -136,7 +136,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
 
-    abstract <T extends Entity> PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException;
+    abstract PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException;
 
     abstract List<String> getFields();
 

@@ -3,7 +3,7 @@
 
 <body>
 
-<h1><b>Error. ${requestScope.error_massage}</b></h1>
+<h1><b>Page not found</b></h1>
 
 </body>
 </html>

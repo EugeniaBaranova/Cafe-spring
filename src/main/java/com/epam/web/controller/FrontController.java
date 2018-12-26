@@ -21,6 +21,8 @@ public class FrontController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(FrontController.class);
 
+    private static final String COMMAND_FACTORY_ATTRIBUTE = "commandFactory";
+
     private CommandFactory commandFactory;
 
     public FrontController() {
@@ -46,7 +48,6 @@ public class FrontController extends HttpServlet {
             }else {
                 resp.sendError(404);
             }
-
         } catch (Exception e) {
             logger.error("[process] Exception.", e);
             resp.sendError(500);

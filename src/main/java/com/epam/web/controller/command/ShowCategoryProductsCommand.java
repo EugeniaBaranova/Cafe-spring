@@ -22,11 +22,15 @@ public class ShowCategoryProductsCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String category = req.getParameter(RequestParameter.PRODUCT_CATEGORY);
-        List<Product> categoryProducts = productService.findByCategory(category);
+        List<Product> categoryProducts = getProductService().findByCategory(category);
         if (!categoryProducts.isEmpty()) {
             req.setAttribute(RequestAttribute.CATEGORY_PRODUCTS, categoryProducts);
             return CommandResult.forward(Pages.MENU_PAGE);
         }
         return CommandResult.forward(Pages.PAGE_NOT_FOUND);
+    }
+
+    private ProductService getProductService() {
+        return productService;
     }
 }

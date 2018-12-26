@@ -31,9 +31,9 @@ public class LoginCommand implements Command {
 
         String login = req.getParameter(RequestParameter.LOGIN);
         String password = req.getParameter(RequestParameter.PASSWORD);
-        //TODO StringUtils where?
+
         if (!StringUtils.isEmpty(login) && !StringUtils.isEmpty(password)) {
-            Optional<User> userOptional = userService.login(login, password);
+            Optional<User> userOptional = getUserService().login(login, password);
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
 
@@ -49,5 +49,9 @@ public class LoginCommand implements Command {
         // TODO: 21.12.2018 forward
         session.setAttribute(SessionAttribute.UNKNOWN_USER, true);
         return CommandResult.redirect(Pages.LOGIN_PAGE);
+    }
+
+    private UserService getUserService() {
+        return userService;
     }
 }

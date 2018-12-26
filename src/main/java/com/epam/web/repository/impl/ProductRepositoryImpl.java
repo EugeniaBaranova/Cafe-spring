@@ -20,22 +20,21 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
     }
 
     @Override
-    <T extends Entity> PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException {
-        Product newProduct = (Product) object;
-        pStatement.setString(1, newProduct.getName());
-        pStatement.setString(2, newProduct.getImageReference());
-        pStatement.setBigDecimal(3, newProduct.getCost());
-        pStatement.setInt(4, newProduct.getAmount());
-        pStatement.setString(5, newProduct.getCategory().name());
-        pStatement.setString(6, newProduct.getDescription());
-        return pStatement;
+    PreparedStatement getReadyPreparedStatement(Product newProduct, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, newProduct.getName());
+        preparedStatement.setString(2, newProduct.getImageReference());
+        preparedStatement.setBigDecimal(3, newProduct.getCost());
+        preparedStatement.setInt(4, newProduct.getAmount());
+        preparedStatement.setString(5, newProduct.getCategory().name());
+        preparedStatement.setString(6, newProduct.getDescription());
+        return preparedStatement;
     }
 
 
     @Override
     List<String> getFields() {
         return new ArrayList<>(
-                Arrays.asList("id","name","image_reference","cost","amount","category","description"));
+                Arrays.asList("id", "name", "image_reference", "cost", "amount", "category", "description"));
     }
 
     @Override

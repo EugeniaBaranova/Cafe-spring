@@ -5,15 +5,15 @@ import java.util.List;
 public class SqlUtils {
 
     public static String getInsertOrUpdateStatement(String table, List<String> fields) {
-        StringBuffer src = new StringBuffer();
-        src.append(getUpdatePart(fields));
-        src.append(" ");
-        src.append(getInsertIntoPart(table, fields));
-        src.append(" ");
-        src.append(getGlobalValuesPart(fields));
-        src.append(" ");
-        src.append(getDuplicateKeyUpdatePart(fields));
-        return src.toString();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(getUpdatePart(fields));
+        stringBuffer.append(" ");
+        stringBuffer.append(getInsertIntoPart(table, fields));
+        stringBuffer.append(" ");
+        stringBuffer.append(getGlobalValuesPart(fields));
+        stringBuffer.append(" ");
+        stringBuffer.append(getDuplicateKeyUpdatePart(fields));
+        return stringBuffer.toString();
     }
 
 
@@ -33,10 +33,10 @@ public class SqlUtils {
         return deleteLastAndReplaceWith(")", stringBuffer);
     }
 
-    private static String deleteLastAndReplaceWith(String replaceTo, StringBuffer src) {
-        src.deleteCharAt(src.length() - 1);
-        src.append(replaceTo);
-        return src.toString();
+    private static String deleteLastAndReplaceWith(String replaceTo, StringBuffer stringBuffer) {
+        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        stringBuffer.append(replaceTo);
+        return stringBuffer.toString();
     }
 
     private static String getInsertIntoPart(String table, List<String> fields) {

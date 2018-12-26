@@ -41,11 +41,15 @@ public class RegistrationCommand implements Command {
                 .createUser();
 
         //TODO another way?
-        User addedUser = userService.addUser(newUser);
+        User addedUser = getUserService().addUser(newUser);
         if(addedUser!=null){
             return CommandResult.redirect(Pages.MAIN_PAGE);
         }
         session.setAttribute(SessionAttribute.UNSUCCESSFUL_REGISTRATION, true);
         return CommandResult.redirect(Pages.REGISTRATION_PAGE);
+    }
+
+    private UserService getUserService() {
+        return userService;
     }
 }

@@ -5,9 +5,11 @@ import com.epam.web.repository.exception.ConnectionPoolException;
 import com.epam.web.repository.exception.ConnectionPoolInitializationException;
 import org.apache.log4j.Logger;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -20,9 +22,9 @@ public class ConnectionPool {
     private static final ConnectionPool instance = new ConnectionPool();
 
     private static final int CONNECTION_POOL_SIZE = 10;
-    private static final String PROPERTIES_FILE_NAME = "database-access";
+    private static final String PROPERTIES_FILE_NAME = "database-access.properties";
 
-    private ResourceBundle resourceBundle = ResourceBundle.getBundle(PROPERTIES_FILE_NAME);
+    private Properties properties = new Properties();
 
     private BlockingQueue<Connection> connectionPool;
 
@@ -38,10 +40,10 @@ public class ConnectionPool {
     public void init() {
         try {
             if (!initialized.get()) {
+                loadProperties();
                 connectionPool = new ArrayBlockingQueue<>(CONNECTION_POOL_SIZE);
                 Class.forName(
-                        resourceBundle.getString(
-                                DatabasePropertyName.DRIVER_NAME));
+                        properties.getProperty(DatabasePropertyName.DRIVER_NAME));
                 createConnections(CONNECTION_POOL_SIZE);
                 initialized.set(true);
             }
@@ -107,11 +109,21 @@ public class ConnectionPool {
 
     private Connection createSingleConnection() throws ConnectionPoolException {
         try {
-            return new ConnectionWrapper( DriverManager.getConnection(
-                    resourceBundle.getString(DatabasePropertyName.URL),
-                    resourceBundle.getString(DatabasePropertyName.LOGIN),
-                    resourceBundle.getString(DatabasePropertyName.PASSWORD)));
+            return new ConnectionWrapper(DriverManager.getConnection(
+                    properties.getProperty(DatabasePropertyName.URL),
+                    properties.getProperty(DatabasePropertyName.LOGIN),
+                    properties.getProperty(DatabasePropertyName.PASSWORD)));
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new ConnectionPoolException(e.getMessage(), e);
+        }
+    }
+
+    private void loadProperties() throws ConnectionPoolException {
+        try {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
+            properties.load(inputStream);
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw new ConnectionPoolException(e.getMessage(), e);
         }

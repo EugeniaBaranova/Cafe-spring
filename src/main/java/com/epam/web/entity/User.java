@@ -12,7 +12,7 @@ public class User extends Entity implements Serializable {
     private String password;
     private int loyaltyPoints;
     private boolean blocked;
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     public User(Long id,
                 String name,

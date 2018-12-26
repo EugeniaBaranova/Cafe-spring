@@ -4,6 +4,8 @@ import com.epam.web.controller.command.Command;
 import com.epam.web.controller.command.CommandFactory;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestParameter;
+import com.epam.web.repository.impl.AbstractRepository;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -16,11 +18,10 @@ import java.io.IOException;
 
 
 public class FrontController extends HttpServlet {
-    private CommandFactory commandFactory;
 
-    public FrontController(CommandFactory commandFactory) {
-        this.commandFactory = commandFactory;
-    }
+    private static final Logger logger = Logger.getLogger(FrontController.class);
+
+    private CommandFactory commandFactory;
 
     public FrontController() {
     }
@@ -39,10 +40,16 @@ public class FrontController extends HttpServlet {
         try {
             String command = req.getParameter(RequestParameter.COMMAND);
             Command action = getCommandFactory().getCommand(command);
-            CommandResult commandResult = action.execute(req, resp);
-            sendResponse(req, resp, commandResult);
+            if(action != null){
+                CommandResult commandResult = action.execute(req, resp);
+                sendResponse(req, resp, commandResult);
+            }else {
+                resp.sendError(404);
+            }
+
         } catch (Exception e) {
-            resp.sendError(404);
+            logger.error("[process] Exception.", e);
+            resp.sendError(500);
         }
     }
 

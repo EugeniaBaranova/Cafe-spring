@@ -1,7 +1,5 @@
 package com.epam.web.repository.specification;
 
-import com.epam.web.entity.User;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,12 +15,11 @@ public class UserByLoginAndPasswordSpec implements Specification {
 
     @Override
     public String toSql() {
-        //TODO check in BD
-        return "SELECT id, name, login, password, blocked, role FROM user WHERE login = ? AND password = ?";
+        return "SELECT id, name, login, password, blocked,e_mail,loyalty_points, role FROM user WHERE login = ? AND password = ?";
     }
 
     @Override
     public List<Object> getParameters() {
-        return Arrays.asList(login, password);
+            return Arrays.asList(login, password);
     }
 }

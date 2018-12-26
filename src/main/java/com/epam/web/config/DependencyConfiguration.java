@@ -26,6 +26,7 @@ public class DependencyConfiguration {
 
     public void configure(){
         this.configureServiceFactory();
+
     }
 
     private Converter<Product> productConverter() {
@@ -76,7 +77,7 @@ public class DependencyConfiguration {
                     field.set(serviceFactory, serviceMap);
                     break;
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }

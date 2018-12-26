@@ -12,7 +12,7 @@
 <body>
 <div class="cards">
 
-    <c:if test="${sessionScope.user_role eq 'admin'}">
+    <c:if test="${sessionScope.user_role eq 'ADMIN'}">
         <form action="/controller" method="post">
             <input type="hidden" name="command" value="add_product">
             <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>
@@ -36,7 +36,7 @@
                             <button class="info_btn" type="submit"><fmt:message key="menu.button.info"/></button>
                         </form>
 
-                        <c:if test="${sessionScope.user_role ne 'guest'}">
+                        <c:if test="${sessionScope.user_role ne 'GUEST'}">
                         <form action="/controller" method="post">
                             <input type="hidden" name="command" value="add_to_cart">
                             <input type="hidden" name="id" value="${product.id}">

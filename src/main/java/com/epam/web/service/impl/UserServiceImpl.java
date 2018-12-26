@@ -32,13 +32,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) throws ServiceException {
         try {
-            getUserRepository().add(user);
+            if(user != null){
+                return getUserRepository().add(user);
+            }
+            return user;
         } catch (RepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
         }
-        //TODO better
-        return null;
     }
 
     private Repository<User> getUserRepository() {

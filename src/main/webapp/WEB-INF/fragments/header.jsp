@@ -26,11 +26,11 @@
         </div>
     </div>
 
-    <c:if test="${sessionScope.user_role ne 'guest'}">
+    <c:if test="${sessionScope.user_role ne 'GUEST'}">
         <a href="/controller?command=show_orders"><fmt:message key="header.page.orders"/></a>
         <a href="/controller?command=show_cart"><fmt:message key="header.page.cart"/></a>
     </c:if>
-    <c:if test="${sessionScope.user_role eq 'admin'}">
+    <c:if test="${sessionScope.user_role eq 'ADMIN'}">
         <a href="/controller?command=show_users"><fmt:message key="header.page.users"/></a>
     </c:if>
 
@@ -58,10 +58,10 @@
         </div>
     </div>
 
-    <c:if test="${sessionScope.user_role eq 'guest'}">
+    <c:if test="${sessionScope.user_role eq 'GUEST'}">
         <a href="/login"><fmt:message key="header.page.login"/></a>
     </c:if>
-    <c:if test="${sessionScope.user_role ne 'guest'}">
+    <c:if test="${sessionScope.user_role ne 'GUEST'}">
         <a href="/controller?command=log_out"><fmt:message key="header.page.logout"/></a>
     </c:if>
 </div>

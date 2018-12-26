@@ -50,7 +50,6 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
             }
             return entities;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
             throw new RepositoryException(e.getMessage(), e);
         }
     }
@@ -59,7 +58,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         List<T> entities = executeQuery(query, parameters);
         if (!entities.isEmpty()) {
             T entity = entities.get(FIRST_LIST_ELEMENT);
-            return Optional.of(entity);
+            return Optional.ofNullable(entity);
         }
         return Optional.empty();
     }

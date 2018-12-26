@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             if (isAvailableCategory(productCategory)) {
                 return getProductRepository()
-                        .query(new ProductsByCategorySpec());
+                        .query(new ProductsByCategorySpec(productCategory));
             }
         } catch (Exception e) {
             String errorMessage = getErrorFormatter()
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> findProduct(Long id) throws ServiceException {
         try {
-            return getProductRepository().queryForSingleResult(new ProductByIdSpec());
+            return getProductRepository().queryForSingleResult(new ProductByIdSpec(id));
         } catch (Exception e) {
             String errorMessage =
                     getErrorFormatter()

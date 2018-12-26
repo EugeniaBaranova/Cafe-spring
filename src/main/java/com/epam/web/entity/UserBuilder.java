@@ -10,7 +10,7 @@ public class UserBuilder {
     private String password;
     private int loyaltyPoints;
     private boolean blocked;
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     public UserBuilder setId(Long id) {
         this.id = id;

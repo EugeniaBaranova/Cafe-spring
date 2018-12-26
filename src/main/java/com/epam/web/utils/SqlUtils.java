@@ -14,7 +14,6 @@ public class SqlUtils {
         src.append(" ");
         src.append(getDuplicateKeyUpdatePart(fields));
         return src.toString();
-
     }
 
 
@@ -25,7 +24,7 @@ public class SqlUtils {
 
     private static String getGlobalValuesPart(List<String> fields) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("VALUES").append("(");
+        stringBuffer.append("VALUES").append(" (");
         for (String field : fields) {
             stringBuffer.append("@");
             stringBuffer.append(field);

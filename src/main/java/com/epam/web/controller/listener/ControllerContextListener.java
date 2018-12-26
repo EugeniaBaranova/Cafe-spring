@@ -18,7 +18,7 @@ public class ControllerContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        /*connectionPool.init();*/
+        connectionPool.init();
         DependencyConfiguration dependencyConfiguration = new DependencyConfiguration();
         dependencyConfiguration.configure();
         ServletContext servletContext = servletContextEvent.getServletContext();

@@ -24,8 +24,7 @@ public class ControllerContextListener implements ServletContextListener {
         DependencyConfiguration dependencyConfiguration = new DependencyConfiguration();
         dependencyConfiguration.configure();
         ServletContext servletContext = servletContextEvent.getServletContext();
-        servletContext.setAttribute("commandFactory", new CommandFactory());
-
+        servletContext.setAttribute(COMMAND_FACTORY_ATTRIBUTE, new CommandFactory());
     }
 
     @Override

@@ -11,7 +11,7 @@
 </header>
     <body>
             <div class="form-group">
-                <c:if test="${sessionScope.unknown_user}">
+                <c:if test="${requestScope.unknown_user}">
                     <h2><fmt:message key="login.text.unknown"/></h2>
                 </c:if>
                 <c:if test="${sessionScope.user_block}">

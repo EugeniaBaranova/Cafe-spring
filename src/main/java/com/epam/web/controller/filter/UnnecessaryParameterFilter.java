@@ -18,7 +18,6 @@ public class UnnecessaryParameterFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) servletRequest).getSession(true);
         removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_REGISTRATION);
-        removeAttributeIfExist(session, SessionAttribute.UNKNOWN_USER);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

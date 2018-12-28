@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.utils.StringUtils;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
@@ -26,9 +27,6 @@ public class LoginCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-
-        HttpSession session = req.getSession(true);
-
         String login = req.getParameter(RequestParameter.LOGIN);
         String password = req.getParameter(RequestParameter.PASSWORD);
 
@@ -37,6 +35,7 @@ public class LoginCommand implements Command {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
 
+                HttpSession session = req.getSession(true);
                 session.setAttribute(SessionAttribute.USER_BLOCK, user.isBlocked());
                 if (user.isBlocked()) {
                     return CommandResult.redirect(Pages.LOGIN_PAGE);
@@ -46,9 +45,8 @@ public class LoginCommand implements Command {
                 return CommandResult.redirect(Pages.MAIN_PAGE);
             }
         }
-        // TODO: 21.12.2018 forward
-        session.setAttribute(SessionAttribute.UNKNOWN_USER, true);
-        return CommandResult.redirect(Pages.LOGIN_PAGE);
+        req.setAttribute(RequestAttribute.UNKNOWN_USER, true);
+        return CommandResult.forward(Pages.LOGIN_PAGE);
     }
 
     private UserService getUserService() {

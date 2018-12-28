@@ -68,7 +68,6 @@ public class FrontController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-
     private CommandFactory getCommandFactory() {
         return commandFactory;
     }
@@ -76,7 +75,7 @@ public class FrontController extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
-        Object commandFactory = servletContext.getAttribute("commandFactory");
+        Object commandFactory = servletContext.getAttribute(COMMAND_FACTORY_ATTRIBUTE);
         if (commandFactory != null) {
             this.commandFactory = (CommandFactory) commandFactory;
         }

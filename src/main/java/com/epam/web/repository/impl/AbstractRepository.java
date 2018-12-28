@@ -49,7 +49,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
                 entities.add(entity);
             }
             return entities;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
         }
     }

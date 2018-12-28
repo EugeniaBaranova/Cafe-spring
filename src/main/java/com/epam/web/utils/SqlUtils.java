@@ -16,11 +16,9 @@ public class SqlUtils {
         return stringBuffer.toString();
     }
 
-
     public static String getDeleteStatement(String table) {
         return "DELETE from " + table + " WHERE id=?";
     }
-
 
     private static String getGlobalValuesPart(List<String> fields) {
         StringBuffer stringBuffer = new StringBuffer();
@@ -42,7 +40,7 @@ public class SqlUtils {
     private static String getInsertIntoPart(String table, List<String> fields) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("INSERT INTO").append(" ").append(table);
-        stringBuffer.append("(");
+        stringBuffer.append(" (");
         for (String field : fields) {
             stringBuffer.append(field);
             stringBuffer.append(",");

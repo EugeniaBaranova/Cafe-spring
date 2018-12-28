@@ -18,11 +18,8 @@ public final class ServiceFactory {
         return (T) service;
     }
 
-
     public static ServiceFactory getInstance(){
         return INSTANCE;
     }
-
-
 
 }

@@ -126,6 +126,7 @@ public class ProductServiceImpl implements ProductService {
     private boolean isAvailableCategory(String categoryName) {
         if (StringUtils.isNotEmpty(categoryName)) {
             for (ProductCategory category : ProductCategory.values()) {
+                //TODO remove dots
                 /*String upperCategoryName = categoryName.toUpperCase();*/
                 if (category.name().equals(categoryName.toUpperCase())) {
                     return true;

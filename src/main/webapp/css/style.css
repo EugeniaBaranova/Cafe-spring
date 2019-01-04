@@ -239,3 +239,13 @@ body {
     margin-bottom: 45px;
     margin-left: 5px;
 }
+
+/*profile*/
+
+.user_name {
+    text-align: center;
+}
+
+.loyalty_points {
+    text-align: right;
+}

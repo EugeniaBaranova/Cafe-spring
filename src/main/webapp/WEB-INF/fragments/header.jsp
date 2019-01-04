@@ -29,6 +29,7 @@
     <c:if test="${sessionScope.user_role ne 'GUEST'}">
         <a href="/controller?command=show_orders"><fmt:message key="header.page.orders"/></a>
         <a href="/controller?command=show_cart"><fmt:message key="header.page.cart"/></a>
+        <a href="/profile"><fmt:message key="header.page.profile"/></a>
     </c:if>
     <c:if test="${sessionScope.user_role eq 'ADMIN'}">
         <a href="/controller?command=show_users"><fmt:message key="header.page.users"/></a>

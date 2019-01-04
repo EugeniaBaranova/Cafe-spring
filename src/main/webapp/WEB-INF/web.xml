@@ -80,6 +80,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ProfilePage</servlet-name>
+        <jsp-file>/WEB-INF/pages/profile.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfilePage</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>NotFoundError</servlet-name>
         <jsp-file>/WEB-INF/pages/error_not_found.jsp</jsp-file>
     </servlet>

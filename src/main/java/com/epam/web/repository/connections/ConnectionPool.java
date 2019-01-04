@@ -47,13 +47,13 @@ public class ConnectionPool {
                 createConnections(CONNECTION_POOL_SIZE);
                 initialized.set(true);
             }
-        } catch (ClassNotFoundException | ConnectionPoolException e) {
+        } catch (ClassNotFoundException e) {
             logger.error(e.getMessage(), e);
             throw new ConnectionPoolInitializationException(e.getMessage(), e);
         }
     }
 
-    public Connection getConnection() throws ConnectionPoolException {
+    public Connection getConnection() {
         try {
             if (connectionPool.isEmpty()) {
                 return createSingleConnection();
@@ -65,7 +65,7 @@ public class ConnectionPool {
         }
     }
 
-    public boolean returnConnection(Connection connection) throws ConnectionPoolException {
+    public boolean returnConnection(Connection connection) {
         try {
             if (connection != null) {
                 if (connectionPool.size() < CONNECTION_POOL_SIZE) {
@@ -96,7 +96,7 @@ public class ConnectionPool {
         }
     }
 
-    private void createConnections(int count) throws ConnectionPoolException {
+    private void createConnections(int count) {
         try {
             for (int i = 0; i < count; i++) {
                 connectionPool.put(createSingleConnection());
@@ -107,7 +107,7 @@ public class ConnectionPool {
         }
     }
 
-    private Connection createSingleConnection() throws ConnectionPoolException {
+    private Connection createSingleConnection() {
         try {
             return new ConnectionWrapper(DriverManager.getConnection(
                     properties.getProperty(DatabasePropertyName.URL),
@@ -119,10 +119,8 @@ public class ConnectionPool {
         }
     }
 
-    private void loadProperties() throws ConnectionPoolException {
-        try {
-            //TODO close
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
+    private void loadProperties() {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             properties.load(inputStream);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

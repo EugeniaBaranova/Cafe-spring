@@ -20,7 +20,7 @@ public class UnnecessaryParameterFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String path = ((HttpServletRequest) servletRequest).getRequestURI();
 
-        if(!path.startsWith(Pages.REGISTRATION_PAGE) && !"/favicon.ico".equals(path)){
+        if(isNotRegistrationPage(path) && isNotIconLoadURI(path)){
             HttpSession session = ((HttpServletRequest) servletRequest).getSession(true);
             removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_REGISTRATION);
             removeAttributeIfExist(session,SessionAttribute.REGISTRATION_ERRORS);
@@ -28,15 +28,23 @@ public class UnnecessaryParameterFilter implements Filter {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    @Override
+    public void destroy() {
+
+    }
+
+    private boolean isNotIconLoadURI(String path){
+        return !"/favicon.ico".equals(path);
+    }
+
+    private boolean isNotRegistrationPage(String path){
+        return !path.startsWith(Pages.REGISTRATION_PAGE);
+    }
+
     private void removeAttributeIfExist(HttpSession session, String sessionAttributeName) {
         Object sessionAttribute = session.getAttribute(sessionAttributeName);
         if (sessionAttribute != null) {
             session.removeAttribute(sessionAttributeName);
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

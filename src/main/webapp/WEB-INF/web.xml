@@ -115,7 +115,7 @@
 
     <filter>
         <filter-name>UnnecessaryParameterFilter</filter-name>
-        <filter-class>com.epam.web.controller.filter.UnnecessaryParameterFilter</filter-class>
+        <filter-class>com.epam.web.controller.filter.SessionParameterFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>UnnecessaryParameterFilter</filter-name>

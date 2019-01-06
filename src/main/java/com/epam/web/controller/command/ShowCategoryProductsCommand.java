@@ -3,7 +3,7 @@ package com.epam.web.controller.command;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.controller.constant.RequestParameter;
-import com.epam.web.entity.Product;
+import com.epam.web.entity.product.Product;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
 
@@ -15,7 +15,7 @@ public class ShowCategoryProductsCommand implements Command {
 
     private ProductService productService;
 
-    public ShowCategoryProductsCommand(ProductService productService) {
+    ShowCategoryProductsCommand(ProductService productService) {
         this.productService = productService;
     }
 

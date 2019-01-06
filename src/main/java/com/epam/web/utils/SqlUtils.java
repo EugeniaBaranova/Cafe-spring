@@ -1,8 +1,72 @@
 package com.epam.web.utils;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class SqlUtils {
+
+
+
+    public static String getInsertStatement(String table, List<String> fields){
+
+        return new StringBuffer()
+                .append("INSERT INTO ")
+                .append(table)
+                .append(" (")
+                .append(generateFields(fields))
+                .append(") ")
+                .append("VALUES")
+                .append(" (")
+                .append(generateValues(fields))
+                .append(");")
+                .toString();
+    }
+
+
+    private static String generateValues(List<String> fields){
+
+        if(fields != null){
+            StringBuffer sb = new StringBuffer();
+            Iterator<String> iterator = fields.iterator();
+            while (iterator.hasNext()){
+                sb.append("?");
+                sb.append(",");
+                iterator.next();
+            }
+            if(isNotEmptyBuilder(sb)) {
+                return deleteLastCharAndGetString(sb);
+            }
+        }
+        return StringUtils.empty();
+    }
+
+
+    private static String generateFields(List<String> fields){
+
+        if(fields != null){
+            StringBuffer sb = new StringBuffer();
+            for(String name : fields){
+                sb.append(name);
+                sb.append(",");
+            }
+            if(isNotEmptyBuilder(sb)) {
+                return deleteLastCharAndGetString(sb);
+            }
+        }
+        return StringUtils.empty();
+    }
+
+    private static boolean isNotEmptyBuilder(StringBuffer sb){
+        return sb != null && sb.length() > 0;
+    }
+
+
+    private static String deleteLastCharAndGetString(StringBuffer sb){
+        return sb
+                .deleteCharAt(sb.length() - 1)
+                .toString();
+    }
+
 
     public static String getInsertOrUpdateStatement(String table, List<String> fields) {
         StringBuffer stringBuffer = new StringBuffer();

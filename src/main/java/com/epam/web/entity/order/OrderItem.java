@@ -1,6 +1,8 @@
-package com.epam.web.entity;
+package com.epam.web.entity.order;
 
-public class OrderItem extends Entity{
+import com.epam.web.entity.Entity;
+
+public class OrderItem extends Entity {
 
     private Long mealId;
     private Long orderId;

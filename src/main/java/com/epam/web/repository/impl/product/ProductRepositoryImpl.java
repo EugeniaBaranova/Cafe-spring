@@ -1,10 +1,10 @@
-package com.epam.web.repository.impl;
+package com.epam.web.repository.impl.product;
 
-import com.epam.web.entity.Entity;
-import com.epam.web.entity.Product;
+import com.epam.web.entity.product.Product;
 import com.epam.web.repository.ProductRepository;
 import com.epam.web.repository.connections.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
+import com.epam.web.repository.impl.AbstractRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
     }
 
     @Override
-    PreparedStatement getReadyPreparedStatement(Product newProduct, PreparedStatement preparedStatement) throws SQLException {
+    public PreparedStatement getReadyPreparedStatement(Product newProduct, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, newProduct.getName());
         preparedStatement.setString(2, newProduct.getImageReference());
         preparedStatement.setBigDecimal(3, newProduct.getCost());
@@ -32,13 +32,13 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
 
 
     @Override
-    List<String> getFields() {
+    public List<String> getFields() {
         return new ArrayList<>(
                 Arrays.asList("id", "name", "image_reference", "cost", "amount", "category", "description"));
     }
 
     @Override
-    String getTable() {
+    public String getTable() {
         return "product";
     }
 }

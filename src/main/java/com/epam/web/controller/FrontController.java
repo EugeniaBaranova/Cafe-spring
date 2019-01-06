@@ -40,6 +40,8 @@ public class FrontController extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setCharacterEncoding("UTF-8");
             String command = req.getParameter(RequestParameter.COMMAND);
             Command action = getCommandFactory().getCommand(command);
             if(action != null){

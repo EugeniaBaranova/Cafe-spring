@@ -1,8 +1,8 @@
 package com.epam.web.controller.command;
 
 import com.epam.web.controller.constant.Pages;
-import com.epam.web.entity.Product;
-import com.epam.web.entity.ProductBuilder;
+import com.epam.web.entity.product.Product;
+import com.epam.web.entity.product.ProductBuilder;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
 import org.junit.Assert;
@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import java.util.Collections;
 import java.util.List;

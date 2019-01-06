@@ -1,7 +1,9 @@
-package com.epam.web.entity;
+package com.epam.web.entity.order;
 
+import com.epam.web.entity.Entity;
 import com.epam.web.entity.enums.OrderState;
 import com.epam.web.entity.enums.PaymentMethod;
+import com.epam.web.entity.user.User;
 
 import java.math.BigDecimal;
 

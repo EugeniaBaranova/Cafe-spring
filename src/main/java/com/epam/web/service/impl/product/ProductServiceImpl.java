@@ -1,11 +1,11 @@
-package com.epam.web.service.impl;
+package com.epam.web.service.impl.product;
 
-import com.epam.web.entity.Product;
-import com.epam.web.entity.ProductBuilder;
+import com.epam.web.entity.product.Product;
+import com.epam.web.entity.product.ProductBuilder;
 import com.epam.web.entity.enums.ProductCategory;
 import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.specification.ProductByIdSpec;
-import com.epam.web.repository.specification.ProductsByCategorySpec;
+import com.epam.web.repository.specification.product.ProductByIdSpec;
+import com.epam.web.repository.specification.product.ProductsByCategorySpec;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.utils.StringUtils;

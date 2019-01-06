@@ -1,34 +1,45 @@
 package com.epam.web.repository.converter;
 
-import com.epam.web.entity.User;
-import com.epam.web.entity.UserBuilder;
-import com.epam.web.entity.enums.UserRole;
+
+import com.epam.web.entity.user.User;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
+import static com.epam.web.repository.converter.UserFields.*;
 
 public class UserConverter implements Converter<User> {
 
     @Override
     public User convert(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong("id");
-        String name = resultSet.getString("name");
-        String role = resultSet.getString("role")
-                .toUpperCase();
-        boolean blocked = resultSet.getBoolean("blocked");
-        String email = resultSet.getString("e_mail");
-        String login = resultSet.getString("login");
-        String password = resultSet.getString("password");
-        int loyaltyPoints = resultSet.getInt("loyalty_points");
-
-        return new UserBuilder().setId(id)
-                .setName(name)
-                .setRole(UserRole.valueOf(role))
-                .setBlocked(blocked)
-                .setEmail(email)
-                .setLogin(login)
-                .setPassword(password)
-                .setLoyaltyPoints(loyaltyPoints)
-                .createUser();
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        User user = new User();
+        if (columnCount != 0) {
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                switch (columnName) {
+                    case ID:
+                        user.setId(resultSet.getLong(columnName));
+                    case NAME:
+                        user.setName(resultSet.getString(columnName));
+                    case LOGIN:
+                        user.setLogin(resultSet.getString(columnName));
+                    case PASSWORD:
+                        user.setPassword(resultSet.getString(columnName));
+                    case EMAIL:
+                        user.setEmail(resultSet.getString(columnName));
+                    case LOYALTY_POINTS:
+                        user.setLoyaltyPoints(resultSet.getInt(columnName));
+                    case BLOCKED:
+                        user.setBlocked(resultSet.getBoolean(columnName));
+                    default:
+                        return user;
+                }
+            }
+        }
+        return user;
     }
+
 }

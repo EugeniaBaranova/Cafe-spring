@@ -1,4 +1,6 @@
-package com.epam.web.repository.specification;
+package com.epam.web.repository.specification.product;
+
+import com.epam.web.repository.specification.Specification;
 
 import java.util.Arrays;
 import java.util.Formatter;

@@ -10,4 +10,5 @@ public class SessionAttribute {
     public static final String USER_EMAIL = "user_email";
     public static final String USER_LOYALTY_POINTS = "loyalty_points";
     public static final String UNSUCCESSFUL_REGISTRATION = "unsuccessful_registration";
+    public static final String REGISTRATION_ERRORS = "registration_errors";
 }

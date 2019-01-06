@@ -1,4 +1,4 @@
-package com.epam.web.entity;
+package com.epam.web.entity.order;
 
 import com.epam.web.entity.enums.OrderState;
 import com.epam.web.entity.enums.PaymentMethod;

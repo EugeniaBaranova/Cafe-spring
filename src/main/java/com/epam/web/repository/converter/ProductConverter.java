@@ -1,7 +1,7 @@
 package com.epam.web.repository.converter;
 
-import com.epam.web.entity.Product;
-import com.epam.web.entity.ProductBuilder;
+import com.epam.web.entity.product.Product;
+import com.epam.web.entity.product.ProductBuilder;
 import com.epam.web.entity.enums.ProductCategory;
 
 import java.math.BigDecimal;

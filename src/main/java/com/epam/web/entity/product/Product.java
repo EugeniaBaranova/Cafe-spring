@@ -1,5 +1,6 @@
-package com.epam.web.entity;
+package com.epam.web.entity.product;
 
+import com.epam.web.entity.Entity;
 import com.epam.web.entity.enums.ProductCategory;
 
 import java.math.BigDecimal;

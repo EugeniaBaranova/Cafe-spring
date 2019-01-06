@@ -1,5 +1,6 @@
-package com.epam.web.entity;
+package com.epam.web.entity.user;
 
+import com.epam.web.entity.Entity;
 import com.epam.web.entity.enums.UserRole;
 
 import java.io.Serializable;
@@ -30,6 +31,11 @@ public class User extends Entity implements Serializable {
         this.loyaltyPoints = loyaltyPoints;
         this.blocked = blocked;
         this.role = role;
+    }
+
+
+    public User() {
+        super();
     }
 
     public String getName() {
@@ -86,5 +92,18 @@ public class User extends Entity implements Serializable {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", loyaltyPoints=" + loyaltyPoints +
+                ", blocked=" + blocked +
+                ", role=" + role +
+                '}';
     }
 }

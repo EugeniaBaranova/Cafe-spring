@@ -65,10 +65,26 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
 
     @Override
-    public T add(T object) throws RepositoryException {
-        try {
-            return this.saveOrUpdate(object);
-        } catch (Exception e) {
+    public T add(T entity) throws RepositoryException {
+
+        try (Connection connection = getConnectionPool().getConnection();
+             PreparedStatement pStatement = connection.prepareStatement(
+                     SqlUtils.getInsertStatement(getTable(), getFields()),
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
+            int affectedRows = readyPreparedStatement.executeUpdate();
+            if (entity.getId() == null) {
+                if (affectedRows != 0) {
+                    try (ResultSet generatedKeys = readyPreparedStatement.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            entity.setId(generatedKeys.getLong(1));
+                            return entity;
+                        }
+                    }
+                }
+            }
+            return entity;
+        }catch(Exception e){
             throw new RepositoryException(e);
         }
     }
@@ -87,7 +103,8 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     @Override
     public T update(T entity) throws RepositoryException {
         try {
-            return saveOrUpdate(entity);
+            /*return saveOrUpdate(entity);*/
+            return null;
         } catch (Exception e) {
             throw new RepositoryException(e);
         }
@@ -113,34 +130,11 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         return Collections.emptyList();
     }
 
+    public abstract PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException;
 
-    private T saveOrUpdate(T entity) throws ConnectionPoolException, SQLException {
-        try (Connection connection = getConnectionPool().getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(
-                     SqlUtils.getInsertOrUpdateStatement(getTable(), getFields()),
-                     PreparedStatement.RETURN_GENERATED_KEYS)) {
-            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
-            int affectedRows = readyPreparedStatement.executeUpdate();
-            if (entity.getId() == null) {
-                if (affectedRows != 0) {
-                    try (ResultSet generatedKeys = readyPreparedStatement.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            entity.setId(generatedKeys.getLong("id"));
-                            return entity;
-                        }
-                    }
-                }
-            }
-            return entity;
-        }
-    }
+    public abstract List<String> getFields();
 
-
-    abstract PreparedStatement getReadyPreparedStatement(T object, PreparedStatement pStatement) throws SQLException;
-
-    abstract List<String> getFields();
-
-    abstract String getTable();
+    public abstract String getTable();
 
     private ConnectionPool getConnectionPool() {
         return connectionPool;

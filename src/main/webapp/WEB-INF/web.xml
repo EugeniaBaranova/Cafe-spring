@@ -119,9 +119,7 @@
     </filter>
     <filter-mapping>
         <filter-name>UnnecessaryParameterFilter</filter-name>
-        <servlet-name>controller</servlet-name>
+        <servlet-name>*</servlet-name>
     </filter-mapping>
-
-
 
 </web-app>

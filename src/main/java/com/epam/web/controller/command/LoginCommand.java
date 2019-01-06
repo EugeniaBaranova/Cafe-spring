@@ -5,7 +5,7 @@ import com.epam.web.utils.StringUtils;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
-import com.epam.web.entity.User;
+import com.epam.web.entity.user.User;
 import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;
 import org.apache.log4j.Logger;
@@ -21,7 +21,7 @@ public class LoginCommand implements Command {
 
     private UserService userService;
 
-    public LoginCommand(UserService userService) {
+     LoginCommand(UserService userService) {
         this.userService = userService;
     }
 

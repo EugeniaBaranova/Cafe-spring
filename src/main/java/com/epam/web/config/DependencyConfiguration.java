@@ -1,21 +1,23 @@
 package com.epam.web.config;
 
-import com.epam.web.entity.Product;
-import com.epam.web.entity.User;
+import com.epam.web.entity.product.Product;
+import com.epam.web.entity.user.User;
 import com.epam.web.repository.ProductRepository;
 import com.epam.web.repository.UserRepository;
 import com.epam.web.repository.connections.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.converter.ProductConverter;
 import com.epam.web.repository.converter.UserConverter;
-import com.epam.web.repository.impl.ProductRepositoryImpl;
-import com.epam.web.repository.impl.UserRepositoryImpl;
+import com.epam.web.repository.impl.product.ProductRepositoryImpl;
+import com.epam.web.repository.impl.user.UserRepositoryImpl;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.Service;
 import com.epam.web.service.UserService;
 import com.epam.web.service.factory.ServiceFactory;
-import com.epam.web.service.impl.ProductServiceImpl;
-import com.epam.web.service.impl.UserServiceImpl;
+import com.epam.web.service.impl.product.ProductServiceImpl;
+import com.epam.web.service.impl.user.UserServiceImpl;
+import com.epam.web.service.validation.UserValidator;
+import com.epam.web.service.validation.Validator;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -50,10 +52,15 @@ public class DependencyConfiguration {
     }
 
 
+    private Validator<User> userValidator(){
+        return new UserValidator();
+    }
+
     private UserService userService() {
         UserServiceImpl userService = new UserServiceImpl();
         userService.setUserRepository(userRepository());
         userService.setReentrantLock(new ReentrantLock());
+        userService.setValidator(userValidator());
         return userService;
     }
 

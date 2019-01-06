@@ -1,4 +1,4 @@
-package com.epam.web.entity;
+package com.epam.web.entity.user;
 
 import com.epam.web.entity.enums.UserRole;
 

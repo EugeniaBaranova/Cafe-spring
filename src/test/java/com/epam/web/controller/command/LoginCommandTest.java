@@ -1,8 +1,8 @@
 package com.epam.web.controller.command;
 
 import com.epam.web.controller.constant.Pages;
-import com.epam.web.entity.User;
-import com.epam.web.entity.UserBuilder;
+import com.epam.web.entity.user.User;
+import com.epam.web.entity.user.UserBuilder;
 import com.epam.web.entity.enums.UserRole;
 import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;

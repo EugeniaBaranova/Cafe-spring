@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     private RegistrationResult<User> getNotUniqueUserResult(){
         Error error = new Error();
-        error.setMessage("User with given login or email already exists");
+        error.setMessage("registration.validation.message.not_unique_user");
         return new RegistrationResult<>(new HashSet<>(Collections.singletonList(error)));
     }
 

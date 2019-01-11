@@ -13,8 +13,7 @@
 <div class="cards">
 
     <c:if test="${sessionScope.user_role eq 'ADMIN'}">
-        <form action="/controller" method="post">
-            <input type="hidden" name="command" value="add_product">
+        <form action="/add_product" method="post">
             <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>
         </form>
     </c:if>
@@ -33,8 +32,7 @@
                         <h3>${product.name}</h3>
                         <p><fmt:message key="menu.product.cost"/>: ${product.cost} <fmt:message key="menu.product.currency"/>.</p>
 
-                        <form action="/menu/product?id=${product.id}" method="get">
-                            <input type="hidden" name="command" value="show_product">
+                        <form action="/controller?command=show_product&id=${product.id}" method="get">
                             <button class="info_btn" type="submit"><fmt:message key="menu.button.info"/></button>
                         </form>
 

@@ -40,6 +40,7 @@ public class UserRegistrationCommand implements Command {
         }
         User newUser = result.getData();
         // TODO: 05.01.2019 Make some action with newUser. For example redirect to newUser profile.
+        session.setAttribute(SessionAttribute.USER, newUser);
         return CommandResult.redirect(Pages.MAIN_PAGE);
     }
 

@@ -40,13 +40,8 @@ public class LoginCommand implements Command {
                 if (user.isBlocked()) {
                     return CommandResult.redirect(Pages.LOGIN_PAGE);
                 }
-                // TODO: 04.01.2019 better
-                session.setAttribute(SessionAttribute.USER_ID, user.getId());
                 session.setAttribute(SessionAttribute.USER_ROLE, user.getRole());
-                session.setAttribute(SessionAttribute.USER_NAME, user.getName());
-                session.setAttribute(SessionAttribute.USER_LOGIN, user.getLogin());
-                session.setAttribute(SessionAttribute.USER_EMAIL, user.getEmail());
-                session.setAttribute(SessionAttribute.USER_LOYALTY_POINTS, user.getLoyaltyPoints());
+                session.setAttribute(SessionAttribute.USER, user);
                 return CommandResult.redirect(Pages.MAIN_PAGE);
             }
         }

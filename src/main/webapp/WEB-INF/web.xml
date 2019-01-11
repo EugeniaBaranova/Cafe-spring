@@ -80,6 +80,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>AddProductPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/add_product.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddProductPage</servlet-name>
+        <url-pattern>/add_product</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>ProfilePage</servlet-name>
         <jsp-file>/WEB-INF/pages/profile.jsp</jsp-file>
     </servlet>
@@ -119,6 +128,15 @@
     </filter>
     <filter-mapping>
         <filter-name>UnnecessaryParameterFilter</filter-name>
+        <servlet-name>*</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>UrlAccessFilter</filter-name>
+        <filter-class>com.epam.web.controller.filter.UrlAccessFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlAccessFilter</filter-name>
         <servlet-name>*</servlet-name>
     </filter-mapping>
 

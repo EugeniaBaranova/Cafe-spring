@@ -1,6 +1,7 @@
 package com.epam.web.repository.converter;
 
 
+import com.epam.web.entity.enums.UserRole;
 import com.epam.web.entity.user.User;
 
 import java.sql.ResultSet;
@@ -22,18 +23,28 @@ public class UserConverter implements Converter<User> {
                 switch (columnName) {
                     case ID:
                         user.setId(resultSet.getLong(columnName));
+                        break;
                     case NAME:
                         user.setName(resultSet.getString(columnName));
+                        break;
                     case LOGIN:
                         user.setLogin(resultSet.getString(columnName));
+                        break;
                     case PASSWORD:
                         user.setPassword(resultSet.getString(columnName));
+                        break;
                     case EMAIL:
                         user.setEmail(resultSet.getString(columnName));
+                        break;
                     case LOYALTY_POINTS:
                         user.setLoyaltyPoints(resultSet.getInt(columnName));
+                        break;
                     case BLOCKED:
                         user.setBlocked(resultSet.getBoolean(columnName));
+                        break;
+                    case ROLE:
+                        user.setRole(UserRole.valueOf(resultSet.getString(columnName)));
+                        break;
                     default:
                         return user;
                 }

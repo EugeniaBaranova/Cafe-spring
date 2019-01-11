@@ -13,17 +13,15 @@ public class SessionParameterFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String path = ((HttpServletRequest) servletRequest).getRequestURI();
-
-        if(isNotRegistrationPage(path) && isNotIconLoadURI(path)){
+        if (isNotRegistrationPage(path) && isNotIconLoadURI(path)) {
             HttpSession session = ((HttpServletRequest) servletRequest).getSession(true);
             removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_REGISTRATION);
-            removeAttributeIfExist(session,SessionAttribute.REGISTRATION_ERRORS);
+            removeAttributeIfExist(session, SessionAttribute.REGISTRATION_ERRORS);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -33,11 +31,11 @@ public class SessionParameterFilter implements Filter {
 
     }
 
-    private boolean isNotIconLoadURI(String path){
-        return !"/favicon.ico".equals(path);
+    private boolean isNotIconLoadURI(String path) {
+        return !Pages.ICON_LOAD_URI.equals(path);
     }
 
-    private boolean isNotRegistrationPage(String path){
+    private boolean isNotRegistrationPage(String path) {
         return !path.startsWith(Pages.REGISTRATION_PAGE);
     }
 

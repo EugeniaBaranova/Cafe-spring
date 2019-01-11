@@ -1,0 +1,17 @@
+.bug_body {
+    background-image: url(../img/bug_back.jpg);
+    background-attachment: fixed;
+}
+
+.bug_body h1{
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 60px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.not_found_body {
+    background-image: url(../img/page_not_found_back.jpg);
+    background-attachment: fixed;
+}
+

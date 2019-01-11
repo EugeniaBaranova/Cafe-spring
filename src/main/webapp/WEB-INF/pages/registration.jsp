@@ -19,14 +19,14 @@
         <h2><fmt:message key="registration.text.unsuccessful"/></h2>
     </c:if>
     <c:forEach var="error" items="${sessionScope.registration_errors}">
-        <p style="color: red"> <fmt:message key="${error.getMessage()}"/></p>
+        <p class="error_message"> <fmt:message key="${error.getMessage()}"/></p>
     </c:forEach>
 
     <form action="/controller" method="POST" name="registration_form" onsubmit="return validateForm()" id="reg_form" data-language="${language}">
         <input type="hidden" name="command" value="registration">
         <div class="container">
             <label for="name"><b><fmt:message key="registration.label.name"/></b></label>
-            <input class="form-control" type="text" placeholder="<fmt:message key="registration.placeholder.name"/>" id="name" name="name"/>
+            <input class="form-control" type="text" placeholder="<fmt:message key="registration.placeholder.name"/>" id="name" name="name" required/>
             <p id = "name_error"></p>
 
             <label for="login"><b><fmt:message key="registration.label.login"/></b></label>

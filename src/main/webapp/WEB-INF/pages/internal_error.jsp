@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="../../css/error_style.css"/>
 </head>
 
-<body>
+<body class="bug_body">
 
 <h1><b>It seems you found a bug</b></h1>
 

@@ -10,7 +10,7 @@ public interface UserService extends Service {
 
     Optional<User> login(String login, String password) throws ServiceException;
 
-    RegistrationResult register(User user) throws ServiceException;
+    RegistrationResult<User> register(User user) throws ServiceException;
 
     RegistrationResult<User> editProfileInfo(Long id, User newUser) throws ServiceException;
 

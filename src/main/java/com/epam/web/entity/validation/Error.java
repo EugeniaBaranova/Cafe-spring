@@ -2,7 +2,10 @@ package com.epam.web.entity.validation;
 
 import java.io.Serializable;
 
-public class Error implements Serializable{
+public class Error implements Serializable {
+
+    private static final long serialVersionUID = 4313238179238520981L;
+
     private String fieldName;
     private String fieldValue;
     private String message;

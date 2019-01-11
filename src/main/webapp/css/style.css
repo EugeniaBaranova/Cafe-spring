@@ -136,6 +136,10 @@ body {
     color: red;
 }
 
+.error_message {
+    color: red;
+}
+
 /*main page*/
 .welcome_title h1{
     font-family: 'Sofia';

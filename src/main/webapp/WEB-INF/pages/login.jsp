@@ -15,7 +15,7 @@
                     <h2><fmt:message key="login.text.unknown"/></h2>
                 </c:if>
                 <c:if test="${sessionScope.user_block}">
-                    <h2><fmt:message key="login.text.sorry"/></h2>
+                    <h2><fmt:message key="login.block.message"/></h2>
                 </c:if>
                 <form action="/controller" method="post">
                     <input type="hidden" name="command" value="log_in">

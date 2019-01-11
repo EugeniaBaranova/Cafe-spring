@@ -12,11 +12,11 @@
 <body>
 <div class="form-group">
     <div class="container">
-        <h3 class="user_name">${sessionScope.user_name}</h3>
-        <h3><fmt:message key="profile.info.login"/>: ${sessionScope.user_login}</h3>
-        <h3><fmt:message key="profile.info.email"/>: ${sessionScope.user_email}</h3>
+        <h3 class="user_name">${sessionScope.user.name}</h3>
+        <h3><fmt:message key="profile.info.login"/>: ${sessionScope.user.login}</h3>
+        <h3><fmt:message key="profile.info.email"/>: ${sessionScope.user.email}</h3>
         <hr>
-        <p class="loyalty_points"><fmt:message key="profile.info.loyalty.points"/>: ${sessionScope.loyalty_points}</p>
+        <p class="loyalty_points"><fmt:message key="profile.info.loyalty.points"/>: ${sessionScope.user.loyaltyPoints}</p>
     </div>
 </div>
 </body>

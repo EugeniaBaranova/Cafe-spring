@@ -40,15 +40,17 @@ public class FrontController extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setCharacterEncoding("UTF-8");
-            String command = req.getParameter(RequestParameter.COMMAND);
-            Command action = getCommandFactory().getCommand(command);
-            if(action != null){
-                CommandResult commandResult = action.execute(req, resp);
-                sendResponse(req, resp, commandResult);
-            }else {
-                resp.sendError(404);
+            if (!resp.isCommitted()){
+                req.setCharacterEncoding("UTF-8");
+                resp.setCharacterEncoding("UTF-8");
+                String command = req.getParameter(RequestParameter.COMMAND);
+                Command action = getCommandFactory().getCommand(command);
+                if(action != null){
+                    CommandResult commandResult = action.execute(req, resp);
+                    sendResponse(req, resp, commandResult);
+                }else {
+                    resp.sendError(404);
+                }
             }
         } catch (Exception e) {
             logger.error("[process] Exception.", e);

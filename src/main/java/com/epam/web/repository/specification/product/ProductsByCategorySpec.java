@@ -16,7 +16,7 @@ public class ProductsByCategorySpec implements Specification {
 
     @Override
     public String toSql() {
-        return "SELECT id,name,image_reference,cost,amount,category,description" +
+        return "SELECT id,name,cost,amount,category,description,image" +
                 " FROM product WHERE category=?";
     }
 

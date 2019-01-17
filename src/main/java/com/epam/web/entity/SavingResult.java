@@ -7,21 +7,21 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RegistrationResult<T> {
+public class SavingResult<T> {
     private T data;
     private Set<Error> errors = new HashSet<>();
 
-    public RegistrationResult(T data) {
+    public SavingResult(T data) {
         this.data = data;
     }
 
-    public RegistrationResult(Set<Error> errors) {
+    public SavingResult(Set<Error> errors) {
         if(errors != null){
             this.errors = errors;
         }
     }
 
-    public RegistrationResult() {
+    public SavingResult() {
     }
     public boolean hasError(){
         return !errors.isEmpty();

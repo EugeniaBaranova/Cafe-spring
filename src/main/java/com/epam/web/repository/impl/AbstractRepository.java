@@ -66,7 +66,6 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     @Override
     public T add(T entity) throws RepositoryException {
-
         try (Connection connection = getConnectionPool().getConnection();
              PreparedStatement pStatement = connection.prepareStatement(
                      SqlUtils.getInsertStatement(getTable(), getFields()),

@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <script src="js\validator.js" type="text/javascript"></script>
 </head>
 <header>
@@ -19,7 +20,7 @@
         <h2><fmt:message key="registration.text.unsuccessful"/></h2>
     </c:if>
     <c:forEach var="error" items="${sessionScope.registration_errors}">
-        <p class="error_message"> <fmt:message key="${error.getMessage()}"/></p>
+        <p class="error_message"><fmt:message key="${error.getMessage()}"/></p>
     </c:forEach>
 
     <form action="/controller" method="POST" name="registration_form" onsubmit="return validateForm()" id="reg_form" data-language="${language}">

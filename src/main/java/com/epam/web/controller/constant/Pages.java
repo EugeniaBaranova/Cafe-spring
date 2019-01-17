@@ -13,4 +13,6 @@ public class Pages {
     public static final String USER_LIST_PAGE = "/users";
     public static final String ICON_LOAD_URI = "/favicon.ico";
     public static final String CONTROLLER_URI = "/controller";
+    public static final String PRODUCT_PAGE = "/product";
+    public static final String IMAGE_CONTENT_URI = "/image_content";
 }

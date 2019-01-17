@@ -6,11 +6,14 @@ import com.epam.web.repository.connections.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
 
+import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.epam.web.repository.converter.ProductFields.*;
 
 public class ProductRepositoryImpl extends AbstractRepository<Product> implements ProductRepository {
 
@@ -22,11 +25,11 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
     @Override
     public PreparedStatement getReadyPreparedStatement(Product newProduct, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, newProduct.getName());
-        preparedStatement.setString(2, newProduct.getImageReference());
-        preparedStatement.setBigDecimal(3, newProduct.getCost());
-        preparedStatement.setInt(4, newProduct.getAmount());
-        preparedStatement.setString(5, newProduct.getCategory().name());
-        preparedStatement.setString(6, newProduct.getDescription());
+        preparedStatement.setBigDecimal(2, newProduct.getCost());
+        preparedStatement.setInt(3, newProduct.getAmount());
+        preparedStatement.setString(4, newProduct.getCategory().name());
+        preparedStatement.setString(5, newProduct.getDescription());
+        preparedStatement.setBinaryStream(6, new ByteArrayInputStream(newProduct.getImage()));
         return preparedStatement;
     }
 
@@ -34,7 +37,7 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
     @Override
     public List<String> getFields() {
         return new ArrayList<>(
-                Arrays.asList("id", "name", "image_reference", "cost", "amount", "category", "description"));
+                Arrays.asList(NAME, COST, AMOUNT, CATEGORY, DESCRIPTION, IMAGE));
     }
 
     @Override

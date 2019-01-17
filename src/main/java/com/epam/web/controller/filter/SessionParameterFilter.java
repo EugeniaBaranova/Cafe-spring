@@ -22,6 +22,11 @@ public class SessionParameterFilter implements Filter {
             HttpSession session = ((HttpServletRequest) servletRequest).getSession(true);
             removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_REGISTRATION);
             removeAttributeIfExist(session, SessionAttribute.REGISTRATION_ERRORS);
+            removeAttributeIfExist(session, SessionAttribute.UNSUCCESSFUL_ADDITION);
+            removeAttributeIfExist(session, SessionAttribute.ADDITION_ERRORS);
+            if(isNotProductPage(path)){
+                removeAttributeIfExist(session, SessionAttribute.PRODUCT);
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -37,6 +42,10 @@ public class SessionParameterFilter implements Filter {
 
     private boolean isNotRegistrationPage(String path) {
         return !path.startsWith(Pages.REGISTRATION_PAGE);
+    }
+
+    private boolean isNotProductPage(String path) {
+        return !Pages.PRODUCT_PAGE.equals(path);
     }
 
     private void removeAttributeIfExist(HttpSession session, String sessionAttributeName) {

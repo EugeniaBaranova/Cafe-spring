@@ -1,10 +1,13 @@
 package com.epam.web.service.impl.product;
 
+import com.epam.web.entity.SavingResult;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.product.ProductBuilder;
 import com.epam.web.entity.enums.ProductCategory;
 import com.epam.web.repository.ProductRepository;
+import com.epam.web.repository.specification.product.ProductAmountInCategorySpec;
 import com.epam.web.repository.specification.product.ProductByIdSpec;
+import com.epam.web.repository.specification.product.ProductsByCategoryPaginationSpec;
 import com.epam.web.repository.specification.product.ProductsByCategorySpec;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
@@ -25,6 +28,23 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    public List<Product> findByCategory(String productCategory, int currentPage, int countOnPage) throws ServiceException {
+        try {
+            if (isAvailableCategory(productCategory)) {
+                int offset = (currentPage * countOnPage) - countOnPage;
+                return getProductRepository()
+                        .query(new ProductsByCategoryPaginationSpec(productCategory, countOnPage, offset));
+            }
+        } catch (Exception e) {
+            String errorMessage = getErrorFormatter()
+                    .format("[findByCategory] Exception while execution method. Method parameter:'%s', '%s'", productCategory, currentPage)
+                    .toString();
+            throw new ServiceException(errorMessage, e);
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
     public List<Product> findByCategory(String productCategory) throws ServiceException {
         try {
             if (isAvailableCategory(productCategory)) {
@@ -40,6 +60,23 @@ public class ProductServiceImpl implements ProductService {
         return Collections.emptyList();
     }
 
+    @Override
+    public int amountInCategory(String productCategory) throws ServiceException {
+        try {
+            if (isAvailableCategory(productCategory)) {
+                List<Product> products = getProductRepository().query(new ProductAmountInCategorySpec(productCategory));
+                if (products != null) {
+                    return products.size();
+                }
+            }
+        } catch (Exception e) {
+            String errorMessage = getErrorFormatter()
+                    .format("[amountInCategory] Exception while execution method. Method parameter:'%s'", productCategory)
+                    .toString();
+            throw new ServiceException(errorMessage, e);
+        }
+        return 0;
+    }
 
     @Override
     public Optional<Product> findProduct(Long id) throws ServiceException {
@@ -55,15 +92,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product) throws ServiceException {
-
+    public SavingResult<Product> addProduct(Product product) throws ServiceException {
         try {
-            if (product != null) {
-                getLocker().lock();
-                logger.debug("[addProduct] Start to execute method. Product to save:{}", product);
-                Product savedProduct = getProductRepository().add(product);
-                logger.debug("[addProduct] Finish to execute method. Saved product:{}", savedProduct);
-            }
+            getLocker().lock();
+            logger.debug("[addProduct] Start to execute method. Product to save:{}", product);
+            Product savedProduct = getProductRepository().add(product);
+            logger.debug("[addProduct] Finish to execute method. Saved product:{}", savedProduct);
+            return new SavingResult<>(savedProduct);
         } catch (Exception e) {
             String errorMessage =
                     getErrorFormatter()
@@ -73,13 +108,10 @@ public class ProductServiceImpl implements ProductService {
         } finally {
             getLocker().unlock();
         }
-
-        return new ProductBuilder().createProduct();
     }
 
     @Override
     public void deleteProduct(Long id) throws ServiceException {
-
         try {
             getLocker().lock();
             logger.debug("[deleteProduct] Start to remove product by id:{}", id);

@@ -1,6 +1,6 @@
 package com.epam.web.service.impl.user;
 
-import com.epam.web.entity.RegistrationResult;
+import com.epam.web.entity.SavingResult;
 import com.epam.web.entity.user.User;
 import com.epam.web.entity.validation.Error;
 import com.epam.web.repository.Repository;
@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> login(String login, String password) throws ServiceException {
         try {
             if (login != null & password != null) {
-                return getUserRepository().queryForSingleResult(new UserByLoginAndPasswordSpec(login, password));
+                String hashedPassword = encodePassword(password);
+                return getUserRepository().queryForSingleResult(new UserByLoginAndPasswordSpec(login, hashedPassword));
             }
             return Optional.empty();
         } catch (RepositoryException e) {
@@ -40,16 +41,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RegistrationResult<User> register(User user) throws ServiceException {
+    public SavingResult<User> register(User user) throws ServiceException {
         try {
             Optional<Set<Error>> validationError = validateUser(user);
             if(validationError.isPresent()){
-                return new RegistrationResult<>(validationError.get());
+                return new SavingResult<>(validationError.get());
             }
             String hashedPassword = encodePassword(user.getPassword());
             user.setPassword(hashedPassword);
-            User saved = getUserRepository().add(user);
-            return new RegistrationResult<>(saved);
+            User savedUser = getUserRepository().add(user);
+            return new SavingResult<>(savedUser);
         } catch (RepositoryException e) {
             String errorMessage = getErrorFormatter()
                     .format("[register] Exception while execution method. User to save:'%s'", user)
@@ -59,8 +60,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RegistrationResult<User> editProfileInfo(Long id, User newUser) throws ServiceException {
-        return new RegistrationResult<>(newUser);
+    public SavingResult<User> editProfileInfo(Long id, User newUser) throws ServiceException {
+        return new SavingResult<>(newUser);
     }
 
     private String encodePassword(String password)  {
@@ -84,10 +85,10 @@ public class UserServiceImpl implements UserService {
         return new Formatter();
     }
 
-    private RegistrationResult<User> getNotUniqueUserResult(){
+    private SavingResult<User> getNotUniqueUserResult(){
         Error error = new Error();
         error.setMessage("registration.validation.message.not_unique_user");
-        return new RegistrationResult<>(new HashSet<>(Collections.singletonList(error)));
+        return new SavingResult<>(new HashSet<>(Collections.singletonList(error)));
     }
 
     private boolean isNotUniqueUser(User user) throws RepositoryException {

@@ -2,7 +2,8 @@ package com.epam.web.utils;
 
 public class StringUtils {
 
-    private final static String EMPTY = "";
+    private static final String EMPTY = "";
+    private static final String NUMERAL_STRING = "\\d+";
 
     public static boolean isEmpty(String string) {
         if (string == null || string.isEmpty()) {
@@ -17,5 +18,9 @@ public class StringUtils {
 
     public static String empty(){
         return EMPTY;
+    }
+
+    public static boolean isNumeral(String parameter) {
+        return parameter.matches(NUMERAL_STRING);
     }
 }

@@ -42,6 +42,14 @@
         <url-pattern>/controller</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ImageContentController</servlet-name>
+        <servlet-class>com.epam.web.controller.ImageContentController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImageContentController</servlet-name>
+        <url-pattern>/image_content</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>LoginPage</servlet-name>
@@ -80,6 +88,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ProductPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/product.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductPage</servlet-name>
+        <url-pattern>/product</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NewProductPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/new_product.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NewProductPage</servlet-name>
+        <url-pattern>/new_product</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>AddProductPage</servlet-name>
         <jsp-file>/WEB-INF/pages/add_product.jsp</jsp-file>
     </servlet>
@@ -99,7 +125,7 @@
 
     <servlet>
         <servlet-name>NotFoundError</servlet-name>
-        <jsp-file>/WEB-INF/pages/error_not_found.jsp</jsp-file>
+        <jsp-file>/WEB-INF/pages/page_not_found.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>NotFoundError</servlet-name>
@@ -121,6 +147,15 @@
     <listener>
         <listener-class>com.epam.web.controller.listener.ControllerContextListener</listener-class>
     </listener>
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.epam.web.controller.filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <servlet-name>*</servlet-name>
+    </filter-mapping>
 
     <filter>
         <filter-name>UnnecessaryParameterFilter</filter-name>

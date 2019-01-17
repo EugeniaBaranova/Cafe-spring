@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DependencyConfiguration {
 
-    public void configure(){
+    public void configure() {
         this.configureServiceFactory();
 
     }
@@ -44,15 +44,15 @@ public class DependencyConfiguration {
     }
 
     private ProductRepository productRepository() {
-        return new ProductRepositoryImpl(connectionPool(),productConverter());
+        return new ProductRepositoryImpl(connectionPool(), productConverter());
     }
 
     private UserRepository userRepository() {
-        return new UserRepositoryImpl(connectionPool(),userConverter());
+        return new UserRepositoryImpl(connectionPool(), userConverter());
     }
 
 
-    private Validator<User> userValidator(){
+    private Validator<User> userValidator() {
         return new UserValidator();
     }
 

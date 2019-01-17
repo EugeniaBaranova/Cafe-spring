@@ -6,6 +6,9 @@
 <fmt:setBundle basename="login" />
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8"/>
+</head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
 </header>

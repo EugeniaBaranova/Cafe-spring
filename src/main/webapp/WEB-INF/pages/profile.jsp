@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <header>
+    <meta charset="UTF-8"/>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
 </header>
 <body>

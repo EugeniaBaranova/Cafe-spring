@@ -6,6 +6,9 @@
 <fmt:setBundle basename="menu" />
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8"/>
+</head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
 </header>
@@ -13,7 +16,7 @@
 <div class="cards">
 
     <c:if test="${sessionScope.user_role eq 'ADMIN'}">
-        <form action="/add_product" method="post">
+        <form action="/new_product" method="post">
             <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>
         </form>
     </c:if>
@@ -25,14 +28,16 @@
                     <div class="card">
                         <div class="imgcontainer">
                             <div class="child_imgcontainer">
-                                <img src="${product.imageReference}" class="card-img">
+                                <img src="/image_content?id=${product.id}" class="card-img">
                             </div>
                         </div>
 
                         <h3>${product.name}</h3>
                         <p><fmt:message key="menu.product.cost"/>: ${product.cost} <fmt:message key="menu.product.currency"/>.</p>
 
-                        <form action="/controller?command=show_product&id=${product.id}" method="get">
+                        <form action="/controller" method="get">
+                            <input type="hidden" name="command" value="show_product">
+                            <input type="hidden" name="id" value="${product.id}">
                             <button class="info_btn" type="submit"><fmt:message key="menu.button.info"/></button>
                         </form>
 
@@ -47,6 +52,23 @@
                 </div>
             </c:forEach>
         </c:if>
+    </div>
+    <div class="center">
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+
+            <c:if test="${requestScope.pages ne null}">
+                <c:set var="pages" value="${requestScope.pages}"/>
+                <c:forEach items="${pages}" var="page">
+                    <c:if test="${page eq param.page}">
+                        <c:set var="class_href" value="active"/>
+                    </c:if>
+                    <a class="${class_href}" href="/controller?command=show_category_products&category=${param.category}&page=${page}">${page}</a>
+                </c:forEach>
+            </c:if>
+
+            <a href="#">&raquo;</a>
+        </div>
     </div>
 </div>
 </body>

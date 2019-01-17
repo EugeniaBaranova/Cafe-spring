@@ -81,13 +81,18 @@ body {
 
 
 /* Full-width input fields */
-.form-control {
+.form-control, select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+}
+
+.form-control[type=file] {
+    border: hidden;
+    width: auto;
 }
 
 /* Set a style for all buttons */
@@ -253,3 +258,39 @@ body {
 .loyalty_points {
     text-align: right;
 }
+
+/*product page*/
+
+.card-wrapper {
+    padding-top: 20px;
+    width: 50%;
+    margin: auto;
+}
+
+.description h3 {
+    text-align: left;
+}
+
+/*pagination*/
+.center {
+    text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+    background-color: rgba(255, 213, 178, 0.96);
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}

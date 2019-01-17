@@ -5,6 +5,7 @@ import com.epam.web.controller.command.CommandFactory;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.repository.impl.AbstractRepository;
+import com.epam.web.utils.ServletResponseUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -41,13 +42,11 @@ public class FrontController extends HttpServlet {
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             if (!resp.isCommitted()){
-                req.setCharacterEncoding("UTF-8");
-                resp.setCharacterEncoding("UTF-8");
                 String command = req.getParameter(RequestParameter.COMMAND);
                 Command action = getCommandFactory().getCommand(command);
                 if(action != null){
                     CommandResult commandResult = action.execute(req, resp);
-                    sendResponse(req, resp, commandResult);
+                    ServletResponseUtils.sendResponse(req, resp, commandResult, getServletContext());
                 }else {
                     resp.sendError(404);
                 }
@@ -56,20 +55,6 @@ public class FrontController extends HttpServlet {
             logger.error("[process] Exception.", e);
             resp.sendError(500);
         }
-    }
-
-    private void sendResponse(HttpServletRequest request, HttpServletResponse response, CommandResult commandResult) throws IOException, ServletException {
-        String page = commandResult.getPage();
-        if (commandResult.isRedirect()) {
-            response.sendRedirect(page);
-            return;
-        }
-        dispatch(request, response, page);
-    }
-
-    private void dispatch(HttpServletRequest req, HttpServletResponse resp, String page) throws ServletException, IOException {
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-        dispatcher.forward(req, resp);
     }
 
     private CommandFactory getCommandFactory() {

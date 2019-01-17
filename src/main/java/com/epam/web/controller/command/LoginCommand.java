@@ -21,7 +21,7 @@ public class LoginCommand implements Command {
 
     private UserService userService;
 
-     LoginCommand(UserService userService) {
+    LoginCommand(UserService userService) {
         this.userService = userService;
     }
 

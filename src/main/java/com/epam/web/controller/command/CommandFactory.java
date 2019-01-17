@@ -13,9 +13,14 @@ public class CommandFactory {
 
     public CommandFactory() {
         commands.put(CommandName.LOG_IN, new LoginCommand(getServiceFactory().getService(UserService.class)));
-        commands.put(CommandName.REGISTRATION, new UserRegistrationCommand(getServiceFactory().getService(UserService.class)));
+        commands.put(CommandName.REGISTRATION, new UserRegistrationCommand(
+                getServiceFactory().getService(UserService.class)));
         commands.put(CommandName.LOG_OUT, new LogOutCommand());
         commands.put(CommandName.SHOW_CATEGORY_PRODUCTS, new ShowCategoryProductsCommand(
+                getServiceFactory().getService(ProductService.class)));
+        commands.put(CommandName.ADD_NEW_PRODUCT, new AddProductCommand(
+                getServiceFactory().getService(ProductService.class)));
+        commands.put(CommandName.SHOW_PRODUCT, new ShowProductCommand(
                 getServiceFactory().getService(ProductService.class)));
     }
 

@@ -3,31 +3,38 @@ package com.epam.web.entity.product;
 import com.epam.web.entity.Entity;
 import com.epam.web.entity.enums.ProductCategory;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Product extends Entity {
+public class Product extends Entity implements Serializable {
+
+    private static final long serialVersionUID = -7574180000284625959L;
 
     private String name;
-    private String imageReference;
     private BigDecimal cost;
     private int amount;
     private ProductCategory category;
     private String description;
+    private byte[] image;
 
     public Product(Long id,
                    String name,
-                   String imageReference,
                    BigDecimal cost,
                    int amount,
                    ProductCategory category,
-                   String description) {
+                   String description,
+                   byte[] image) {
         super(id);
         this.name = name;
-        this.imageReference = imageReference;
         this.cost = cost;
         this.amount = amount;
         this.category = category;
         this.description = description;
+        this.image = image;
+    }
+
+    public Product() {
+        super();
     }
 
     public String getName() {
@@ -36,14 +43,6 @@ public class Product extends Entity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImageReference() {
-        return imageReference;
-    }
-
-    public void setImageReference(String imageReference) {
-        this.imageReference = imageReference;
     }
 
     public BigDecimal getCost() {
@@ -76,5 +75,13 @@ public class Product extends Entity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

@@ -19,10 +19,10 @@
     <div class="dropdown">
         <button class="dropbtn"><fmt:message key="header.button.menu"/></button>
         <div class="dropdown-content">
-            <a href="/controller?command=show_category_products&category=drink"><fmt:message key="header.page.drink"/></a>
-            <a href="/controller?command=show_category_products&category=snack"><fmt:message key="header.page.snack"/></a>
-            <a href="/controller?command=show_category_products&category=salad"><fmt:message key="header.page.salad"/></a>
-            <a href="/controller?command=show_category_products&category=hot_meal"><fmt:message key="header.page.hot"/></a>
+            <a href="/controller?command=show_category_products&category=drink&page=1"><fmt:message key="header.page.drink"/></a>
+            <a href="/controller?command=show_category_products&category=snack&page=1"><fmt:message key="header.page.snack"/></a>
+            <a href="/controller?command=show_category_products&category=salad&page=1"><fmt:message key="header.page.salad"/></a>
+            <a href="/controller?command=show_category_products&category=hot_meal&page=1"><fmt:message key="header.page.hot"/></a>
         </div>
     </div>
 

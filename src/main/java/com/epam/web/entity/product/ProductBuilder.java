@@ -5,13 +5,14 @@ import com.epam.web.entity.enums.ProductCategory;
 import java.math.BigDecimal;
 
 public class ProductBuilder {
+
     private Long id;
     private String name;
-    private String imageReference;
     private BigDecimal cost;
     private int amount;
     private ProductCategory category;
     private String description;
+    private byte[] image;
 
     public ProductBuilder setId(Long id) {
         this.id = id;
@@ -20,11 +21,6 @@ public class ProductBuilder {
 
     public ProductBuilder setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public ProductBuilder setImageReference(String imageReference) {
-        this.imageReference = imageReference;
         return this;
     }
 
@@ -48,7 +44,12 @@ public class ProductBuilder {
         return this;
     }
 
+    public ProductBuilder setImage(byte[] image) {
+        this.image = image;
+        return this;
+    }
+
     public Product createProduct() {
-        return new Product(id, name, imageReference, cost, amount, category, description);
+        return new Product(id, name, cost, amount, category, description, image);
     }
 }

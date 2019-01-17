@@ -25,7 +25,6 @@ public class UserRepositoryImpl extends AbstractRepository<User> implements User
         if (name != null) {
             preparedStatement.setString(1, name);
         }
-
         String email = user.getEmail();
         if (email != null) {
             preparedStatement.setString(2, email);

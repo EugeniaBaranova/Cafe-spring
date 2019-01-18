@@ -1,33 +1,32 @@
-package com.epam.web.repository.connections;
+package com.epam.web.repository.connection;
 
+import com.epam.web.repository.connection.pool.ConnectionPool;
 import com.epam.web.repository.exception.CloseConnectionException;
 import com.epam.web.repository.exception.ConnectionPoolException;
 import org.apache.log4j.Logger;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ConnectionWrapper  implements AutoCloseable, Connection {
+public class ConnectionWrapper implements AutoCloseable, Connection {
 
     private static final Logger logger = Logger.getLogger(ConnectionWrapper.class);
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool;
 
     private Connection connection;
 
-    public ConnectionWrapper(Connection connection) {
+    public ConnectionWrapper(Connection connection, ConnectionPool connectionPool) {
         this.connection = connection;
+        this.connectionPool = connectionPool;
     }
 
     @Override
-    public void close(){
+    public void close() {
         try {
-            connectionPool.returnConnection(connection);
+            connectionPool.returnConnection(connection, true);
         } catch (ConnectionPoolException e) {
             logger.error(e.getMessage(), e);
             throw new CloseConnectionException(e.getMessage(), e);

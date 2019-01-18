@@ -63,6 +63,9 @@
                     <c:if test="${page eq param.page}">
                         <c:set var="class_href" value="active"/>
                     </c:if>
+                    <c:if test="${page ne param.page}">
+                        <c:set var="class_href" value="non_active"/>
+                    </c:if>
                     <a class="${class_href}" href="/controller?command=show_category_products&category=${param.category}&page=${page}">${page}</a>
                 </c:forEach>
             </c:if>

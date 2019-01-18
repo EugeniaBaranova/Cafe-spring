@@ -2,9 +2,9 @@ package com.epam.web.repository.impl;
 
 import com.epam.web.entity.Entity;
 import com.epam.web.repository.Repository;
-import com.epam.web.repository.connections.ConnectionPool;
+import com.epam.web.repository.connection.pool.BaseConnectionPool;
+import com.epam.web.repository.connection.pool.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
-import com.epam.web.repository.exception.ConnectionPoolException;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.specification.Specification;
 import com.epam.web.utils.SqlUtils;

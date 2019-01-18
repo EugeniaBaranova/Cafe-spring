@@ -2,7 +2,8 @@ package com.epam.web.repository.impl.product;
 
 import com.epam.web.entity.product.Product;
 import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.connections.ConnectionPool;
+import com.epam.web.repository.connection.pool.BaseConnectionPool;
+import com.epam.web.repository.connection.pool.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
 
@@ -17,6 +18,7 @@ import static com.epam.web.repository.converter.ProductFields.*;
 
 public class ProductRepositoryImpl extends AbstractRepository<Product> implements ProductRepository {
 
+    private final static String TABLE_NAME = "product";
 
     public ProductRepositoryImpl(ConnectionPool connectionPool, Converter<Product> converter) {
         super(connectionPool, converter);
@@ -42,6 +44,6 @@ public class ProductRepositoryImpl extends AbstractRepository<Product> implement
 
     @Override
     public String getTable() {
-        return "product";
+        return TABLE_NAME;
     }
 }

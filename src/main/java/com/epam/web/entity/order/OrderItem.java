@@ -3,10 +3,13 @@ package com.epam.web.entity.order;
 import com.epam.web.entity.Entity;
 
 public class OrderItem extends Entity {
-
     private Long mealId;
     private Long orderId;
     private int count;
+
+
+    public OrderItem() {
+    }
 
     public OrderItem(Long id,
                      Long mealId,

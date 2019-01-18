@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 public class Order extends Entity {
 
     private Long userId;
-    // TODO: 11.12.2018
-    private User user;
     private String orderDate;
     private String receivingDate;
     private BigDecimal sum;
@@ -20,6 +18,10 @@ public class Order extends Entity {
     private boolean paid;
     private int mark;
     private String review;
+
+
+    public Order() {
+    }
 
     public Order(Long id,
                  Long userId,

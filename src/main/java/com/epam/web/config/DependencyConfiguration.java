@@ -2,18 +2,23 @@ package com.epam.web.config;
 
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
+import com.epam.web.repository.OrderRepository;
 import com.epam.web.repository.ProductRepository;
 import com.epam.web.repository.UserRepository;
-import com.epam.web.repository.connections.ConnectionPool;
+import com.epam.web.repository.connection.pool.BaseConnectionPool;
 import com.epam.web.repository.converter.Converter;
+import com.epam.web.repository.converter.OrderConverter;
 import com.epam.web.repository.converter.ProductConverter;
 import com.epam.web.repository.converter.UserConverter;
+import com.epam.web.repository.impl.order.OrderRepositoryImpl;
 import com.epam.web.repository.impl.product.ProductRepositoryImpl;
 import com.epam.web.repository.impl.user.UserRepositoryImpl;
+import com.epam.web.service.OrderService;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.Service;
 import com.epam.web.service.UserService;
 import com.epam.web.service.factory.ServiceFactory;
+import com.epam.web.service.impl.order.OrderServiceImpl;
 import com.epam.web.service.impl.product.ProductServiceImpl;
 import com.epam.web.service.impl.user.UserServiceImpl;
 import com.epam.web.service.validation.UserValidator;
@@ -28,7 +33,6 @@ public class DependencyConfiguration {
 
     public void configure() {
         this.configureServiceFactory();
-
     }
 
     private Converter<Product> productConverter() {
@@ -39,8 +43,8 @@ public class DependencyConfiguration {
         return new UserConverter();
     }
 
-    private ConnectionPool connectionPool() {
-        return ConnectionPool.getInstance();
+    private BaseConnectionPool connectionPool() {
+        return BaseConnectionPool.getInstance();
     }
 
     private ProductRepository productRepository() {
@@ -51,9 +55,16 @@ public class DependencyConfiguration {
         return new UserRepositoryImpl(connectionPool(), userConverter());
     }
 
+    private OrderRepository orderRepository() {
+        return new OrderRepositoryImpl(connectionPool(), new OrderConverter());
+    }
 
     private Validator<User> userValidator() {
         return new UserValidator();
+    }
+
+    private OrderService orderService() {
+        return new OrderServiceImpl(productRepository(), orderRepository());
     }
 
     private UserService userService() {
@@ -69,6 +80,7 @@ public class DependencyConfiguration {
         productService.setProductRepository(productRepository());
         productService.setReentrantLock(new ReentrantLock());
         return productService;
+
     }
 
     private ServiceFactory configureServiceFactory() {
@@ -96,6 +108,7 @@ public class DependencyConfiguration {
         Map<Class<? extends Service>, Service> serviceMap = new HashMap<>();
         serviceMap.put(ProductService.class, productService());
         serviceMap.put(UserService.class, userService());
+        serviceMap.put(OrderService.class, orderService());
         return serviceMap;
     }
 

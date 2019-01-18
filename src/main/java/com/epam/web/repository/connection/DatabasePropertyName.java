@@ -1,4 +1,4 @@
-package com.epam.web.repository.connections;
+package com.epam.web.repository.connection;
 
 public class DatabasePropertyName {
 

@@ -2,7 +2,8 @@ package com.epam.web.controller.listener;
 
 import com.epam.web.config.DependencyConfiguration;
 import com.epam.web.controller.command.CommandFactory;
-import com.epam.web.repository.connections.ConnectionPool;
+import com.epam.web.repository.connection.pool.BaseConnectionPool;
+import com.epam.web.repository.connection.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
@@ -16,7 +17,7 @@ public class ControllerContextListener implements ServletContextListener {
 
     private static final String COMMAND_FACTORY_ATTRIBUTE = "commandFactory";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool = BaseConnectionPool.getInstance();
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

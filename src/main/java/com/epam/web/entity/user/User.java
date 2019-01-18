@@ -10,8 +10,8 @@ public class User extends Entity implements Serializable {
     private static final long serialVersionUID = 6967139789602530021L;
 
     private String name;
-    private String email;
     private String login;
+    private String email;
     private String password;
     private int loyaltyPoints;
     private boolean blocked;

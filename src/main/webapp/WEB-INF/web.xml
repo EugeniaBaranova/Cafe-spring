@@ -133,6 +133,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>UsersPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/users.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersPage</servlet-name>
+        <url-pattern>/users</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OrdersPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/orders.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrdersPage</servlet-name>
+        <url-pattern>/orders</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>NotFoundError</servlet-name>
         <jsp-file>/WEB-INF/pages/page_not_found.jsp</jsp-file>
     </servlet>

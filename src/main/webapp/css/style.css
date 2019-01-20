@@ -297,6 +297,16 @@ body {
 
 /*Cart*/
 
+.form_submit_btn_change {
+    background-color: #4CAF50;
+    color: white;
+    padding: 4px 2px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 70px;
+}
+
 .text_cart {
     text-align: center;
 }

@@ -22,10 +22,19 @@
 
         <div class="span_container">
             <ul class="span_ul span-card-4">
-            <c:set var="products" value="${requestScope.cartInfo.products}"/>
+            <c:set var="products" value="${requestScope.cartInfo.products.keySet()}"/>
             <c:forEach items="${products}" var="product">
                 <li class="span-bar">
                     <a href="/controller?command=delete_from_cart&id=${product.id}" class="span-bar-item span-button span-white span-xlarge span-right">×</a>
+
+                    <form action="/controller"  method="post" class="span-bar-item span-button span-white span-xlarge span-right">
+                        <input type="hidden" name="command" value="change_cart_count">
+                        <input type="hidden" name="id" value="${product.id}">
+                        <label for="amount"><b><fmt:message key="addition.label.amount"/></b></label>
+                        <input class="form-control" type="number" min="1" max="10" id="amount" name="amount" value="${requestScope.cartInfo.products.get(product.id)}" required/>
+                        <button class="form_submit_btn_change" type="submit"><fmt:message key="cart.change.count"/></button>
+                    </form>
+
                     <img src="/image_content?id=${product.id}" class="span-bar-item" style="width:85px" alt="Image not found">
                     <div class="span-bar-item">
                         <span class="span-large">${product.name}</span><br>
@@ -43,7 +52,7 @@
                     <h1 class="text_cart"><fmt:message key="cart.sum"/>: ${requestScope.cartInfo.sum} <fmt:message key="cart.product.currency"/>.</h1>
 
                     <label for="receiving_date"><b><fmt:message key="cart.receiving.date"/></b></label>
-                    <input class="form-control" type="datetime-local" placeholder="Enter" id="receiving_date" name="receiving_date" required/>
+                    <input class="form-control" type="date" placeholder="Enter" id="receiving_date" name="receiving_date" required/>
                     <p id = "receiving_date_error"></p>
 
                     <label for="payment_method"><b><fmt:message key="cart.payment.method"/></b></label>

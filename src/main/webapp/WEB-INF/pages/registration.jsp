@@ -9,6 +9,7 @@
 <head>
     <meta charset="UTF-8"/>
     <script src="js\validator.js" type="text/javascript"></script>
+    <title><fmt:message key="registration.title"/></title>
 </head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>

@@ -10,8 +10,9 @@
     margin-top: 50px;
 }
 
-.not_found_body {
+.not_found {
     background-image: url(../img/page_not_found_back.jpg);
     background-attachment: fixed;
+    background-size: 90%;
 }
 

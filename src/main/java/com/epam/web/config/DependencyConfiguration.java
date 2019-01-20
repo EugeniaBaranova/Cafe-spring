@@ -1,5 +1,6 @@
 package com.epam.web.config;
 
+import com.epam.web.entity.order.Order;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
 import com.epam.web.repository.OrderRepository;
@@ -43,6 +44,10 @@ public class DependencyConfiguration {
         return new UserConverter();
     }
 
+    private Converter<Order> orderConverter() {
+        return new OrderConverter();
+    }
+
     private BaseConnectionPool connectionPool() {
         return BaseConnectionPool.getInstance();
     }
@@ -56,7 +61,7 @@ public class DependencyConfiguration {
     }
 
     private OrderRepository orderRepository() {
-        return new OrderRepositoryImpl(connectionPool(), new OrderConverter());
+        return new OrderRepositoryImpl(connectionPool(), orderConverter());
     }
 
     private Validator<User> userValidator() {
@@ -80,7 +85,6 @@ public class DependencyConfiguration {
         productService.setProductRepository(productRepository());
         productService.setReentrantLock(new ReentrantLock());
         return productService;
-
     }
 
     private ServiceFactory configureServiceFactory() {

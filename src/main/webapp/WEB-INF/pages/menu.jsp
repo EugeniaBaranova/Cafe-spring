@@ -8,6 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    <title><fmt:message key="menu.title"/></title>
 </head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
@@ -16,7 +17,7 @@
 <div class="cards">
 
     <c:if test="${sessionScope.user_role eq 'ADMIN'}">
-        <form action="/new_product" method="post">
+        <form action="/add_product" method="post">
             <button class="add_new_btn" type="submit"><fmt:message key="menu.add.new"/></button>
         </form>
     </c:if>
@@ -28,7 +29,7 @@
                     <div class="card">
                         <div class="imgcontainer">
                             <div class="child_imgcontainer">
-                                <img src="/image_content?id=${product.id}" class="card-img">
+                                <img src="/image_content?id=${product.id}" class="card-img" alt="Image not found">
                             </div>
                         </div>
 
@@ -41,7 +42,7 @@
                             <button class="info_btn" type="submit"><fmt:message key="menu.button.info"/></button>
                         </form>
 
-                        <c:if test="${sessionScope.user_role ne 'GUEST'}">
+                        <c:if test="${sessionScope.user_role eq 'USER'}">
                         <form action="/controller" method="post">
                             <input type="hidden" name="command" value="add_to_cart">
                             <input type="hidden" name="id" value="${product.id}">

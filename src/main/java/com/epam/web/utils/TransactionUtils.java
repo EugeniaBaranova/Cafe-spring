@@ -15,7 +15,7 @@ public class TransactionUtils {
         }
     }
 
-    public static void finishTransaction(ConnectionPool connectionPool, boolean withClosing) throws SQLException {
+    public static void commit(ConnectionPool connectionPool, boolean withClosing) throws SQLException {
         if (connectionPool != null) {
             Connection connection = connectionPool.getConnection();
             connection.commit();

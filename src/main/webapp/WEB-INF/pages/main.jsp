@@ -9,13 +9,14 @@
 <head>
     <meta charset="UTF-8"/>
     <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+    <title><fmt:message key="welcome.title"/></title>
 </head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
 </header>
 <body>
     <div class="welcome_title">
-        <h1><b><fmt:message key="welcome.title"/>!</b></h1>
+        <h1><b><fmt:message key="welcome.message"/>!</b></h1>
     </div>
 </body>
 </html>

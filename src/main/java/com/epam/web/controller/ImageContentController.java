@@ -35,7 +35,7 @@ public class ImageContentController extends HttpServlet {
         try {
             if (!resp.isCommitted()) {
                 String idString = req.getParameter(RequestParameter.ID);
-                if(StringUtils.isNumeral(idString)){
+                if (StringUtils.isNumeral(idString)) {
                     long id = Long.valueOf(req.getParameter(RequestParameter.ID));
                     ProductService productService = ServiceFactory.getInstance()
                             .getService(ProductService.class);
@@ -43,7 +43,7 @@ public class ImageContentController extends HttpServlet {
                     if (productOptional.isPresent()) {
                         Product product = productOptional.get();
                         byte[] image = product.getImage();
-                        if(image != null) {
+                        if (image != null) {
                             resp.setContentType(IMAGE_CONTENT_TYPE);
                             resp.getOutputStream().write(image, 0, image.length);
                         }
@@ -66,12 +66,15 @@ public class ImageContentController extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            if(!resp.isCommitted()) {
-                Command action = commandFactory.getCommand(CommandName.ADD_NEW_PRODUCT);
-                if(action != null){
-                    CommandResult commandResult = action.execute(req, resp);
-                    ServletResponseUtils.sendResponse(req, resp, commandResult, getServletContext());
-                }else {
+            if (!resp.isCommitted()) {
+                String command = req.getParameter(RequestParameter.COMMAND);
+                if (CommandName.ADD_NEW_PRODUCT.equals(command) || CommandName.EDIT_PRODUCT.equals(command)) {
+                    Command action = commandFactory.getCommand(command);
+                    if (action != null) {
+                        CommandResult commandResult = action.execute(req, resp);
+                        ServletResponseUtils.sendResponse(req, resp, commandResult, getServletContext());
+                    }
+                } else {
                     resp.sendError(404);
                 }
             }

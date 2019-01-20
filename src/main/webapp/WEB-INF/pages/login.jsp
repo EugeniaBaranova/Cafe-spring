@@ -8,6 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    <title><fmt:message key="login.title"/></title>
 </head>
 <header>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>

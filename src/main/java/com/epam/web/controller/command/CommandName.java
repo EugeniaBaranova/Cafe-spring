@@ -10,6 +10,8 @@ public class CommandName {
     public static final String SHOW_CART = "show_cart";
     public static final String SHOW_USERS = "show_users";
     public static final String ADD_NEW_PRODUCT = "add_product";
+    public static final String EDIT_PRODUCT = "edit_product";
+    public static final String DELETE_PRODUCT = "delete_product";
     public static final String SHOW_PRODUCT = "show_product";
 
 }

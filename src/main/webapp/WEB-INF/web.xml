@@ -97,21 +97,21 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>NewProductPage</servlet-name>
-        <jsp-file>/WEB-INF/pages/new_product.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>NewProductPage</servlet-name>
-        <url-pattern>/new_product</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>AddProductPage</servlet-name>
         <jsp-file>/WEB-INF/pages/add_product.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddProductPage</servlet-name>
         <url-pattern>/add_product</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EditProductPage</servlet-name>
+        <jsp-file>/WEB-INF/pages/edit_product.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditProductPage</servlet-name>
+        <url-pattern>/edit_product</url-pattern>
     </servlet-mapping>
 
     <servlet>

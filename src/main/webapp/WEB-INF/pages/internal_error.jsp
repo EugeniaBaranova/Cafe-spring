@@ -10,11 +10,9 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../../css/error_style.css"/>
+    <title><fmt:message key="internal.error.title"/></title>
 </head>
-
 <body class="bug_body">
-
-<h1><b>It seems you found a bug</b></h1>
-
+<h1><b><fmt:message key="internal.error.message"/></b></h1>
 </body>
 </html>

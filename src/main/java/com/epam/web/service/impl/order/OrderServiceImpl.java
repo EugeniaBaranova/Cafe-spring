@@ -9,21 +9,16 @@ import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
 import com.epam.web.repository.OrderRepository;
 import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.connection.pool.BaseConnectionPool;
-import com.epam.web.repository.connection.pool.ConnectionPool;
 import com.epam.web.repository.connection.pool.SingleConnectionPool;
 import com.epam.web.repository.converter.OrderConverter;
 import com.epam.web.repository.converter.ProductConverter;
-import com.epam.web.repository.converter.UserConverter;
 import com.epam.web.repository.impl.order.OrderRepositoryImpl;
 import com.epam.web.repository.impl.product.ProductRepositoryImpl;
-import com.epam.web.repository.impl.user.UserRepositoryImpl;
 import com.epam.web.service.OrderService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.utils.TransactionUtils;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
                     int productCount = getProductCount(product, products);
                     orderItem.setCount(productCount);
                     orderItems.add(orderItem);
+                    //TODO result of addition
                     sum.add(product.getCost());
                 }
                 Order order = new Order();
@@ -74,16 +70,16 @@ public class OrderServiceImpl implements OrderService {
                 }
                 order.setOrderState(OrderState.WAITING);
                 order.setOrderDate(new Date().toString());
+
+                TransactionUtils.commit(connectionPool, true);
             }
             return null;
         } catch (SQLException e) {
             //TODO better way for Exception handling
             try {
-                TransactionUtils.rollbackTransaction(connectionPool, true);
-            } catch (SQLException e1) {
-                throw new ServiceException(e.getMessage(), e);
-            } finally {
-                connectionPool.closeAll();
+                TransactionUtils.rollbackTransaction(connectionPool, false);
+            } catch (SQLException ex) {
+                throw new ServiceException(ex.getMessage(), ex);
             }
         }
         return null;

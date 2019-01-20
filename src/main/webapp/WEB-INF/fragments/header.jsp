@@ -10,10 +10,8 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
-    <%--<style><%@include file="/css/style.css"%></style>--%>
 </head>
 <body>
-
 <div class="navbar">
     <a href="/"><fmt:message key="header.page.home"/></a>
     <div class="dropdown">
@@ -26,9 +24,11 @@
         </div>
     </div>
 
-    <c:if test="${sessionScope.user_role ne 'GUEST'}">
+    <c:if test="${sessionScope.user_role eq 'USER'}">
         <a href="/controller?command=show_orders"><fmt:message key="header.page.orders"/></a>
         <a href="/controller?command=show_cart"><fmt:message key="header.page.cart"/></a>
+    </c:if>
+    <c:if test="${sessionScope.user_role ne 'GUEST'}">
         <a href="/profile"><fmt:message key="header.page.profile"/></a>
     </c:if>
     <c:if test="${sessionScope.user_role eq 'ADMIN'}">
@@ -66,6 +66,5 @@
         <a href="/controller?command=log_out"><fmt:message key="header.page.logout"/></a>
     </c:if>
 </div>
-
 </body>
 </html>

@@ -83,7 +83,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
                 }
             }
             return entity;
-        }catch(Exception e){
+        }catch(SQLException e){
             throw new RepositoryException(e);
         }
     }
@@ -94,7 +94,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         PreparedStatement pStatement = connection.prepareStatement(SqlUtils.getDeleteStatement(getTable()))){
             pStatement.setLong(1,object.getId());
             int remove = pStatement.executeUpdate();
-        }catch (Exception e){
+        }catch (SQLException e){
             throw new RepositoryException(e);
         }
     }
@@ -105,6 +105,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
             /*return saveOrUpdate(entity);*/
             return null;
         } catch (Exception e) {
+            //todo SQLException <- Exception
             throw new RepositoryException(e);
         }
     }

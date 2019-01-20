@@ -15,4 +15,5 @@ public class Pages {
     public static final String CONTROLLER_URI = "/controller";
     public static final String PRODUCT_PAGE = "/product";
     public static final String IMAGE_CONTENT_URI = "/image_content";
+    public static final String EDIT_PRODUCT_PAGE = "/edit_product";
 }

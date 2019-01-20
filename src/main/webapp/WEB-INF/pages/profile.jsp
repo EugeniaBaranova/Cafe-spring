@@ -6,6 +6,10 @@
 <fmt:setBundle basename="profile" />
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title><fmt:message key="profile.title"/></title>
+</head>
 <header>
     <meta charset="UTF-8"/>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>

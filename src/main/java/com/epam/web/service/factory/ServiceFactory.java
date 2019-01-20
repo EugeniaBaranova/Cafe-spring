@@ -10,12 +10,12 @@ public final class ServiceFactory {
     private Map<Class<? extends Service>,Service> serviceMap = new HashMap<>();
     private ServiceFactory(){}
 
-    public <T> T getService(Class<T> repositoryClass){
-        Service service = serviceMap.get(repositoryClass);
+    public <T> T getService(Class<T> serviceClass){
+        Service service = serviceMap.get(serviceClass);
         if(service == null){
-            throw new UnsupportedFactoryTypeException(repositoryClass);
+            throw new UnsupportedFactoryTypeException(serviceClass);
         }
-        return (T) service;
+        return (T)service;
     }
 
     public static ServiceFactory getInstance(){

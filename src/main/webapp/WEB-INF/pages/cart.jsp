@@ -14,6 +14,7 @@
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
 </header>
 <body>
+
     <c:if test="${empty requestScope.cartInfo.products}">
         <h1 class="text_cart"><fmt:message key="cart.empty"/></h1>
     </c:if>
@@ -42,7 +43,7 @@
                     <h1 class="text_cart"><fmt:message key="cart.sum"/>: ${requestScope.cartInfo.sum} <fmt:message key="cart.product.currency"/>.</h1>
 
                     <label for="receiving_date"><b><fmt:message key="cart.receiving.date"/></b></label>
-                    <input class="form-control" type="date" placeholder="Enter" id="receiving_date" name="receiving_date" required/>
+                    <input class="form-control" type="datetime-local" placeholder="Enter" id="receiving_date" name="receiving_date" required/>
                     <p id = "receiving_date_error"></p>
 
                     <label for="payment_method"><b><fmt:message key="cart.payment.method"/></b></label>

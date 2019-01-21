@@ -22,9 +22,9 @@ public class RepositoryFactory {
 
     public RepositoryFactory() {
         DISPATCHER_MAP.put(ProductRepository.class, getProductRepository());
-        DISPATCHER_MAP.put(UserRepository.class, getProductRepository());
-        DISPATCHER_MAP.put(OrderRepository.class, getProductRepository());
-        DISPATCHER_MAP.put(OrderItemRepository.class, getProductRepository());
+        DISPATCHER_MAP.put(UserRepository.class, getUserRepository());
+        DISPATCHER_MAP.put(OrderRepository.class, getOrderRepository());
+        DISPATCHER_MAP.put(OrderItemRepository.class, getOrderItemRepository());
     }
 
     public <T extends Repository<?>> T newInstance(Class<T> clazz, Connection connection) {

@@ -1,7 +1,5 @@
 package com.epam.web.controller.filter;
 
-import com.epam.web.controller.command.CommandName;
-import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
 import com.epam.web.entity.enums.UserRole;
@@ -14,40 +12,44 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
+import static com.epam.web.controller.command.CommandName.*;
+import static com.epam.web.controller.constant.Pages.*;
+import static com.epam.web.entity.enums.UserRole.*;
+
 public class UrlAccessFilter implements Filter {
 
-    private final List<String> NOT_GUEST_URI_S = Arrays.asList(
-            Pages.PROFILE_PAGE, Pages.ADD_PRODUCT_PAGE,
-            Pages.INTERNAL_ERROR_PAGE);
-    private final List<String> NOT_USER_URI_S = Arrays.asList(
-            Pages.LOGIN_PAGE, Pages.REGISTRATION_PAGE,
-            Pages.USER_LIST_PAGE, Pages.ADD_PRODUCT_PAGE,
-            Pages.INTERNAL_ERROR_PAGE);
-    private final List<String> NOT_ADMIN_URI_S = Arrays.asList(
-            Pages.LOGIN_PAGE, Pages.REGISTRATION_PAGE,
-            Pages.INTERNAL_ERROR_PAGE);
-    //todo final? CONSTANT_NAME?
-    private Map<UserRole, List<String>> forbiddenUserURIs = new HashMap<>();
+    private final Map<String, List<UserRole>> NOT_AVAILABLE_PAGES = new HashMap<>();
 
-    private final List<String> NOT_GUEST_COMMANDS = Arrays.asList(
-            CommandName.LOG_OUT, CommandName.ADD_NEW_PRODUCT,
-            CommandName.SHOW_CART, CommandName.SHOW_ORDERS,
-            CommandName.SHOW_USERS);
-    private final List<String> NOT_USER_COMMANDS = Arrays.asList(
-            CommandName.LOG_IN, CommandName.REGISTRATION,
-            CommandName.SHOW_USERS, CommandName.ADD_NEW_PRODUCT);
-    private final List<String> NOT_ADMIN_COMMANDS = Arrays.asList(
-            CommandName.LOG_IN, CommandName.REGISTRATION);
-    private Map<UserRole, List<String>> forbiddenUserCommands = new HashMap<>();
+    private final Map<String, List<UserRole>> NOT_AVAILABLE_CONTROLLER_COMMANDS = new HashMap<>();
+
+    private final Map<String, List<UserRole>> AVAILABLE_IMAGE_CONTENT_COMMANDS = new HashMap<>();
 
     {
-        forbiddenUserURIs.put(UserRole.GUEST, NOT_GUEST_URI_S);
-        forbiddenUserURIs.put(UserRole.USER, NOT_USER_URI_S);
-        forbiddenUserURIs.put(UserRole.ADMIN, NOT_ADMIN_URI_S);
+        NOT_AVAILABLE_PAGES.put(PROFILE_PAGE, Arrays.asList(GUEST));
+        NOT_AVAILABLE_PAGES.put(INTERNAL_ERROR_PAGE, Arrays.asList(GUEST, USER, ADMIN));
+        NOT_AVAILABLE_PAGES.put(LOGIN_PAGE, Arrays.asList(USER, ADMIN));
+        NOT_AVAILABLE_PAGES.put(REGISTRATION_PAGE, Arrays.asList(USER, ADMIN));
+        NOT_AVAILABLE_PAGES.put(ADD_PRODUCT_PAGE, Arrays.asList(GUEST, USER));
+        NOT_AVAILABLE_PAGES.put(USERS_PAGE, Arrays.asList(GUEST, USER));
+        NOT_AVAILABLE_PAGES.put(EDIT_PRODUCT_PAGE, Arrays.asList(GUEST, USER));
+        NOT_AVAILABLE_PAGES.put(ORDERS_PAGE, Arrays.asList(GUEST, ADMIN));
+        NOT_AVAILABLE_PAGES.put(CART_PAGE, Arrays.asList(GUEST, ADMIN));
 
-        forbiddenUserCommands.put(UserRole.GUEST, NOT_GUEST_COMMANDS);
-        forbiddenUserCommands.put(UserRole.USER, NOT_USER_COMMANDS);
-        forbiddenUserCommands.put(UserRole.ADMIN, NOT_ADMIN_COMMANDS);
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(LOG_IN, Arrays.asList(USER, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(REGISTRATION, Arrays.asList(USER, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(LOG_OUT, Arrays.asList(GUEST));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(SHOW_ORDERS, Arrays.asList(GUEST, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(SHOW_CART, Arrays.asList(GUEST, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(SHOW_USERS, Arrays.asList(GUEST, USER));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(ADD_NEW_PRODUCT, Arrays.asList(GUEST, USER, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(EDIT_PRODUCT, Arrays.asList(GUEST, USER, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(DELETE_PRODUCT, Arrays.asList(GUEST, USER));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(MAKE_ORDER, Arrays.asList(GUEST, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(CHANGE_CART_COUNT, Arrays.asList(GUEST, ADMIN));
+        NOT_AVAILABLE_CONTROLLER_COMMANDS.put(ADD_TO_CART, Arrays.asList(GUEST, ADMIN));
+
+        AVAILABLE_IMAGE_CONTENT_COMMANDS.put(ADD_NEW_PRODUCT, Arrays.asList(GUEST, USER));
+        AVAILABLE_IMAGE_CONTENT_COMMANDS.put(EDIT_PRODUCT, Arrays.asList(GUEST, USER));
     }
 
     @Override
@@ -76,28 +78,25 @@ public class UrlAccessFilter implements Filter {
     }
 
     private boolean NotHaveAccess(UserRole userRole, String uri, String commandName) {
-        if (StringUtils.isNotEmpty(commandName) && Pages.CONTROLLER_URI.equals(uri)) {
-            return isNotAvailableCommand(forbiddenUserCommands.get(userRole), commandName);
+        if (StringUtils.isNotEmpty(commandName)) {
+            switch (uri) {
+                case CONTROLLER_URI:
+                    return isNotAvailableFor(userRole, NOT_AVAILABLE_CONTROLLER_COMMANDS.get(commandName));
+                case IMAGE_CONTENT_URI:
+                    return !isNotAvailableFor(userRole, AVAILABLE_IMAGE_CONTENT_COMMANDS.get(commandName));
+            }
         }
-        return isNotAvailableURI(uri, forbiddenUserURIs.get(userRole));
+        return isNotAvailableFor(userRole, NOT_AVAILABLE_PAGES.get(uri));
     }
 
-    private boolean isNotAvailableCommand(List<String> forbiddenCommands, String commandName) {
-        for (String forbiddenCommand : forbiddenCommands) {
-            if(forbiddenCommand.equals(commandName)){
-                return true;
+    private boolean isNotAvailableFor(UserRole userRole, List<UserRole> accessRoles) {
+        if (userRole != null && accessRoles != null) {
+            for (UserRole accessRole : accessRoles) {
+                if (accessRole.equals(userRole)) {
+                    return true;
+                }
             }
         }
         return false;
     }
-
-    private boolean isNotAvailableURI(String uri, List<String> forbiddenURIs) {
-        for (String forbiddenURI : forbiddenURIs) {
-            if (forbiddenURI.equals(uri)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

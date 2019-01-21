@@ -49,6 +49,7 @@ public class ProductByIds implements Specification {
         }
         if (StringUtils.isNotEmpty(sb.toString())) {
             sb.deleteCharAt(sb.length() - 1);
+            return sb.toString();
         }
         return StringUtils.empty();
 

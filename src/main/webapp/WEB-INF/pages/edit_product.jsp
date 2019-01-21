@@ -46,10 +46,10 @@
 
             <label for="category"><b><fmt:message key="edition.label.category"/></b></label>
             <select name="category" id="category">
-                <option value="drink"><fmt:message key="edition.select.drink"/></option>
-                <option value="snack"><fmt:message key="edition.select.snack"/></option>
-                <option value="salad"><fmt:message key="edition.select.salad"/></option>
-                <option value="hot_meal"><fmt:message key="edition.select.hot.meal"/></option>
+                <option value="DRINK"><fmt:message key="edition.select.drink"/></option>
+                <option value="SNACK"><fmt:message key="edition.select.snack"/></option>
+                <option value="SALAD"><fmt:message key="edition.select.salad"/></option>
+                <option value="HOT_MEAL"><fmt:message key="edition.select.hot.meal"/></option>
             </select>
             <p id = "category_error"></p>
 

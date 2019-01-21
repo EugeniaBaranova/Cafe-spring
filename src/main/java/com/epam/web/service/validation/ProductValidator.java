@@ -33,8 +33,8 @@ public class ProductValidator extends AbstractValidator<Product> {
             String productName = product.getName();
             error.setFieldName(NAME);
             error.setFieldValue(productName);
-            if (isEmpty(productName, error, "addition.message.empty_name")
-                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "addition.message.name_not_like_regexp")) {
+            if (isEmpty(productName, error, "message.empty_name")
+                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "message.name_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -47,8 +47,8 @@ public class ProductValidator extends AbstractValidator<Product> {
             String productName = product.getDescription();
             error.setFieldName(DESCRIPTION);
             error.setFieldValue(productName);
-            if (isEmpty(productName, error, "addition.message.empty_description")
-                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "addition.message.description_not_like_regexp")) {
+            if (isEmpty(productName, error, "message.empty_description")
+                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "message.description_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -62,12 +62,12 @@ public class ProductValidator extends AbstractValidator<Product> {
             BigDecimal productCost = product.getCost();
             error.setFieldName(COST);
             if (productCost == null) {
-                error.setMessage("addition.message.empty_cost");
+                error.setMessage("message.empty_cost");
                 return Optional.of(error);
             }
             error.setFieldValue(productCost.toString());
-            if (BigDecimal.ZERO.compareTo(productCost) < 0) {
-                error.setMessage("addition.message.under_zero_cost");
+            if (BigDecimal.ZERO.compareTo(productCost) <= 0 ) {
+                error.setMessage("message.under_zero_cost");
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -81,7 +81,7 @@ public class ProductValidator extends AbstractValidator<Product> {
             error.setFieldName(AMOUNT);
             error.setFieldValue(String.valueOf(productAmount));
             if (productAmount <= 0) {
-                error.setMessage("addition.message.not_positive_amount");
+                error.setMessage("message.not_positive_amount");
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -94,11 +94,11 @@ public class ProductValidator extends AbstractValidator<Product> {
             byte[] productImage = product.getImage();
             error.setFieldName(IMAGE);
             if (productImage == null) {
-                error.setMessage("addition.message.empty_image");
+                error.setMessage("message.empty_image");
                 return Optional.of(error);
             }
             if (productImage.length > 10485760) {
-                error.setMessage("addition.message.upper_ten_mb_image");
+                error.setMessage("message.upper_ten_mb_image");
                 return Optional.of(error);
             }
             return Optional.empty();

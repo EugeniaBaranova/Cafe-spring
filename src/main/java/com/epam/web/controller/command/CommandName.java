@@ -13,5 +13,6 @@ public class CommandName {
     public static final String EDIT_PRODUCT = "edit_product";
     public static final String DELETE_PRODUCT = "delete_product";
     public static final String SHOW_PRODUCT = "show_product";
+    public static final String MAKE_ORDER = "make_order";
 
 }

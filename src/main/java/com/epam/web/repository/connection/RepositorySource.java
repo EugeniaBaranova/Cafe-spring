@@ -1,8 +1,8 @@
-package com.epam.web.repository.connection.pool;
+package com.epam.web.repository.connection;
 
 import java.sql.Connection;
 
-public interface ConnectionPool {
+public interface RepositorySource {
 
     void init();
 
@@ -11,4 +11,5 @@ public interface ConnectionPool {
     boolean returnConnection(Connection connection, boolean forClosing);
 
     void closeAll();
+
 }

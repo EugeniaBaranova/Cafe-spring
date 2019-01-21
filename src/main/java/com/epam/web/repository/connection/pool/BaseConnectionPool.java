@@ -1,7 +1,7 @@
 package com.epam.web.repository.connection.pool;
 
-import com.epam.web.repository.connection.ConnectionWrapper;
 import com.epam.web.repository.connection.DatabasePropertyName;
+import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.CloseConnectionException;
 import com.epam.web.repository.exception.ConnectionPoolException;
 import com.epam.web.repository.exception.ConnectionPoolInitializationException;
@@ -14,7 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BaseConnectionPool implements ConnectionPool {
+public class BaseConnectionPool implements RepositorySource {
 
     private static final Logger logger = Logger.getLogger(BaseConnectionPool.class);
     private static final BaseConnectionPool instance = new BaseConnectionPool();

@@ -13,4 +13,8 @@ public class RequestParameter {
     public static final String DESCRIPTION = "description";
     public static final String ID = "id";
     public static final String CURRENT_PAGE = "page";
+    public static final String RECEIVING_DATE = "receiving_date";
+    public static final String PAYMENT_METHOD = "payment_method";
+
+
 }

@@ -8,7 +8,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import static com.epam.web.repository.converter.UserFields.*;
+import static com.epam.web.repository.converter.Fields.User.*;
+import static com.epam.web.repository.converter.Fields.ID;
 
 public class UserConverter implements Converter<User> {
 

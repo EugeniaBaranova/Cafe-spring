@@ -2,8 +2,8 @@ package com.epam.web.controller.listener;
 
 import com.epam.web.config.DependencyConfiguration;
 import com.epam.web.controller.command.CommandFactory;
+import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.connection.pool.BaseConnectionPool;
-import com.epam.web.repository.connection.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
@@ -17,19 +17,25 @@ public class ControllerContextListener implements ServletContextListener {
 
     private static final String COMMAND_FACTORY_ATTRIBUTE = "commandFactory";
 
-    private ConnectionPool connectionPool = BaseConnectionPool.getInstance();
+    private RepositorySource polledSource = BaseConnectionPool.getInstance();
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        connectionPool.init();
+        logger.info("[contextInitialized] Start to init connection pool");
+        polledSource.init();
+        logger.info("[contextInitialized] Connection pool initialized successfully");
         DependencyConfiguration dependencyConfiguration = new DependencyConfiguration();
         dependencyConfiguration.configure();
+        logger.info("[contextInitialized] Dependency configured");
         ServletContext servletContext = servletContextEvent.getServletContext();
         servletContext.setAttribute(COMMAND_FACTORY_ATTRIBUTE, new CommandFactory());
+        logger.info("[contextInitialized] Command factory created");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        connectionPool.closeAll();
+        logger.info("[contextInitialized] Start to close pool connections");
+        polledSource.closeAll();
+        logger.info("[contextInitialized] Pool connections closed");
     }
 }

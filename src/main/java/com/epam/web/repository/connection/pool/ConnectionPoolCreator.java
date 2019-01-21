@@ -1,7 +1,7 @@
 package com.epam.web.repository.connection.pool;
 
-import com.epam.web.repository.connection.ConnectionWrapper;
 import com.epam.web.repository.connection.DatabasePropertyName;
+import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.ConnectionPoolException;
 import org.apache.log4j.Logger;
 
@@ -30,7 +30,7 @@ public class ConnectionPoolCreator {
         return instance;
     }
 
-    public void createConnections(BlockingQueue<Connection> connectionPool, int count, ConnectionPool connectionPoolKeeper) {
+    public void createConnections(BlockingQueue<Connection> connectionPool, int count, RepositorySource connectionPoolKeeper) {
         try {
             for (int i = 0; i < count; i++) {
                 connectionPool.put(createSingleConnection(connectionPoolKeeper));
@@ -41,7 +41,7 @@ public class ConnectionPoolCreator {
         }
     }
 
-    public Connection createSingleConnection(ConnectionPool connectionPoolKeeper) {
+    public Connection createSingleConnection(RepositorySource connectionPoolKeeper) {
         try {
             return new ConnectionWrapper(DriverManager.getConnection(
                     properties.getProperty(DatabasePropertyName.URL),

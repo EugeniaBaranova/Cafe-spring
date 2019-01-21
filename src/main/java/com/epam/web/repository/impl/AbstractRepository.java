@@ -2,8 +2,6 @@ package com.epam.web.repository.impl;
 
 import com.epam.web.entity.Entity;
 import com.epam.web.repository.Repository;
-import com.epam.web.repository.connection.pool.BaseConnectionPool;
-import com.epam.web.repository.connection.pool.ConnectionPool;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.specification.Specification;
@@ -22,18 +20,17 @@ import java.util.Optional;
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     private static final Logger logger = Logger.getLogger(AbstractRepository.class);
     private static final int FIRST_LIST_ELEMENT = 0;
-    private ConnectionPool connectionPool;
     private Converter<T> converter;
+    private Connection connection;
 
 
-    public AbstractRepository(ConnectionPool connectionPool, Converter<T> converter) {
-        this.connectionPool = connectionPool;
+    public AbstractRepository(Connection connection, Converter<T> converter) {
         this.converter = converter;
+        this.connection = connection;
     }
 
     private List<T> executeQuery(String query, List<Object> parameters) throws RepositoryException {
-        try (Connection connection = getConnectionPool().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(query)
         ) {
             if (parameters != null) {
                 int parameterPosition = 1;
@@ -66,10 +63,9 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     @Override
     public T add(T entity) throws RepositoryException {
-        try (Connection connection = getConnectionPool().getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(
-                     SqlUtils.getInsertStatement(getTable(), getFields()),
-                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pStatement = this.connection.prepareStatement(
+                SqlUtils.getInsertStatement(getTable(), getFields()),
+                PreparedStatement.RETURN_GENERATED_KEYS)) {
             PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
             int affectedRows = readyPreparedStatement.executeUpdate();
             if (entity.getId() == null) {
@@ -83,29 +79,30 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
                 }
             }
             return entity;
-        }catch(SQLException e){
+        } catch (Exception e) {
             throw new RepositoryException(e);
         }
     }
 
     @Override
     public void remove(T object) throws RepositoryException {
-        try(Connection connection = getConnectionPool().getConnection();
-        PreparedStatement pStatement = connection.prepareStatement(SqlUtils.getDeleteStatement(getTable()))){
-            pStatement.setLong(1,object.getId());
+        try (PreparedStatement pStatement = connection.prepareStatement(SqlUtils.getDeleteStatement(getTable()))) {
+            pStatement.setLong(1, object.getId());
             int remove = pStatement.executeUpdate();
-        }catch (SQLException e){
+        } catch (Exception e) {
             throw new RepositoryException(e);
         }
     }
 
     @Override
     public T update(T entity) throws RepositoryException {
-        try {
-            /*return saveOrUpdate(entity);*/
-            return null;
+        Long id = entity.getId();
+        try (PreparedStatement pStatement = this.connection.prepareStatement(
+                SqlUtils.getUpdateStatement(getTable(), id, getFields()))) {
+            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
+            readyPreparedStatement.executeUpdate();
+            return entity;
         } catch (Exception e) {
-            //todo SQLException <- Exception
             throw new RepositoryException(e);
         }
     }
@@ -136,9 +133,6 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     public abstract String getTable();
 
-    private ConnectionPool getConnectionPool() {
-        return connectionPool;
-    }
     private Converter<T> getConverter() {
         return converter;
     }

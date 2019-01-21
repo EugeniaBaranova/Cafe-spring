@@ -84,4 +84,33 @@ public class Product extends Entity implements Serializable {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (!name.equals(product.name)) return false;
+        return category == product.category;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + category.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", cost=" + cost +
+                ", amount=" + amount +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

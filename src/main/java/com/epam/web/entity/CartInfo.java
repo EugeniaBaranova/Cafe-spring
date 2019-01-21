@@ -9,7 +9,6 @@ import java.util.Map;
 public class CartInfo {
 
     private Map<Product, Integer> products = new HashMap<>();
-
     private BigDecimal sum;
 
     public Map<Product, Integer> getProducts() {

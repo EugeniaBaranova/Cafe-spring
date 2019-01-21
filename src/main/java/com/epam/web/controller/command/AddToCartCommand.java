@@ -1,21 +1,27 @@
 package com.epam.web.controller.command;
 
 import com.epam.web.controller.constant.RequestParameter;
+import com.epam.web.controller.constant.SessionAttribute;
+import com.epam.web.entity.product.Product;
 import com.epam.web.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 public class AddToCartCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        //TODO command
-        HttpSession session = req.getSession(true);
-        String id = req.getParameter(RequestParameter.ID);
-        String request_page = req.getParameter(RequestParameter.REQUEST_PAGE);
-
-        return null;
+        HttpSession session = req.getSession();
+        String productId = req.getParameter(RequestParameter.ID);
+        String requestPage = req.getParameter(RequestParameter.REQUEST_PAGE);
+        Object cartProducts = session.getAttribute(SessionAttribute.CART_PRODUCTS);
+        if(cartProducts != null){
+            ((List<Long>)cartProducts)
+                    .add(Long.valueOf(productId));
+        }
+        return CommandResult.redirect(requestPage);
     }
 }

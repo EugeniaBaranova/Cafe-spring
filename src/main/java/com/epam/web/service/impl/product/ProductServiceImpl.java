@@ -164,14 +164,24 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     }
 
     @Override
-    public List<Product> findAllById(Set<Long> productIds) {
+    public List<Product> findAllByIdWithoutImage(Set<Long> productIds) {
         try {
             return getRepository()
                     .query(new ProductsWithoutImageByIdsSpec(productIds));
         } catch (Exception e) {
-            logger.warn("[findAllById] Exception while execution method.");
+            logger.warn("[findAllByIdWithoutImage] Exception while execution method.");
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<Product> findAllById(Set<Long> productIds) throws ServiceException {
+        try {
+            return getRepository()
+                    .query(new ProductByIds(productIds));
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     private boolean isAvailableCategory(String categoryName) {

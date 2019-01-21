@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CartInfo {
-
     private Map<Product, Integer> products = new HashMap<>();
-    private BigDecimal sum;
 
     public Map<Product, Integer> getProducts() {
         return products;
@@ -20,10 +18,16 @@ public class CartInfo {
     }
 
     public BigDecimal getSum() {
-        return sum;
-    }
-
-    public void setSum(BigDecimal sum) {
-        this.sum = sum;
+        BigDecimal itemCost = BigDecimal.ZERO;
+        BigDecimal totalCost = BigDecimal.ZERO;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            Integer count = entry.getValue();
+            itemCost = new BigDecimal(String
+                    .valueOf(product.getCost()
+                            .multiply(new BigDecimal(count))));
+            totalCost = totalCost.add(itemCost);
+        }
+        return totalCost;
     }
 }

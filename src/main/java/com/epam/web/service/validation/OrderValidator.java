@@ -14,5 +14,5 @@ public class OrderValidator extends AbstractValidator<Order> {
         return super.validate(order);
     }
 
-    //TODO what to validate?
+
 }

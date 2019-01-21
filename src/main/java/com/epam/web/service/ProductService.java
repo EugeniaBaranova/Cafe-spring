@@ -24,5 +24,7 @@ public interface ProductService extends Service{
 
     SavingResult<Product> editProduct(Long id, Product product) throws ServiceException;
 
-    List<Product> findAllById(Set<Long> productIds);
+    List<Product> findAllByIdWithoutImage(Set<Long> productIds);
+
+    List<Product> findAllById(Set<Long> productIds) throws ServiceException;
 }

@@ -27,6 +27,8 @@ public class CommandFactory {
                 getServiceFactory().getService(OrderService.class),
                 getServiceFactory().getService(ProductService.class)));
         commands.put(CommandName.ADD_TO_CART, new AddToCartCommand());
+        commands.put(CommandName.SHOW_CART, new ShowCartCommand(
+                getServiceFactory().getService(ProductService.class)));
     }
 
     public Command getCommand(String commandName) {

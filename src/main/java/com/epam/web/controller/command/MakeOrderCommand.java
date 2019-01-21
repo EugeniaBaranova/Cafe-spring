@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,10 +49,10 @@ public class MakeOrderCommand implements Command {
                 if (user != null) {
                     if (productsInfo instanceof Iterable) {
                         Set<Long> ids = new HashSet<>((List<Long>) productsInfo);
-                        List<Product> products = getProductService().findAllById(ids);
+                        List<Product> products = getProductService().findAllByIdWithoutImage(ids);
                         OrderContext orderContext = new OrderContext(date, products, paymentMethod, (User) user);
                         Order order = getOrderService().makeOrder(orderContext);
-                        if(order != null){
+                        if (order != null) {
                             return CommandResult.redirect(Pages.ORDERS_PAGE);
                         }
                     }

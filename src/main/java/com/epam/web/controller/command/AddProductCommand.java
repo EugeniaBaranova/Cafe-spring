@@ -28,6 +28,7 @@ import static com.epam.web.controller.constant.RequestParameter.*;
 public class AddProductCommand implements Command {
 
     private static final String IMAGE_CONTENT_TYPE = "image/jpeg";
+    private static final String COST_PATTERN = "^[0-9]{1,2}.[0-9]{2}$";
 
     private ProductService productService;
 
@@ -83,7 +84,9 @@ public class AddProductCommand implements Command {
                     product.setName(fieldValue);
                     break;
                 case COST:
-                    product.setCost(BigDecimal.valueOf(Double.valueOf(fieldValue)));
+                    if (fieldName.matches(COST_PATTERN)) {
+                        product.setCost(BigDecimal.valueOf(Double.valueOf(fieldValue)));
+                    }
                     break;
                 case AMOUNT:
                     product.setAmount(Integer.valueOf(fieldValue));

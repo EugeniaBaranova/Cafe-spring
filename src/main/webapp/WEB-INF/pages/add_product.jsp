@@ -9,7 +9,6 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <script src="js\product_validator.js" type="text/javascript"></script>
     <title><fmt:message key="addition.title"/></title>
 </head>
 <header>
@@ -25,7 +24,7 @@
         <p class="error_message"><fmt:message key="${error.getMessage()}"/></p>
     </c:forEach>
 
-    <form action="/image_content" method="POST" name="addition_form" onsubmit="return validateForm()" enctype="multipart/form-data" data-language="${language}">
+    <form action="/image_content" method="POST" id="addition_form" name="addition_form" enctype="multipart/form-data" data-language="${language}">
         <input type="hidden" name="command" value="add_product">
         <div class="container">
             <label for="image"><b><fmt:message key="addition.label.image"/></b></label>

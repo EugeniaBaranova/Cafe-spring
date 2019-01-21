@@ -1,6 +1,7 @@
 package com.epam.web.repository.specification.product;
 
 import com.epam.web.repository.specification.Specification;
+import com.epam.web.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +20,11 @@ public class ProductByIds implements Specification {
 
     @Override
     public String toSql() {
+
+        String sqlValue = sqlProductIds();
+        if(StringUtils.isEmpty(sqlValue)){
+            return StringUtils.empty();
+        }
         return "SELECT  id,name,cost,amount,category,description,image " +
                 "FROM " +
                 "product " +
@@ -26,7 +32,7 @@ public class ProductByIds implements Specification {
                 "id " +
                 "IN " +
                 "(" +
-                sqlProductIds() +
+                sqlValue +
                 ");";
     }
 
@@ -41,10 +47,10 @@ public class ProductByIds implements Specification {
             sb.append("?");
             sb.append(",");
         }
-        if(sb.length() != 0){
+        if (StringUtils.isNotEmpty(sb.toString())) {
             sb.deleteCharAt(sb.length() - 1);
         }
-        return sb.toString();
+        return StringUtils.empty();
 
     }
 }

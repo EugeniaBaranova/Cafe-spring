@@ -6,6 +6,7 @@ import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.specification.Specification;
 import com.epam.web.utils.SqlUtils;
+import com.epam.web.utils.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -121,7 +122,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     public List<T> query(Specification specification) throws RepositoryException {
         List<Object> parameters = specification.getParameters();
         String query = specification.toSql();
-        if (query != null && parameters != null) {
+        if (StringUtils.isNotEmpty(query) && parameters != null) {
             return executeQuery(query, parameters);
         }
         return Collections.emptyList();

@@ -6,6 +6,7 @@ import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -23,19 +24,25 @@ public class OrderRepositoryImpl extends AbstractRepository<Order> implements Or
 
     @Override
     public PreparedStatement getReadyPreparedStatement(Order order, PreparedStatement pStatement) throws SQLException {
-
         pStatement.setLong(1, order.getUserId());
-
+        pStatement.setDate(2, Date.valueOf(order.getOrderDate()));
+        pStatement.setDate(3, Date.valueOf(order.getReceivingDate()));
+        pStatement.setBigDecimal(4, order.getSum());
+        pStatement.setString(5, order.getPaymentMethod().name());
+        pStatement.setString(6, order.getOrderState().name());
+        pStatement.setBoolean(7, order.isPaid());
+        //TODO do I need? private String review = "Empty"; in Order class
+        pStatement.setInt(8, order.getMark());
+        pStatement.setString(9, order.getReview());
         // TODO: 21.01.2019 Set date
-
-        return null;
+        return pStatement;
     }
 
     @Override
     public List<String> getFields() {
         return Arrays
-                .asList(USER_ID, ORDER_DATE, RECEIVING_DATE, SUM
-                        , PAYMENT_METHOD, ORDER_STATE, PAID, MARK, REVIEW);
+                .asList(USER_ID, ORDER_DATE, RECEIVING_DATE, SUM,
+                        PAYMENT_METHOD, ORDER_STATE, PAID, MARK, REVIEW);
     }
 
     @Override

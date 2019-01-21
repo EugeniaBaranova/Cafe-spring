@@ -39,7 +39,6 @@ public class Fields {
         public final static String MEAL_ID = "meal_id";
         public final static String ORDER_ID = "order_id";
         public final static String COUNT = "count";
-
     }
 
 }

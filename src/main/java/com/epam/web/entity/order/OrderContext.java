@@ -4,19 +4,20 @@ import com.epam.web.entity.enums.PaymentMethod;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 public class OrderContext {
-    private LocalDateTime receiving;
+    private LocalDate receiving;
     private User customer;
     private List<Product> products;
     private PaymentMethod paymentMethod;
 
 
 
-    public OrderContext(LocalDateTime receiving, List<Product> products, PaymentMethod paymentMethod, User user) {
+    public OrderContext(LocalDate receiving, List<Product> products, PaymentMethod paymentMethod, User user) {
         this.receiving = receiving;
         this.products = products;
         this.paymentMethod = paymentMethod;
@@ -24,11 +25,11 @@ public class OrderContext {
     }
 
 
-    public LocalDateTime getReceiving() {
+    public LocalDate getReceiving() {
         return receiving;
     }
 
-    public void setReceiving(LocalDateTime receiving) {
+    public void setReceiving(LocalDate receiving) {
         this.receiving = receiving;
     }
 

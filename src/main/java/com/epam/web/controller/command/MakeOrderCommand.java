@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MakeOrderCommand implements Command {
             if (isAvailablePaymentMethod(method)) {
                 PaymentMethod paymentMethod = PaymentMethod.valueOf(method);
                 String receivingDate = req.getParameter(RequestParameter.RECEIVING_DATE);
-                LocalDateTime date = getReceivingDate(receivingDate);
+                LocalDate date = getReceivingDate(receivingDate);
                 Object user = session.getAttribute(SessionAttribute.USER);
                 if (user != null) {
                     if (productsInfo instanceof Iterable) {
@@ -62,8 +63,8 @@ public class MakeOrderCommand implements Command {
         return CommandResult.redirect(Pages.LOGIN_PAGE);
     }
 
-    private LocalDateTime getReceivingDate(String rawDate) {
-        return LocalDateTime.parse(rawDate);
+    private LocalDate getReceivingDate(String rawDate) {
+        return LocalDate.parse(rawDate);
     }
 
 

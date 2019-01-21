@@ -9,56 +9,81 @@ import com.epam.web.utils.StringUtils;
 import java.util.*;
 import java.util.function.Function;
 
-public class UserValidator implements Validator<User> {
-    private List<Function<User, Optional<Error>>> result = new ArrayList<>();
+import static com.epam.web.repository.converter.Fields.User.LOGIN;
+import static com.epam.web.repository.converter.Fields.User.NAME;
+
+public class UserValidator extends AbstractValidator<User> {
+
+    private static final String NAME_PATTERN = "^[a-zA-Zа-яА-Я ]{5,30}$";
+    private static final String LOGIN_PATTERN = "^[a-zA-Zа-яА-Я0-9 ]{5,30}$";
+    private static final String EMAIL_PATTERN = "^(([^<>()[\\]\\\\.,;:\\s@\\\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+    private static final String PASSWORD_PATTERN = "^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/";
 
     public UserValidator() {
         result.add(checkForName());
-
+        result.add(checkForLogin());
+        result.add(checkForEmail());
+        result.add(checkForPassword());
     }
 
     @Override
     public ValidationResult validate(User user) {
-        Set<Error> errors = new HashSet<>();
-        Optional<Error> nullEntityError = checkForNull(user);
-        if(nullEntityError.isPresent()){
-            errors.add(nullEntityError.get());
-            return new ValidationResult(errors);
-        }
-
-        ValidationResult validationResult = new ValidationResult();
-        List<Function<User, Optional<Error>>> errorResult = getResult();
-
-        for(Function<User, Optional<Error>> function : errorResult){
-            Optional<Error> checkResult = function.apply(user);
-            checkResult.ifPresent(errors::add);
-        }
-        validationResult.setErrors(errors);
-        return validationResult;
+        return super.validate(user);
     }
 
-
-    private Optional<Error> checkForNull(User user){
-        if(user == null){
-            return Optional.of(new NullEntityError());
-        }
-        return Optional.empty();
-    }
-
-    private Function<User, Optional<Error>> checkForName(){
+    private Function<User, Optional<Error>> checkForName() {
         return user -> {
             Error error = new Error();
-            error.setFieldName("name");
-            error.setFieldValue(user.getName());
-            if(StringUtils.isEmpty(user.getName())){
-                error.setMessage("registration.validation.message.empty_name");
+            String userName = user.getName();
+            error.setFieldName(NAME);
+            error.setFieldValue(userName);
+            if (isEmpty(userName, error, "registration.message.empty_name")
+                    || isMatch(userName, NAME_PATTERN, error, "registration.message.name_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
         };
     }
 
-    private List<Function<User, Optional<Error>>> getResult() {
-        return result;
+    private Function<User, Optional<Error>> checkForLogin() {
+        return user -> {
+            Error error = new Error();
+            String userLogin = user.getLogin();
+            error.setFieldName(LOGIN);
+            error.setFieldValue(userLogin);
+            if (isEmpty(userLogin, error, "registration.message.empty_login")
+                    || isMatch(userLogin, LOGIN_PATTERN, error, "registration.message.login_not_like_regexp")) {
+                return Optional.of(error);
+            }
+            return Optional.empty();
+        };
+    }
+
+    private Function<User, Optional<Error>> checkForPassword() {
+        return user -> {
+            Error error = new Error();
+            String userPassword = user.getPassword();
+            error.setFieldName(LOGIN);
+            error.setFieldValue(userPassword);
+            if (isEmpty(userPassword, error, "registration.message.empty_password")
+                    || isMatch(userPassword, PASSWORD_PATTERN, error, "registration.message.password_not_like_regexp")) {
+                return Optional.of(error);
+            }
+            return Optional.empty();
+        };
+    }
+
+    private Function<User, Optional<Error>> checkForEmail() {
+        return user -> {
+            Error error = new Error();
+            String userEmail = user.getEmail();
+            error.setFieldName(LOGIN);
+            error.setFieldValue(userEmail);
+            if (isEmpty(userEmail, error, "registration.message.empty_email")
+                    || isMatch(userEmail, EMAIL_PATTERN, error, "registration.message.email_not_like_regexp")) {
+                return Optional.of(error);
+            }
+            return Optional.empty();
+        };
     }
 }

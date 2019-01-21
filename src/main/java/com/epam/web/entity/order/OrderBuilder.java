@@ -4,12 +4,13 @@ import com.epam.web.entity.enums.OrderState;
 import com.epam.web.entity.enums.PaymentMethod;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class OrderBuilder {
     private Long id;
     private Long userId;
-    private String orderDate;
-    private String receivingDate;
+    private LocalDate orderDate;
+    private LocalDate receivingDate;
     private BigDecimal sum;
     private PaymentMethod paymentMethod;
     private OrderState orderState;
@@ -25,12 +26,12 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder setOrderDate(String orderDate) {
+    public OrderBuilder setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
         return this;
     }
 
-    public OrderBuilder setReceivingDate(String receivingDate) {
+    public OrderBuilder setReceivingDate(LocalDate receivingDate) {
         this.receivingDate = receivingDate;
         return this;
     }

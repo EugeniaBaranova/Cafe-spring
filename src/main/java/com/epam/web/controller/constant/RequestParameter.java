@@ -15,6 +15,7 @@ public class RequestParameter {
     public static final String CURRENT_PAGE = "page";
     public static final String RECEIVING_DATE = "receiving_date";
     public static final String PAYMENT_METHOD = "payment_method";
+    public static final String REQUEST_PAGE = "request_page";
 
 
 }

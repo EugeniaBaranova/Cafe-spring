@@ -38,6 +38,7 @@
             <form action="/controller" method="post">
                 <input type="hidden" name="command" value="add_to_cart">
                 <input type="hidden" name="id" value="${product.id}">
+                <input type="hidden" name="request_page" value="/controller?command=show_product&id=${param.id}">
                 <button class="add_btn" type="submit"><fmt:message key="product.add.to.cart"/></button>
             </form>
             </c:if>

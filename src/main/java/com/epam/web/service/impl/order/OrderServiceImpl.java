@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Override
     public Order makeOrder(OrderContext orderContext) throws ServiceException {
-        logger.debug("[makeOrder] Start to execute method. Order info : ", orderContext);
+        logger.debug("[makeOrder] Start to execute method. Order info : {} ", orderContext);
 
         User customer = orderContext.getCustomer();
         Connection connection = getRepositorySource().getConnection();
@@ -55,11 +56,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 Order order = new Order();
                 order.setOrderState(OrderState.WAITING);
                 order.setPaymentMethod(orderContext.getPaymentMethod());
-                order.setOrderDate(new Date().toString());
+                order.setOrderDate(LocalDate.now());
                 order.setPaymentMethod(orderContext.getPaymentMethod());
-                LocalDateTime dateTime = orderContext.getReceiving();
+                LocalDate dateTime = orderContext.getReceiving();
                 if (dateTime != null) {
-                    order.setReceivingDate(dateTime.toString());
+                    order.setReceivingDate(dateTime);
                 }
                 order.setSum(productCostSum);
                 order.setUserId(customer.getId());

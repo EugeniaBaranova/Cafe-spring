@@ -25,15 +25,15 @@ public class CommandFactory {
                 getServiceFactory().getService(ProductService.class)));
         commands.put(CommandName.MAKE_ORDER, new MakeOrderCommand(
                 getServiceFactory().getService(OrderService.class),
-                getServiceFactory().getService(ProductService.class)
-        ));
+                getServiceFactory().getService(ProductService.class)));
+        commands.put(CommandName.ADD_TO_CART, new AddToCartCommand());
     }
 
     public Command getCommand(String commandName) {
         return commands.get(commandName);
     }
 
-    private ServiceFactory getServiceFactory(){
+    private ServiceFactory getServiceFactory() {
         return serviceFactory;
     }
 }

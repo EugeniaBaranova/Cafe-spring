@@ -6,6 +6,7 @@ import com.epam.web.service.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductService extends Service{
 
@@ -21,5 +22,7 @@ public interface ProductService extends Service{
 
     void deleteProduct(Long id) throws ServiceException;
 
-    Product editProduct(Long id, Product product) throws ServiceException;
+    SavingResult<Product> editProduct(Long id, Product product) throws ServiceException;
+
+    List<Product> findAllById(Set<Long> productIds);
 }

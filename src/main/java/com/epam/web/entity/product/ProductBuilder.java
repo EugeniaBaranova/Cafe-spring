@@ -49,7 +49,7 @@ public class ProductBuilder {
         return this;
     }
 
-    public Product createProduct() {
+    public Product build() {
         return new Product(id, name, cost, amount, category, description, image);
     }
 }

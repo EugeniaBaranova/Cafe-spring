@@ -6,9 +6,7 @@ import java.util.List;
 public class SqlUtils {
 
 
-
-    public static String getInsertStatement(String table, List<String> fields){
-
+    public static String getInsertStatement(String table, List<String> fields) {
         return new StringBuffer()
                 .append("INSERT INTO ")
                 .append(table)
@@ -22,18 +20,49 @@ public class SqlUtils {
                 .toString();
     }
 
+    public static String getUpdateStatement(String table, Long id, List<String> fields) {
+        return new StringBuffer()
+                .append("UPDATE ")
+                .append(table)
+                .append(" SET ")
+                .append(generateUpdateValues(fields))
+                .append(" WHERE ")
+                .append("id=")
+                .append(id)
+                .toString();
+    }
 
-    private static String generateValues(List<String> fields){
 
-        if(fields != null){
+    private static String generateUpdateValues(List<String> fields) {
+
+        if (fields != null) {
+
+            StringBuilder sb = new StringBuilder();
+            for (String field : fields) {
+                sb.append(field);
+                sb.append("=");
+                sb.append("?");
+                sb.append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            return sb.toString();
+        }
+
+        return StringUtils.empty();
+
+    }
+
+    private static String generateValues(List<String> fields) {
+
+        if (fields != null) {
             StringBuffer sb = new StringBuffer();
             Iterator<String> iterator = fields.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 sb.append("?");
                 sb.append(",");
                 iterator.next();
             }
-            if(isNotEmptyBuilder(sb)) {
+            if (isNotEmptyBuilder(sb)) {
                 return deleteLastCharAndGetString(sb);
             }
         }
@@ -41,27 +70,27 @@ public class SqlUtils {
     }
 
 
-    private static String generateFields(List<String> fields){
+    private static String generateFields(List<String> fields) {
 
-        if(fields != null){
+        if (fields != null) {
             StringBuffer sb = new StringBuffer();
-            for(String name : fields){
+            for (String name : fields) {
                 sb.append(name);
                 sb.append(",");
             }
-            if(isNotEmptyBuilder(sb)) {
+            if (isNotEmptyBuilder(sb)) {
                 return deleteLastCharAndGetString(sb);
             }
         }
         return StringUtils.empty();
     }
 
-    private static boolean isNotEmptyBuilder(StringBuffer sb){
+    private static boolean isNotEmptyBuilder(StringBuffer sb) {
         return sb != null && sb.length() > 0;
     }
 
 
-    private static String deleteLastCharAndGetString(StringBuffer sb){
+    private static String deleteLastCharAndGetString(StringBuffer sb) {
         return sb
                 .deleteCharAt(sb.length() - 1)
                 .toString();

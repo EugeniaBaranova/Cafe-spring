@@ -35,7 +35,7 @@ public class ShowCategoryProductsCommandTest {
         //given
         List<Product> categoryProducts = Collections.singletonList(
                 new ProductBuilder()
-                .createProduct());
+                .build());
         when(request.getParameter(any(String.class))).thenReturn(null);
         when(productService.findByCategory(null)).thenReturn(categoryProducts);
         doNothing().when(request).setAttribute(any(String.class), any(Object.class));

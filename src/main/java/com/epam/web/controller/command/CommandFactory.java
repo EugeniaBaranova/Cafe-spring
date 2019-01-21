@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.service.OrderService;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.UserService;
 import com.epam.web.service.factory.ServiceFactory;
@@ -22,6 +23,10 @@ public class CommandFactory {
                 getServiceFactory().getService(ProductService.class)));
         commands.put(CommandName.SHOW_PRODUCT, new ShowProductCommand(
                 getServiceFactory().getService(ProductService.class)));
+        commands.put(CommandName.MAKE_ORDER, new MakeOrderCommand(
+                getServiceFactory().getService(OrderService.class),
+                getServiceFactory().getService(ProductService.class)
+        ));
     }
 
     public Command getCommand(String commandName) {

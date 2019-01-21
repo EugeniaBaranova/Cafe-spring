@@ -1,24 +1,23 @@
 package com.epam.web.repository.converter;
 
-import com.epam.web.entity.product.Product;
-import com.epam.web.entity.product.ProductBuilder;
 import com.epam.web.entity.enums.ProductCategory;
+import com.epam.web.entity.product.Product;
 import com.epam.web.repository.exception.RepositoryException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import static com.epam.web.repository.converter.ProductFields.*;
+import static com.epam.web.repository.converter.Fields.ID;
+import static com.epam.web.repository.converter.Fields.Product.*;
 
 public class ProductConverter implements Converter<Product> {
 
     @Override
     public Product convert(ResultSet resultSet) throws SQLException, RepositoryException {
-        try{
+        try {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             Product product = new Product();

@@ -10,4 +10,5 @@ public class SessionAttribute {
     public static final String UNSUCCESSFUL_ADDITION = "unsuccessful_addition";
     public static final String ADDITION_ERRORS = "addition_errors";
     public static final String PRODUCT = "product";
+    public static final String CART_PRODUCTS = "cart_products";
 }

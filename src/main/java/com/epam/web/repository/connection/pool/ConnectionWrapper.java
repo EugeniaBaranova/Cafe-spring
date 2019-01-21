@@ -1,6 +1,6 @@
-package com.epam.web.repository.connection;
+package com.epam.web.repository.connection.pool;
 
-import com.epam.web.repository.connection.pool.ConnectionPool;
+import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.CloseConnectionException;
 import com.epam.web.repository.exception.ConnectionPoolException;
 import org.apache.log4j.Logger;
@@ -14,11 +14,11 @@ public class ConnectionWrapper implements AutoCloseable, Connection {
 
     private static final Logger logger = Logger.getLogger(ConnectionWrapper.class);
 
-    private ConnectionPool connectionPool;
+    private RepositorySource connectionPool;
 
     private Connection connection;
 
-    public ConnectionWrapper(Connection connection, ConnectionPool connectionPool) {
+    public ConnectionWrapper(Connection connection, RepositorySource connectionPool) {
         this.connection = connection;
         this.connectionPool = connectionPool;
     }

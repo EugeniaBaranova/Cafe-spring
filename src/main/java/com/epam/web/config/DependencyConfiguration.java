@@ -1,19 +1,12 @@
 package com.epam.web.config;
 
 import com.epam.web.entity.order.Order;
+import com.epam.web.entity.order.OrderItem;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
-import com.epam.web.repository.OrderRepository;
-import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.UserRepository;
+import com.epam.web.repository.RepositoryFactory;
+import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.connection.pool.BaseConnectionPool;
-import com.epam.web.repository.converter.Converter;
-import com.epam.web.repository.converter.OrderConverter;
-import com.epam.web.repository.converter.ProductConverter;
-import com.epam.web.repository.converter.UserConverter;
-import com.epam.web.repository.impl.order.OrderRepositoryImpl;
-import com.epam.web.repository.impl.product.ProductRepositoryImpl;
-import com.epam.web.repository.impl.user.UserRepositoryImpl;
 import com.epam.web.service.OrderService;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.Service;
@@ -22,69 +15,67 @@ import com.epam.web.service.factory.ServiceFactory;
 import com.epam.web.service.impl.order.OrderServiceImpl;
 import com.epam.web.service.impl.product.ProductServiceImpl;
 import com.epam.web.service.impl.user.UserServiceImpl;
-import com.epam.web.service.validation.UserValidator;
-import com.epam.web.service.validation.Validator;
+import com.epam.web.service.validation.*;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class DependencyConfiguration {
 
     public void configure() {
         this.configureServiceFactory();
+
     }
 
-    private Converter<Product> productConverter() {
-        return new ProductConverter();
+    private RepositoryFactory repositoryFactory(){
+        return new RepositoryFactory();
     }
 
-    private Converter<User> userConverter() {
-        return new UserConverter();
-    }
-
-    private Converter<Order> orderConverter() {
-        return new OrderConverter();
-    }
-
-    private BaseConnectionPool connectionPool() {
+    private RepositorySource repositorySource(){
         return BaseConnectionPool.getInstance();
-    }
-
-    private ProductRepository productRepository() {
-        return new ProductRepositoryImpl(connectionPool(), productConverter());
-    }
-
-    private UserRepository userRepository() {
-        return new UserRepositoryImpl(connectionPool(), userConverter());
-    }
-
-    private OrderRepository orderRepository() {
-        return new OrderRepositoryImpl(connectionPool(), orderConverter());
     }
 
     private Validator<User> userValidator() {
         return new UserValidator();
     }
 
-    private OrderService orderService() {
-        return new OrderServiceImpl(productRepository(), orderRepository());
+    private Validator<Product> productValidator(){
+        return new ProductValidator();
     }
 
+    private Validator<Order> orderValidator(){
+        return new OrderValidator();
+    }
+
+    private Validator<OrderItem> orderItemValidator(){
+        return new OrderItemValidator();
+    }
+
+
+
+
     private UserService userService() {
-        UserServiceImpl userService = new UserServiceImpl();
-        userService.setUserRepository(userRepository());
-        userService.setReentrantLock(new ReentrantLock());
-        userService.setValidator(userValidator());
-        return userService;
+        return new UserServiceImpl(
+                repositoryFactory(),
+                repositorySource(),
+                userValidator()
+        );
     }
 
     private ProductService productService() {
-        ProductServiceImpl productService = new ProductServiceImpl();
-        productService.setProductRepository(productRepository());
-        productService.setReentrantLock(new ReentrantLock());
-        return productService;
+        return new ProductServiceImpl(
+                repositoryFactory(),
+                repositorySource(),
+                productValidator());
+    }
+
+    private OrderService orderService(){
+        return new OrderServiceImpl(
+                repositoryFactory(),
+                repositorySource(),
+                orderValidator()
+        );
     }
 
     private ServiceFactory configureServiceFactory() {
@@ -107,6 +98,10 @@ public class DependencyConfiguration {
         }
         return serviceFactory;
     }
+
+
+
+
 
     private Map<Class<? extends Service>, Service> getServiceMap() {
         Map<Class<? extends Service>, Service> serviceMap = new HashMap<>();

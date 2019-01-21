@@ -1,88 +1,155 @@
 package com.epam.web.service.impl.order;
 
 import com.epam.web.entity.enums.OrderState;
-import com.epam.web.entity.enums.PaymentMethod;
 import com.epam.web.entity.order.Order;
 import com.epam.web.entity.order.OrderContext;
 import com.epam.web.entity.order.OrderItem;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.user.User;
-import com.epam.web.repository.OrderRepository;
-import com.epam.web.repository.ProductRepository;
-import com.epam.web.repository.connection.pool.SingleConnectionPool;
-import com.epam.web.repository.converter.OrderConverter;
-import com.epam.web.repository.converter.ProductConverter;
-import com.epam.web.repository.impl.order.OrderRepositoryImpl;
-import com.epam.web.repository.impl.product.ProductRepositoryImpl;
+import com.epam.web.repository.*;
+import com.epam.web.repository.connection.RepositorySource;
+import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.service.OrderService;
 import com.epam.web.service.exception.ServiceException;
-import com.epam.web.utils.TransactionUtils;
+import com.epam.web.service.impl.BaseServiceImpl;
+import com.epam.web.service.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
+import java.sql.Connection;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OrderServiceImpl implements OrderService {
-    private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
+public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
 
-    public OrderServiceImpl(ProductRepository productRepository,
-                            OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class.getName());
+
+    public OrderServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<Order> validator) {
+        super(repositoryFactory, repositorySource, validator);
+
     }
+
 
     @Override
     public Order makeOrder(OrderContext orderContext) throws ServiceException {
-        SingleConnectionPool connectionPool = new SingleConnectionPool();
+        logger.debug("[makeOrder] Start to execute method. Order info : ", orderContext);
+
+        User customer = orderContext.getCustomer();
+        Connection connection = getRepositorySource().getConnection();
         try {
-            TransactionUtils.beginTransaction(connectionPool);
+            logger.debug("[makeOrder] Begin transaction. Customer :{}", customer.getId());
+            TransactionUtils.begin(connection);
 
-            //TODO or fill fields?
-            ProductRepository productRepository = new ProductRepositoryImpl(connectionPool, new ProductConverter());
-            OrderRepository orderRepository = new OrderRepositoryImpl(connectionPool, new OrderConverter());
-
+            ProductRepository productRepository = getRepositoryFactory()
+                    .newInstance(ProductRepository.class, connection);
+            OrderRepository orderRepository = getRepositoryFactory()
+                    .newInstance(OrderRepository.class, connection);
+            OrderItemRepository orderItemRepository = getRepositoryFactory()
+                    .newInstance(OrderItemRepository.class, connection);
             List<Product> products = orderContext.getProducts();
             if (products != null) {
-                Set<OrderItem> orderItems = new HashSet<>();
-                BigDecimal sum = new BigDecimal(0);
-                for (Product product : products) {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setMealId(product.getId());
-                    int productCount = getProductCount(product, products);
-                    orderItem.setCount(productCount);
-                    orderItems.add(orderItem);
-                    //TODO result of addition
-                    sum.add(product.getCost());
-                }
+                Map<Product, Integer> productCountMap = getProductCountMap(products);
+                BigDecimal productCostSum = getProductCostSum(products);
                 Order order = new Order();
-                order.setSum(sum);
-                User customer = orderContext.getCustomer();
-                if (customer != null) {
-                    order.setUserId(customer.getId());
-                }
-                PaymentMethod paymentMethod = orderContext.getPaymentMethod();
-                order.setPaymentMethod(paymentMethod);
-                Date receiving = orderContext.getReceiving();
-                if (receiving != null) {
-                    order.setReceivingDate(receiving.toString());
-                }
                 order.setOrderState(OrderState.WAITING);
+                order.setPaymentMethod(orderContext.getPaymentMethod());
                 order.setOrderDate(new Date().toString());
+                order.setPaymentMethod(orderContext.getPaymentMethod());
+                LocalDateTime dateTime = orderContext.getReceiving();
+                if (dateTime != null) {
+                    order.setReceivingDate(dateTime.toString());
+                }
+                order.setSum(productCostSum);
+                order.setUserId(customer.getId());
+                logger.debug("[makeOrder] Start to to save order. Customer :{} , Order :{}", customer.getId(), order);
+                Order savedOrder = orderRepository.add(order);
+                logger.debug("[makeOrder] Finish to save order. Customer :{} ,  Saved order id:{}", customer.getId(), savedOrder.getId());
 
-                TransactionUtils.commit(connectionPool, true);
+                List<OrderItem> orderItems = createOrderItems(productCountMap, order);
+                this.saveOrderItems(orderItems, orderItemRepository);
+                this.updateProductAmounts(productCountMap, productRepository);
+                return savedOrder;
             }
             return null;
-        } catch (SQLException e) {
-            //TODO better way for Exception handling
-            try {
-                TransactionUtils.rollbackTransaction(connectionPool, false);
-            } catch (SQLException ex) {
-                throw new ServiceException(ex.getMessage(), ex);
+        } catch (Exception e) {
+            logger.warn("[makeOrder] Exception while execute transaction. Do Roll back. Customer :{}", customer.getId());
+            TransactionUtils.rollBack(connection);
+            logger.warn("[makeOrder] Roll back done. Customer :{}", customer.getId());
+            throw new ServiceException("Exception while execution method. Customer :" + customer.getId());
+        } finally {
+            logger.debug("[makeOrder] Finish to execute method. Close transaction. Customer :{}", customer.getId());
+            TransactionUtils.close(connection);
+        }
+    }
+
+    private List<OrderItem> createOrderItems(Map<Product, Integer> productCountMap, Order order) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        if (productCountMap != null) {
+            for (Map.Entry<Product, Integer> entry : productCountMap.entrySet()) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrderId(order.getId());
+                orderItem.setMealId(entry
+                        .getKey()
+                        .getId());
+                orderItem.setCount(entry.getValue());
+                orderItems.add(orderItem);
             }
         }
-        return null;
+        return orderItems;
+    }
+
+
+    private void saveOrderItems(List<OrderItem> orderItems, OrderItemRepository repository) throws RepositoryException {
+        for (OrderItem orderItem : orderItems) {
+            repository.add(orderItem);
+        }
+    }
+
+    private void updateProductAmounts(Map<Product, Integer> productCountMap, ProductRepository productRepository) throws RepositoryException {
+        if (productCountMap != null) {
+            logger.debug("[updateProductAmounts] Start to update product amounts");
+            for (Map.Entry<Product, Integer> entry : productCountMap.entrySet()) {
+                Product product = entry.getKey();
+                Integer boughtCount = entry.getValue();
+                product.setAmount(product.getAmount() - boughtCount);
+                productRepository.update(product);
+            }
+            logger.debug("[updateProductAmounts] Finish to update product amounts");
+        }
+    }
+
+    private Map<Product, Integer> getProductCountMap(List<Product> products) {
+        Map<Product, Integer> productMap = new HashMap<>();
+
+        for (Product product : products) {
+            if (!productMap.containsKey(product)) {
+                int productCount = getProductCount(product, products);
+                productMap.put(product, productCount);
+            }
+        }
+        return productMap;
+    }
+
+    @Override
+    protected Repository<Order> getRepository() {
+        return getRepositoryFactory()
+                .newInstance(OrderRepository.class,
+                        getRepositorySource().getConnection());
+    }
+
+
+    private BigDecimal getProductCostSum(List<Product> products) {
+        if (products != null && !products.isEmpty()) {
+            products
+                    .stream()
+                    .filter(product -> product.getCost() != null)
+                    .map(Product::getCost)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+
+        return BigDecimal.ZERO;
     }
 
     private int getProductCount(Product product, List<Product> products) {
@@ -91,14 +158,6 @@ public class OrderServiceImpl implements OrderService {
                 .filter(product1 -> product1.equals(product))
                 .collect(Collectors.toList())
                 .size();
-    }
-
-    private OrderRepository getOrderRepository() {
-        return orderRepository;
-    }
-
-    private ProductRepository getProductRepository() {
-        return productRepository;
     }
 
 }

@@ -134,10 +134,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
-    protected Repository<Order> getRepository() {
+    protected Repository<Order> getRepository(Connection connection) {
         return getRepositoryFactory()
                 .newInstance(OrderRepository.class,
-                        getRepositorySource().getConnection());
+                        connection);
     }
 
 

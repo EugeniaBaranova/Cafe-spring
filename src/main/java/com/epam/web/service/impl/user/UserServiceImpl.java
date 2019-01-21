@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
@@ -34,16 +36,16 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public Optional<User> login(String login, String password) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             if (login != null & password != null) {
                 String hashedPassword = encodePassword(password);
-                return getUserRepository()
+                return getRepository(connection)
                         .queryForSingleResult(
                                 new UserByLoginAndPasswordSpec(login, hashedPassword)
                         );
             }
             return Optional.empty();
-        } catch (RepositoryException e) {
+        } catch (Exception e) {
             String errorMessage = getErrorFormatter()
                     .format("[login] Exception while execution method. Method parameters:'%s', '%s'", login, password)
                     .toString();
@@ -53,16 +55,16 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public SavingResult<User> register(User user) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             Optional<Set<Error>> validationError = validateUser(user);
             if (validationError.isPresent()) {
                 return new SavingResult<>(validationError.get());
             }
             String hashedPassword = encodePassword(user.getPassword());
             user.setPassword(hashedPassword);
-            User savedUser = getUserRepository().add(user);
+            User savedUser = getRepository(connection).add(user);
             return new SavingResult<>(savedUser);
-        } catch (RepositoryException e) {
+        } catch (Exception e) {
             String errorMessage = getErrorFormatter()
                     .format("[register] Exception while execution method. User to save:'%s'", user)
                     .toString();
@@ -80,7 +82,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             }
             logger.debug("[editProfileInfo] Finish to edit user profile. User id :{}", id);
             return update;
-        } catch (RepositoryException e) {
+        } catch (Exception e) {
             logger.error("[editProfileInfo] Exception while execution edit user profile", e);
             throw new ServiceException(e);
         }
@@ -110,24 +112,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return new SavingResult<>(new HashSet<>(Collections.singletonList(error)));
     }
 
-    private boolean isNotUniqueUser(User user) throws RepositoryException {
-        UserRepository userRepository = getUserRepository();
-        Optional<User> existsUser =
-                userRepository
-                        .queryForSingleResult(
-                                new CheckUniqueLoginAndEmailSpec(
-                                        user.getLogin(),
-                                        user.getEmail()));
-        return existsUser.isPresent();
+    private boolean isNotUniqueUser(User user) throws RepositoryException, SQLException {
+        try (Connection connection = getRepositorySource().getConnection()) {
+            Repository<User> userRepository = getRepository(connection);
+            Optional<User> existsUser =
+                    userRepository
+                            .queryForSingleResult(
+                                    new CheckUniqueLoginAndEmailSpec(
+                                            user.getLogin(),
+                                            user.getEmail()));
+            return existsUser.isPresent();
+        }
     }
 
-    private UserRepository getUserRepository() {
-        return getRepositoryFactory()
-                .newInstance(UserRepository.class,
-                        getRepositorySource().getConnection());
-    }
-
-    private Optional<Set<Error>> validateUser(User user) throws RepositoryException {
+    private Optional<Set<Error>> validateUser(User user) throws RepositoryException, SQLException {
         ValidationResult result = getValidator().validate(user);
         if (result.hasError()) {
             return Optional.of(result.getErrors());
@@ -145,9 +143,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    protected Repository<User> getRepository() {
+    protected Repository<User> getRepository(Connection connection) {
         return getRepositoryFactory()
                 .newInstance(UserRepository.class,
-                        getRepositorySource().getConnection());
+                        connection);
     }
 }

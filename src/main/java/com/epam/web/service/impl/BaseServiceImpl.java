@@ -9,6 +9,9 @@ import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.service.validation.Validator;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public abstract class BaseServiceImpl<T extends Entity> {
 
     private RepositoryFactory repositoryFactory;
@@ -35,22 +38,30 @@ public abstract class BaseServiceImpl<T extends Entity> {
 
     private SavingResult<T> addOrUpdate(T entity, boolean saveNew) throws RepositoryException {
 
-        ValidationResult validationResult = getValidator().validate(entity);
-        if (validationResult.hasError()) {
-            return new SavingResult<>(validationResult.getErrors());
-        }
+        Connection connection = getRepositorySource().getConnection();
+        try {
+            ValidationResult validationResult = getValidator().validate(entity);
+            if (validationResult.hasError()) {
+                return new SavingResult<>(validationResult.getErrors());
+            }
 
-        if (saveNew) {
-            T savedNew = getRepository().add(entity);
-            return new SavingResult<>(savedNew);
+            if (saveNew) {
+                T savedNew = getRepository(connection).add(entity);
+                return new SavingResult<>(savedNew);
+            }
+            T update = getRepository(connection).update(entity);
+            return new SavingResult<>(update);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RepositoryException(e);
+            }
         }
-        T update = getRepository().update(entity);
-        return new SavingResult<>(update);
-
     }
 
 
-    protected abstract Repository<T> getRepository();
+    protected abstract Repository<T> getRepository(Connection connection);
 
 
     protected RepositoryFactory getRepositoryFactory() {

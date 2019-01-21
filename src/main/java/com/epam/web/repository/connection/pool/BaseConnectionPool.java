@@ -65,7 +65,7 @@ public class BaseConnectionPool implements RepositorySource {
     public boolean returnConnection(Connection connection, boolean forClosing) {
         try {
             if (connection != null) {
-                if (!forClosing) {
+                if (forClosing) {
                     if (connectionPool.size() < CONNECTION_POOL_SIZE) {
                         connectionPool.put(connection);
                         return true;

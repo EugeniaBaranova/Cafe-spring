@@ -18,6 +18,7 @@ import com.epam.web.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
 import java.util.*;
 
 public class ProductServiceImpl extends BaseServiceImpl<Product> implements ProductService {
@@ -31,10 +32,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findByCategory(String productCategory, int currentPage, int countOnPage) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             if (isAvailableCategory(productCategory)) {
                 int offset = (currentPage * countOnPage) - countOnPage;
-                return getRepository()
+                return getRepository(connection)
                         .query(
                                 new ProductsByCategoryPaginationSpec(
                                         productCategory,
@@ -52,9 +53,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findByCategory(String productCategory) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             if (isAvailableCategory(productCategory)) {
-                return getRepository()
+                return getRepository(connection)
                         .query(new ProductsByCategorySpec(productCategory));
             }
         } catch (Exception e) {
@@ -68,9 +69,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public int amountInCategory(String productCategory) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             if (isAvailableCategory(productCategory)) {
-                List<Product> products = getRepository()
+                List<Product> products = getRepository(connection)
                         .query(new ProductAmountInCategorySpec(productCategory));
                 if (products != null) {
                     return products.size();
@@ -87,8 +88,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public Optional<Product> findProduct(Long id) throws ServiceException {
-        try {
-            return getRepository()
+        try (Connection connection = getRepositorySource().getConnection()) {
+            return getRepository(connection)
                     .queryForSingleResult(new ProductByIdSpec(id));
         } catch (Exception e) {
             String errorMessage =
@@ -102,7 +103,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     @Override
     public SavingResult<Product> addProduct(Product product) throws ServiceException {
 
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             logger.debug("[addProduct] Start to execute method. Product to save:{}", product);
 
             ValidationResult validResult = getValidator().validate(product);
@@ -111,7 +112,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                 return new SavingResult<>(validResult.getErrors());
             }
 
-            Product savedProduct = getRepository().add(product);
+            Product savedProduct = getRepository(connection).add(product);
             logger.debug("[addProduct] Finish to execute method. Saved product:{}", savedProduct);
             return new SavingResult<>(savedProduct);
         } catch (Exception e) {
@@ -125,12 +126,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public void deleteProduct(Long id) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             logger.debug("[deleteProduct] Start to remove product by id:{}", id);
             Product product = new ProductBuilder()
                     .setId(id)
                     .build();
-            getRepository().remove(product);
+            getRepository(connection)
+                    .remove(product);
             logger.debug("[deleteProduct] Finish to remove product by id:{}", id);
         } catch (Exception e) {
             String errorMessage =
@@ -143,7 +145,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public SavingResult<Product> editProduct(Long id, Product product) throws ServiceException {
-        try {
+        try (Connection connection = getRepositorySource().getConnection()) {
             logger.debug("[editProduct] Start to update product. product info:{}", product);
             ValidationResult validResult = getValidator().validate(product);
             if (validResult.hasError()) {
@@ -151,7 +153,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                 return new SavingResult<>(validResult.getErrors());
             }
 
-            Product updated = getRepository().update(product);
+            Product updated = getRepository(connection).update(product);
             logger.debug("[editProduct] Finish to update product. product info:{}", product);
             return new SavingResult<>(updated);
         } catch (Exception e) {
@@ -165,8 +167,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findAllByIdWithoutImage(Set<Long> productIds) {
-        try {
-            return getRepository()
+        try (Connection connection = getRepositorySource().getConnection()) {
+            return getRepository(connection)
                     .query(new ProductsWithoutImageByIdsSpec(productIds));
         } catch (Exception e) {
             logger.warn("[findAllByIdWithoutImage] Exception while execution method.");
@@ -176,8 +178,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findAllById(Set<Long> productIds) throws ServiceException {
-        try {
-            return getRepository()
+        try (Connection connection = getRepositorySource().getConnection()) {
+            return getRepository(connection)
                     .query(new ProductByIds(productIds));
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -198,11 +200,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     }
 
     @Override
-    protected Repository<Product> getRepository() {
+    protected Repository<Product> getRepository(Connection connection) {
         return getRepositoryFactory()
                 .newInstance(
                         ProductRepository.class,
-                        getRepositorySource().getConnection());
+                        connection);
     }
 
 

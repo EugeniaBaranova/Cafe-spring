@@ -53,8 +53,6 @@ public class DependencyConfiguration {
     }
 
 
-
-
     private UserService userService() {
         return new UserServiceImpl(
                 repositoryFactory(),

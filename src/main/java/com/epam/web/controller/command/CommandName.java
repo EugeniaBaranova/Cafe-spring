@@ -16,5 +16,6 @@ public class CommandName {
     public static final String MAKE_ORDER = "make_order";
     public static final String CHANGE_CART_COUNT = "change_cart_count";
     public static final String ADD_TO_CART = "add_to_cart";
+    public static final String DELETE_FROM_CART = "delete_from_cart";
 
 }

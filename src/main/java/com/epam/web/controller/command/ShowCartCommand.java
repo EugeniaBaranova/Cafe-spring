@@ -37,7 +37,7 @@ public class ShowCartCommand implements Command {
             HashSet<Product> productSet = new HashSet<>(products);
             for (Product product : productSet) {
                 Long id = product.getId();
-                Integer productCount = getProductCount(id, products);
+                Integer productCount = getProductCount(id, productIds);
                 if (!productsMap.containsKey(product)) {
                     productsMap.put(product, productCount);
                 }
@@ -48,10 +48,10 @@ public class ShowCartCommand implements Command {
         return CommandResult.forward(Pages.CART_PAGE);
     }
 
-    private Integer getProductCount(Long id, List<Product> products) {
-        List<Product> matchProducts = products
+    private Integer getProductCount(Long id, List<Long> products) {
+        List<Long> matchProducts = products
                 .stream()
-                .filter(product -> product.getId().equals(id))
+                .filter(productId -> productId == id)
                 .collect(Collectors.toList());
         return matchProducts.size();
 

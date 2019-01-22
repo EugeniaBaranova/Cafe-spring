@@ -29,6 +29,7 @@ public class CommandFactory {
         commands.put(CommandName.ADD_TO_CART, new AddToCartCommand());
         commands.put(CommandName.SHOW_CART, new ShowCartCommand(
                 getServiceFactory().getService(ProductService.class)));
+        commands.put(CommandName.DELETE_FROM_CART, new DeleteProductFromCartCommand());
     }
 
     public Command getCommand(String commandName) {

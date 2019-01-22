@@ -335,7 +335,8 @@ body {
 
 .span-button:hover{color:#000!important;background-color:#ccc!important}
 
-.span-white{color:#000!important;background-color:#fff!important}
+.span-white{color:#000!important;
+    background-color:rgba(255, 213, 178, 0.96)!important}
 
 .span-xlarge{font-size:24px!important}
 

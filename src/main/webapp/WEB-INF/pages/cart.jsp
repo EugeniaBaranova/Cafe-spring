@@ -18,8 +18,8 @@
     <c:if test="${empty requestScope.cartInfo.products}">
         <h1 class="text_cart"><fmt:message key="cart.empty"/></h1>
     </c:if>
-    <c:if test="${!empty requestScope.cartInfo.products}">
 
+    <c:if test="${!empty requestScope.cartInfo.products}">
         <div class="span_container">
             <ul class="span_ul span-card-4">
             <c:set var="products" value="${requestScope.cartInfo.products.keySet()}"/>
@@ -27,11 +27,11 @@
                 <li class="span-bar">
                     <a href="/controller?command=delete_from_cart&id=${product.id}" class="span-bar-item span-button span-white span-xlarge span-right">×</a>
 
-                    <form action="/controller"  method="post" class="span-bar-item span-button span-white span-xlarge span-right">
+                    <form action="/controller"  method="post" class="span-bar-item span-button span-white span-xlarge span-right" style="width: min-content">
                         <input type="hidden" name="command" value="change_cart_count">
                         <input type="hidden" name="id" value="${product.id}">
-                        <label for="amount"><b><fmt:message key="addition.label.amount"/></b></label>
-                        <input class="form-control" type="number" min="1" max="10" id="amount" name="amount" value="${requestScope.cartInfo.products.get(product.id)}" required/>
+
+                        <input class="form-control" type="number" min="1" max="10" id="amount" name="amount" value="${requestScope.cartInfo.products.get(product)}" required/>
                         <button class="form_submit_btn_change" type="submit"><fmt:message key="cart.change.count"/></button>
                     </form>
 

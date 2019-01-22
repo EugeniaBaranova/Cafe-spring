@@ -14,7 +14,7 @@ public class TransactionUtils {
 
     public static void begin(Connection connection) {
 
-        doAction(con -> con.setAutoCommit(true)
+        doAction(con -> con.setAutoCommit(false)
                 ,connection
                 ,"Exception while begin transaction");
     }

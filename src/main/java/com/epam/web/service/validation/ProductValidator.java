@@ -34,7 +34,7 @@ public class ProductValidator extends AbstractValidator<Product> {
             error.setFieldName(NAME);
             error.setFieldValue(productName);
             if (isEmpty(productName, error, "message.empty_name")
-                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "message.name_not_like_regexp")) {
+                    || isNotMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "message.name_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -47,8 +47,7 @@ public class ProductValidator extends AbstractValidator<Product> {
             String productName = product.getDescription();
             error.setFieldName(DESCRIPTION);
             error.setFieldValue(productName);
-            if (isEmpty(productName, error, "message.empty_description")
-                    || isMatch(productName, NAME_AND_DESCRIPTION_PATTERN, error, "message.description_not_like_regexp")) {
+            if (isEmpty(productName, error, "message.empty_description")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -66,7 +65,7 @@ public class ProductValidator extends AbstractValidator<Product> {
                 return Optional.of(error);
             }
             error.setFieldValue(productCost.toString());
-            if (BigDecimal.ZERO.compareTo(productCost) <= 0 ) {
+            if (productCost.doubleValue() <= 0) {
                 error.setMessage("message.under_zero_cost");
                 return Optional.of(error);
             }

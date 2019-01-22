@@ -16,6 +16,7 @@ import com.epam.web.service.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -71,6 +72,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 List<OrderItem> orderItems = createOrderItems(productCountMap, order);
                 this.saveOrderItems(orderItems, orderItemRepository);
                 this.updateProductAmounts(productCountMap, productRepository);
+                TransactionUtils.commit(connection);
                 return savedOrder;
             }
             return null;

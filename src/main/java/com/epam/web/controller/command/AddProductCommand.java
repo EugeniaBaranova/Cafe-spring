@@ -8,6 +8,7 @@ import com.epam.web.entity.product.Product;
 import com.epam.web.entity.validation.Error;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
+import com.epam.web.utils.StringUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -28,7 +29,7 @@ import static com.epam.web.controller.constant.RequestParameter.*;
 public class AddProductCommand implements Command {
 
     private static final String IMAGE_CONTENT_TYPE = "image/jpeg";
-    private static final String COST_PATTERN = "^[0-9]{1,2}.[0-9]{2}$";
+    private static final String COST_PATTERN = "^[0-9]{1,}.[0-9]{2}$";
 
     private ProductService productService;
 
@@ -50,6 +51,12 @@ public class AddProductCommand implements Command {
         Product newProduct = result.getData();
         session.setAttribute(SessionAttribute.PRODUCT, newProduct);
         return CommandResult.redirect(Pages.PRODUCT_PAGE);
+    }
+
+    private boolean isDigit(String stringDigit){
+
+
+       return false;
     }
 
     private Product convertFromReq(HttpServletRequest req) throws ServiceException {
@@ -84,7 +91,7 @@ public class AddProductCommand implements Command {
                     product.setName(fieldValue);
                     break;
                 case COST:
-                    if (fieldName.matches(COST_PATTERN)) {
+                    if (StringUtils.isDigit(fieldValue)) {
                         product.setCost(BigDecimal.valueOf(Double.valueOf(fieldValue)));
                     }
                     break;

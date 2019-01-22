@@ -22,7 +22,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     private static final Logger logger = Logger.getLogger(AbstractRepository.class);
     private static final int FIRST_LIST_ELEMENT = 0;
     private Converter<T> converter;
-    private Connection connection;
+    protected Connection connection;
 
 
     public AbstractRepository(Connection connection, Converter<T> converter) {

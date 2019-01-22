@@ -2,9 +2,7 @@ package com.epam.web.service.validation;
 
 import com.epam.web.entity.user.User;
 import com.epam.web.entity.validation.Error;
-import com.epam.web.entity.validation.NullEntityError;
 import com.epam.web.entity.validation.ValidationResult;
-import com.epam.web.utils.StringUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -38,7 +36,7 @@ public class UserValidator extends AbstractValidator<User> {
             error.setFieldName(NAME);
             error.setFieldValue(userName);
             if (isEmpty(userName, error, "registration.message.empty_name")
-                    || isMatch(userName, NAME_PATTERN, error, "registration.message.name_not_like_regexp")) {
+                    || isNotMatch(userName, NAME_PATTERN, error, "registration.message.name_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -52,7 +50,7 @@ public class UserValidator extends AbstractValidator<User> {
             error.setFieldName(LOGIN);
             error.setFieldValue(userLogin);
             if (isEmpty(userLogin, error, "registration.message.empty_login")
-                    || isMatch(userLogin, LOGIN_PATTERN, error, "registration.message.login_not_like_regexp")) {
+                    || isNotMatch(userLogin, LOGIN_PATTERN, error, "registration.message.login_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -66,7 +64,7 @@ public class UserValidator extends AbstractValidator<User> {
             error.setFieldName(LOGIN);
             error.setFieldValue(userPassword);
             if (isEmpty(userPassword, error, "registration.message.empty_password")
-                    || isMatch(userPassword, PASSWORD_PATTERN, error, "registration.message.password_not_like_regexp")) {
+                    || isNotMatch(userPassword, PASSWORD_PATTERN, error, "registration.message.password_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();
@@ -80,7 +78,7 @@ public class UserValidator extends AbstractValidator<User> {
             error.setFieldName(LOGIN);
             error.setFieldValue(userEmail);
             if (isEmpty(userEmail, error, "registration.message.empty_email")
-                    || isMatch(userEmail, EMAIL_PATTERN, error, "registration.message.email_not_like_regexp")) {
+                    || isNotMatch(userEmail, EMAIL_PATTERN, error, "registration.message.email_not_like_regexp")) {
                 return Optional.of(error);
             }
             return Optional.empty();

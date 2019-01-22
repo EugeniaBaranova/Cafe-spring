@@ -27,7 +27,6 @@ public class ConnectionWrapper implements AutoCloseable, Connection {
     public void close() {
         try {
             connectionPool.returnConnection(connection, true);
-            logger.info("[Return connection]");
         } catch (ConnectionPoolException e) {
             logger.error(e.getMessage(), e);
             throw new CloseConnectionException(e.getMessage(), e);

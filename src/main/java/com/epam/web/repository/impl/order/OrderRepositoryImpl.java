@@ -4,6 +4,7 @@ import com.epam.web.entity.order.Order;
 import com.epam.web.repository.OrderRepository;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
+import com.epam.web.utils.StringUtils;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -16,7 +17,7 @@ import static com.epam.web.repository.converter.Fields.Order.*;
 
 public class OrderRepositoryImpl extends AbstractRepository<Order> implements OrderRepository {
 
-    private final static String TABLE_NAME = "order";
+    private final static String TABLE_NAME = "`order`";
 
     public OrderRepositoryImpl(Connection connection, Converter<Order> converter) {
         super(connection, converter);
@@ -33,7 +34,12 @@ public class OrderRepositoryImpl extends AbstractRepository<Order> implements Or
         pStatement.setBoolean(7, order.isPaid());
         //TODO do I need? private String review = "Empty"; in Order class
         pStatement.setInt(8, order.getMark());
-        pStatement.setString(9, order.getReview());
+        if(StringUtils.isNotEmpty(order.getReview())){
+            pStatement.setString(9, order.getReview());
+
+        }else {
+            pStatement.setString(9, StringUtils.empty());
+        }
         // TODO: 21.01.2019 Set date
         return pStatement;
     }

@@ -20,11 +20,11 @@
     <c:if test="${sessionScope.unsuccessful_addition}">
         <h2><fmt:message key="addition.text.unsuccessful"/></h2>
     </c:if>
-    <c:forEach var="error" items="${sessionScope.registration_errors}">
+    <c:forEach var="error" items="${sessionScope.addition_errors}">
         <p class="error_message"><fmt:message key="${error.getMessage()}"/></p>
     </c:forEach>
 
-    <form action="/image_content" method="POST" id="addition_form" name="addition_form" enctype="multipart/form-data" data-language="${language}">
+    <form action="/image_content?command=add_product" method="POST" id="addition_form" name="addition_form" enctype="multipart/form-data" data-language="${language}">
         <input type="hidden" name="command" value="add_product">
         <div class="container">
             <label for="image"><b><fmt:message key="addition.label.image"/></b></label>

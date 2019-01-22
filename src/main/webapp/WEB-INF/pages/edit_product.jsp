@@ -24,7 +24,7 @@
         <p class="error_message"><fmt:message key="${error.getMessage()}"/></p>
     </c:forEach>
 
-    <form action="/image_content" method="POST" name="addition_form" enctype="multipart/form-data" data-language="${language}">
+    <form action="/image_content?command=edit_product&id=${param.id}" method="POST" name="addition_form" enctype="multipart/form-data" data-language="${language}">
         <input type="hidden" name="command" value="edit_product">
         <input type="hidden" name="id" value="${param.id}">
         <div class="container">

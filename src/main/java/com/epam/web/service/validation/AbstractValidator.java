@@ -48,14 +48,15 @@ public abstract class AbstractValidator<T extends Entity> implements Validator<T
         return false;
     }
 
-    protected boolean isMatch(String field, String regExp, Error error, String message) {
+    protected boolean isNotMatch(String field, String regExp, Error error, String message) {
         if (field != null && regExp != null && error != null && message != null) {
             if (field.matches(regExp)) {
+                return false;
+            } else {
                 error.setMessage(message);
-                return true;
             }
         }
-        return false;
+        return true;
     }
 
     private List<Function<T, Optional<Error>>> getResult() {

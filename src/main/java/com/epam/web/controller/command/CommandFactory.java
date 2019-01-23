@@ -12,6 +12,7 @@ import com.epam.web.controller.command.product.ShowProductCommand;
 import com.epam.web.controller.command.user.RegisterUserCommand;
 import com.epam.web.controller.command.user.LogoutCommand;
 import com.epam.web.controller.command.user.LoginCommand;
+import com.epam.web.service.CartService;
 import com.epam.web.service.OrderService;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.UserService;
@@ -44,8 +45,8 @@ public class CommandFactory {
         commands.put(CommandName.DELETE_FROM_CART, new DeleteFromCartCommand());
         commands.put(CommandName.SHOW_ORDERS, new ShowOrdersComand
                 (getServiceFactory().getService(OrderService.class)));
-        commands.put(CommandName.CHANGE_CART_COUNT, new ChangeCartItemCountCommand());
-
+        commands.put(CommandName.CHANGE_CART_COUNT, new ChangeCartItemCountCommand(
+                getServiceFactory().getService(CartService.class)));
     }
 
     public Command getCommand(String commandName) {

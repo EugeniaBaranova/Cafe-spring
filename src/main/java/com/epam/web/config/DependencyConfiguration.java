@@ -7,11 +7,9 @@ import com.epam.web.entity.user.User;
 import com.epam.web.repository.RepositoryFactory;
 import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.connection.pool.BaseConnectionPool;
-import com.epam.web.service.OrderService;
-import com.epam.web.service.ProductService;
-import com.epam.web.service.Service;
-import com.epam.web.service.UserService;
+import com.epam.web.service.*;
 import com.epam.web.service.factory.ServiceFactory;
+import com.epam.web.service.impl.cart.CartServiceImpl;
 import com.epam.web.service.impl.order.OrderServiceImpl;
 import com.epam.web.service.impl.product.ProductServiceImpl;
 import com.epam.web.service.impl.user.UserServiceImpl;
@@ -28,11 +26,11 @@ public class DependencyConfiguration {
 
     }
 
-    private RepositoryFactory repositoryFactory(){
+    private RepositoryFactory repositoryFactory() {
         return new RepositoryFactory();
     }
 
-    private RepositorySource repositorySource(){
+    private RepositorySource repositorySource() {
         return BaseConnectionPool.getInstance();
     }
 
@@ -40,15 +38,15 @@ public class DependencyConfiguration {
         return new UserValidator();
     }
 
-    private Validator<Product> productValidator(){
+    private Validator<Product> productValidator() {
         return new ProductValidator();
     }
 
-    private Validator<Order> orderValidator(){
+    private Validator<Order> orderValidator() {
         return new OrderValidator();
     }
 
-    private Validator<OrderItem> orderItemValidator(){
+    private Validator<OrderItem> orderItemValidator() {
         return new OrderItemValidator();
     }
 
@@ -68,12 +66,16 @@ public class DependencyConfiguration {
                 productValidator());
     }
 
-    private OrderService orderService(){
+    private OrderService orderService() {
         return new OrderServiceImpl(
                 repositoryFactory(),
                 repositorySource(),
                 orderValidator()
         );
+    }
+
+    private CartService cartService() {
+        return new CartServiceImpl();
     }
 
     private ServiceFactory configureServiceFactory() {
@@ -98,14 +100,12 @@ public class DependencyConfiguration {
     }
 
 
-
-
-
     private Map<Class<? extends Service>, Service> getServiceMap() {
         Map<Class<? extends Service>, Service> serviceMap = new HashMap<>();
         serviceMap.put(ProductService.class, productService());
         serviceMap.put(UserService.class, userService());
         serviceMap.put(OrderService.class, orderService());
+        serviceMap.put(CartService.class, cartService());
         return serviceMap;
     }
 

@@ -56,7 +56,7 @@ public class AddProductCommand implements Command {
     }
 
 
-    private Product convertFromReq(HttpServletRequest req) throws ServiceException {
+    protected Product convertFromReq(HttpServletRequest req) throws ServiceException {
         try {
             Product product = new Product();
             FileItemFactory fileItemFactory = new DiskFileItemFactory();

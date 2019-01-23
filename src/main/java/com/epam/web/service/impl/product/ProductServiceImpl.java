@@ -9,6 +9,7 @@ import com.epam.web.repository.ProductRepository;
 import com.epam.web.repository.Repository;
 import com.epam.web.repository.RepositoryFactory;
 import com.epam.web.repository.connection.RepositorySource;
+import com.epam.web.repository.impl.AbstractRepository;
 import com.epam.web.repository.specification.product.*;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
@@ -22,8 +23,7 @@ import java.sql.Connection;
 import java.util.*;
 
 public class ProductServiceImpl extends BaseServiceImpl<Product> implements ProductService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class.getName());
-
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ProductServiceImpl.class);
 
     public ProductServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<Product> validator) {
         super(repositoryFactory, repositorySource, validator);
@@ -43,6 +43,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                                         offset));
             }
         } catch (Exception e) {
+            logger.warn("[findByCategory] Exception while execution method");
             String errorMessage = getErrorFormatter()
                     .format("[findByCategory] Exception while execution method. Method parameter:'%s', '%s'", productCategory, currentPage)
                     .toString();
@@ -59,6 +60,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                         .query(new ProductsByCategorySpec(productCategory));
             }
         } catch (Exception e) {
+            logger.warn("[findByCategory] Exception while execution method");
             String errorMessage = getErrorFormatter()
                     .format("[findByCategory] Exception while execution method. Method parameter:'%s'", productCategory)
                     .toString();
@@ -78,6 +80,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                 }
             }
         } catch (Exception e) {
+            logger.warn("[amountInCategory] Exception while execution method");
             String errorMessage = getErrorFormatter()
                     .format("[amountInCategory] Exception while execution method. Method parameter:'%s'", productCategory)
                     .toString();
@@ -92,6 +95,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
             return getRepository(connection)
                     .queryForSingleResult(new ProductByIdSpec(id));
         } catch (Exception e) {
+            logger.warn("[findProduct] Exception while execution method. Product : " + id);
             String errorMessage =
                     getErrorFormatter()
                             .format("[findProduct] Error find Product with id:'%s'", id)
@@ -104,18 +108,20 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     public SavingResult<Product> addProduct(Product product) throws ServiceException {
 
         try (Connection connection = getRepositorySource().getConnection()) {
-            logger.debug("[addProduct] Start to execute method. Product to save:{}", product);
+            logger.debug("[addProduct] Start to execute method. Product to save: " + product);
 
             ValidationResult validResult = getValidator().validate(product);
-
+            logger.debug("[addProduct] Got validation error: " + product);
             if (validResult.hasError()) {
+
                 return new SavingResult<>(validResult.getErrors());
             }
 
             Product savedProduct = getRepository(connection).add(product);
-            logger.debug("[addProduct] Finish to execute method. Saved product:{}", savedProduct);
+            logger.debug("[addProduct] Finish to execute method. Saved product:" + savedProduct);
             return new SavingResult<>(savedProduct);
         } catch (Exception e) {
+            logger.warn("[addProduct] Exception while execution method.");
             String errorMessage =
                     getErrorFormatter()
                             .format("[addProduct] Error while saving product. Product to save: %s", product)
@@ -127,14 +133,15 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     @Override
     public void deleteProduct(Long id) throws ServiceException {
         try (Connection connection = getRepositorySource().getConnection()) {
-            logger.debug("[deleteProduct] Start to remove product by id:{}", id);
+            logger.debug("[deleteProduct] Start to remove product by id:{}" + id);
             Product product = new ProductBuilder()
                     .setId(id)
                     .build();
             getRepository(connection)
                     .remove(product);
-            logger.debug("[deleteProduct] Finish to remove product by id:{}", id);
+            logger.debug("[deleteProduct] Finish to remove product by id:" + id);
         } catch (Exception e) {
+            logger.warn("[deleteProduct] Exception while execution method. Product id:" + id);
             String errorMessage =
                     getErrorFormatter()
                             .format("[deleteProduct] Error while removing product. Id: %s", id)
@@ -146,17 +153,18 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     @Override
     public SavingResult<Product> editProduct(Long id, Product product) throws ServiceException {
         try (Connection connection = getRepositorySource().getConnection()) {
-            logger.debug("[editProduct] Start to update product. product info:{}", product);
+            logger.debug("[editProduct] Start to update product. product info:" + product);
             ValidationResult validResult = getValidator().validate(product);
             if (validResult.hasError()) {
-                logger.debug("[editProduct] Invalid product. Errors:{}", validResult.getErrors());
+                logger.debug("[editProduct] Invalid product. Errors:" + validResult.getErrors());
                 return new SavingResult<>(validResult.getErrors());
             }
 
             Product updated = getRepository(connection).update(product);
-            logger.debug("[editProduct] Finish to update product. product info:{}", product);
+            logger.debug("[editProduct] Finish to update product. product info:"+ product);
             return new SavingResult<>(updated);
         } catch (Exception e) {
+            logger.warn("[editProduct] Exception while execution method. Product id:" + id);
             String errorMessage =
                     getErrorFormatter()
                             .format("[editProduct] Error while updating product. product: %s", product)
@@ -189,8 +197,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     private boolean isAvailableCategory(String categoryName) {
         if (StringUtils.isNotEmpty(categoryName)) {
             for (ProductCategory category : ProductCategory.values()) {
-                //TODO remove dots
-                /*String upperCategoryName = categoryName.toUpperCase();*/
                 if (category.name().equals(categoryName.toUpperCase())) {
                     return true;
                 }

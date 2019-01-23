@@ -2,6 +2,7 @@ package com.epam.web.controller.command.cart;
 
 import com.epam.web.controller.command.Command;
 import com.epam.web.controller.command.CommandResult;
+import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
 import com.epam.web.service.exception.ServiceException;
@@ -27,12 +28,10 @@ public class ChangeCartItemCountCommand implements Command {
                 if(cartProducts != null){
                     ((List<Long>)cartProducts)
                             .add(Long.valueOf(productId));
+                    return CommandResult.forward(Pages.CART_PAGE);
                 }
             }
-
-
         }
-
-        return null;
+        return CommandResult.forward(Pages.PAGE_NOT_FOUND);
     }
 }

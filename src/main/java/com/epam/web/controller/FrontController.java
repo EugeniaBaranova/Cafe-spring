@@ -41,7 +41,7 @@ public class FrontController extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            if (resp.isCommitted()){
+            if (!resp.isCommitted()){
                 String command = req.getParameter(RequestParameter.COMMAND);
                 Command action = getCommandFactory().getCommand(command);
                 if(action != null){

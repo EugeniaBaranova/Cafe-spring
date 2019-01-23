@@ -32,7 +32,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     private List<T> executeQuery(String query, List<Object> parameters) throws RepositoryException {
 
-        ResultSet resultSe = null;
+        logger.debug("[executeQuery] Start to execute method. Query :" + query);
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(query)
         ) {
             if (parameters != null) {
@@ -42,14 +42,16 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
                     parameterPosition++;
                 }
             }
-            resultSe = preparedStatement.executeQuery();
+            ResultSet resultSe = preparedStatement.executeQuery();
             List<T> entities = new ArrayList<>();
             while (resultSe.next()) {
                 T entity = getConverter().convert(resultSe);
                 entities.add(entity);
             }
+            logger.debug("[executeQuery] Finish to execute method");
             return entities;
         } catch (SQLException e) {
+            logger.warn("[executeQuery] SQL Exception while execution method");
             throw new RepositoryException(e.getMessage(), e);
         }
     }
@@ -66,16 +68,21 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     @Override
     public T add(T entity) throws RepositoryException {
+
+        String query = SqlUtils.getInsertStatement(getTable(), getFields());
+        logger.debug("[add] Start to execute method. Query :" + query);
         try (PreparedStatement pStatement = this.connection.prepareStatement(
-                SqlUtils.getInsertStatement(getTable(), getFields()),
+                query,
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
             PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
+            logger.debug("[add] Prepared statement ready for query:" + query);
             int affectedRows = readyPreparedStatement.executeUpdate();
             if (entity.getId() == null) {
                 if (affectedRows != 0) {
                     try (ResultSet generatedKeys = readyPreparedStatement.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
                             entity.setId(generatedKeys.getLong(1));
+                            logger.debug("[add] Generated id :" + entity.getId());
                             return entity;
                         }
                     }
@@ -83,6 +90,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
             }
             return entity;
         } catch (Exception e) {
+            logger.warn("[add]Exception while execute query :" + query);
             throw new RepositoryException(e);
         }
     }
@@ -91,7 +99,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     public void remove(T object) throws RepositoryException {
         try (PreparedStatement pStatement = connection.prepareStatement(SqlUtils.getDeleteStatement(getTable()))) {
             pStatement.setLong(1, object.getId());
-            int remove = pStatement.executeUpdate();
+            pStatement.executeUpdate();
         } catch (Exception e) {
             throw new RepositoryException(e);
         }

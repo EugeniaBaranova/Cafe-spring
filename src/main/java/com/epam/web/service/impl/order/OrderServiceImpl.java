@@ -14,20 +14,20 @@ import com.epam.web.service.OrderService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.service.impl.BaseServiceImpl;
 import com.epam.web.service.validation.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
     public OrderServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<Order> validator) {
         super(repositoryFactory, repositorySource, validator);
@@ -37,12 +37,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Override
     public Order makeOrder(OrderContext orderContext) throws ServiceException {
-        logger.debug("[makeOrder] Start to execute method. Order info : {} ", orderContext);
+        logger.debug("[makeOrder] Start to execute method. Order info : " + orderContext);
 
         User customer = orderContext.getCustomer();
         Connection connection = getRepositorySource().getConnection();
         try {
-            logger.debug("[makeOrder] Begin transaction. Customer :{}", customer.getId());
+            logger.debug("[makeOrder] Begin transaction. Customer :" + customer.getId());
             TransactionUtils.begin(connection);
 
             ProductRepository productRepository = getRepositoryFactory()
@@ -66,24 +66,28 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
                 order.setSum(productCostSum);
                 order.setUserId(customer.getId());
-                logger.debug("[makeOrder] Start to to save order. Customer :{} , Order :{}", customer.getId(), order);
+                logger.debug("[makeOrder] Start to to save order. Customer :" + customer.getId() + ", Order : " + order);
                 Order savedOrder = orderRepository.add(order);
-                logger.debug("[makeOrder] Finish to save order. Customer :{} ,  Saved order id:{}", customer.getId(), savedOrder.getId());
+                logger.debug("[makeOrder] Finish to save order. Customer :" + customer.getId() + ", Saved id: " + savedOrder.getId());
 
                 List<OrderItem> orderItems = createOrderItems(productCountMap, order);
                 this.saveOrderItems(orderItems, orderItemRepository);
+                logger.debug("[makeOrder] Finish to save orderItems. Customer :" + customer.getId());
+
                 this.updateProductAmounts(productCountMap, productRepository);
+                logger.debug("[makeOrder] Finish to update product Amount. Customer :" + customer.getId());
+
                 TransactionUtils.commit(connection);
                 return savedOrder;
             }
             return null;
         } catch (Exception e) {
-            logger.warn("[makeOrder] Exception while execute transaction. Do Roll back. Customer :{}", customer.getId());
+            logger.warn("[makeOrder] Exception while execute transaction. Do Roll back. Customer :" + customer.getId());
             TransactionUtils.rollBack(connection);
-            logger.warn("[makeOrder] Roll back done. Customer :{}", customer.getId());
+            logger.warn("[makeOrder] Roll back done. Customer :" + customer.getId());
             throw new ServiceException("Exception while execution method. Customer :" + customer.getId());
         } finally {
-            logger.debug("[makeOrder] Finish to execute method. Close transaction. Customer :{}", customer.getId());
+            logger.debug("[makeOrder] Finish to execute method. Close transaction. Customer :" + customer.getId());
             TransactionUtils.close(connection);
         }
     }

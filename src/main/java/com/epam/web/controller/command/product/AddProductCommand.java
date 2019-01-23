@@ -35,7 +35,7 @@ public class AddProductCommand implements Command {
 
     private ProductService productService;
 
-    AddProductCommand(ProductService productService) {
+    public AddProductCommand(ProductService productService) {
         this.productService = productService;
     }
 

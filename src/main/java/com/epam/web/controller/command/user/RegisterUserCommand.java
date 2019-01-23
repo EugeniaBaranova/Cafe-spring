@@ -22,7 +22,7 @@ public class RegisterUserCommand implements Command {
     private static final Logger logger = Logger.getLogger(RegisterUserCommand.class);
     private UserService userService;
 
-    RegisterUserCommand(UserService userService) {
+    public RegisterUserCommand(UserService userService) {
         this.userService = userService;
     }
 

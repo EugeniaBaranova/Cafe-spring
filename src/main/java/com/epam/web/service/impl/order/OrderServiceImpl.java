@@ -53,8 +53,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     .newInstance(OrderItemRepository.class, connection);
             List<Product> products = orderContext.getProducts();
             if (products != null) {
-                Map<Product, Integer> productCountMap = getProductCountMap(products);
-                BigDecimal productCostSum = getProductCostSum(products);
+                Map<Product, Integer> productCountMap
+                        = getProductCountMap(products, orderContext.getCartProductIds());
+                BigDecimal productCostSum = getProductCostSum(productCountMap);
                 Order order = new Order();
                 order.setOrderState(OrderState.WAITING);
                 order.setPaymentMethod(orderContext.getPaymentMethod());
@@ -140,12 +141,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
-    private Map<Product, Integer> getProductCountMap(List<Product> products) {
+    private Map<Product, Integer> getProductCountMap(List<Product> products, List<Long> cartIds) {
         Map<Product, Integer> productMap = new HashMap<>();
 
         for (Product product : products) {
             if (!productMap.containsKey(product)) {
-                int productCount = getProductCount(product, products);
+                int productCount = getProductCount(product, cartIds);
                 productMap.put(product, productCount);
             }
         }
@@ -160,22 +161,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
 
-    private BigDecimal getProductCostSum(List<Product> products) {
-        if (products != null && !products.isEmpty()) {
-            return products
-                    .stream()
-                    .filter(product -> product.getCost() != null)
-                    .map(Product::getCost)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+    private BigDecimal getProductCostSum(Map<Product, Integer> productMap) {
+        if (productMap != null && !productMap.isEmpty()) {
+            BigDecimal result = BigDecimal.ZERO;
+            for(Map.Entry<Product, Integer> entry : productMap.entrySet()){
+                Product product = entry.getKey();
+                Integer count = entry.getValue();
+                BigDecimal cost = product.getCost();
+                BigDecimal itemResult = cost.multiply(new BigDecimal(count));
+                result = result.add(itemResult);
+            }
+            return result;
         }
 
         return BigDecimal.ZERO;
     }
 
-    private int getProductCount(Product product, List<Product> products) {
+    private int getProductCount(Product product, List<Long> products) {
         return products
                 .stream()
-                .filter(product1 -> product1.equals(product))
+                .filter(prodId -> product.getId() == prodId)
                 .collect(Collectors.toList())
                 .size();
     }

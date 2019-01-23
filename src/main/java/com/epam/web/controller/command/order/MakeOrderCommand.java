@@ -51,9 +51,10 @@ public class MakeOrderCommand implements Command {
                 Object user = session.getAttribute(SessionAttribute.USER);
                 if (user != null) {
                     if (productsInfo instanceof Iterable) {
+                        List<Long> cartIds = (List<Long>) productsInfo;
                         Set<Long> ids = new HashSet<>((List<Long>) productsInfo);
                         List<Product> products = getProductService().findAllByIdWithoutImage(ids);
-                        OrderContext orderContext = new OrderContext(date, products, paymentMethod, (User) user);
+                        OrderContext orderContext = new OrderContext(date, products, paymentMethod, (User) user, cartIds);
                         Order order = getOrderService().makeOrder(orderContext);
                         if (order != null) {
                             session.setAttribute(SessionAttribute.CART_PRODUCTS, new ArrayList<>());

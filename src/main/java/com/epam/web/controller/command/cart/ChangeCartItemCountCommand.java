@@ -40,7 +40,7 @@ public class ChangeCartItemCountCommand implements Command {
                             cartProduct.remove(productId);
                         }
                     }
-                    return CommandResult.forward(Pages.CART_PAGE);
+                    return CommandResult.forward("/controller?command=show_cart");
                 }
             }
         }

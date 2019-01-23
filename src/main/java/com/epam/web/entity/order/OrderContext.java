@@ -14,16 +14,26 @@ public class OrderContext {
     private User customer;
     private List<Product> products;
     private PaymentMethod paymentMethod;
+    private List<Long> cartProductIds;
 
 
 
-    public OrderContext(LocalDate receiving, List<Product> products, PaymentMethod paymentMethod, User user) {
+    public OrderContext(LocalDate receiving, List<Product> products, PaymentMethod paymentMethod, User user, List<Long> cartProductIds) {
         this.receiving = receiving;
         this.products = products;
         this.paymentMethod = paymentMethod;
         this.customer = user;
+        this.cartProductIds = cartProductIds;
     }
 
+
+    public List<Long> getCartProductIds() {
+        return cartProductIds;
+    }
+
+    public void setCartProductIds(List<Long> cartProductIds) {
+        this.cartProductIds = cartProductIds;
+    }
 
     public LocalDate getReceiving() {
         return receiving;

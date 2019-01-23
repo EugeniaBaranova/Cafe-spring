@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.order;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +56,8 @@ public class MakeOrderCommand implements Command {
                         OrderContext orderContext = new OrderContext(date, products, paymentMethod, (User) user);
                         Order order = getOrderService().makeOrder(orderContext);
                         if (order != null) {
-                            return CommandResult.redirect(Pages.ORDERS_PAGE);
+                            session.setAttribute(SessionAttribute.CART_PRODUCTS, new ArrayList<>());
+                            return CommandResult.redirect("/controller?command=show_orders");
                         }
                     }
                 }

@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.user;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.utils.StringUtils;
 import com.epam.web.controller.constant.Pages;
@@ -21,7 +23,7 @@ public class LoginCommand implements Command {
 
     private UserService userService;
 
-    LoginCommand(UserService userService) {
+    public LoginCommand(UserService userService) {
         this.userService = userService;
     }
 

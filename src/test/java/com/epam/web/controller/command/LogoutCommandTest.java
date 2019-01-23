@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.controller.command.user.LogoutCommand;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.service.exception.ServiceException;
 import org.junit.Assert;
@@ -16,13 +17,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LogOutCommandTest {
+public class LogoutCommandTest {
 
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpSession session = mock(HttpSession.class);
 
-    private LogOutCommand logOutCommand = new LogOutCommand();
+    private LogoutCommand logoutCommand = new LogoutCommand();
 
     @Test
     @Ignore
@@ -31,7 +32,7 @@ public class LogOutCommandTest {
         when(request.getSession()).thenReturn(session);
         doNothing().when(session).invalidate();
         //when
-        CommandResult result = logOutCommand.execute(request, response);
+        CommandResult result = logoutCommand.execute(request, response);
         //then
         Assert.assertTrue(result.isRedirect());
         Assert.assertThat(result.getPage(), is(Pages.LOGIN_PAGE));

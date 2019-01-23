@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.product;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.SessionAttribute;
 import com.epam.web.entity.SavingResult;
@@ -53,11 +55,6 @@ public class AddProductCommand implements Command {
         return CommandResult.redirect(Pages.PRODUCT_PAGE);
     }
 
-    private boolean isDigit(String stringDigit){
-
-
-       return false;
-    }
 
     private Product convertFromReq(HttpServletRequest req) throws ServiceException {
         try {

@@ -9,6 +9,7 @@ import com.epam.web.entity.user.User;
 import com.epam.web.repository.*;
 import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.RepositoryException;
+import com.epam.web.repository.specification.order.GetAllOrdersSpec;
 import com.epam.web.service.OrderService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.service.impl.BaseServiceImpl;
@@ -87,6 +88,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
+    @Override
+    public List<Order> getAllByUserId(Long userId) throws ServiceException {
+
+        try (Connection connection = getRepositorySource().getConnection()) {
+            return getRepository(connection)
+                    .query(new GetAllOrdersSpec(userId));
+        } catch (Exception e) {
+            logger.warn("[getAllByUserId] Exception while execution service method");
+            throw new ServiceException(e);
+        }
+    }
+
     private List<OrderItem> createOrderItems(Map<Product, Integer> productCountMap, Order order) {
         List<OrderItem> orderItems = new ArrayList<>();
         if (productCountMap != null) {
@@ -145,7 +158,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     private BigDecimal getProductCostSum(List<Product> products) {
         if (products != null && !products.isEmpty()) {
-            products
+            return products
                     .stream()
                     .filter(product -> product.getCost() != null)
                     .map(Product::getCost)

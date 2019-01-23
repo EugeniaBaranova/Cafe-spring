@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.product;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.controller.constant.RequestParameter;
@@ -13,14 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowCategoryProductsCommand implements Command {
+public class ShowProductsCategoryCommand implements Command {
 
     private static final int COUNT_ON_PAGE = 8;
     private static final int ZERO_DIVISION_REMAINDER = 0;
 
     private ProductService productService;
 
-    ShowCategoryProductsCommand(ProductService productService) {
+    public ShowProductsCategoryCommand(ProductService productService) {
         this.productService = productService;
     }
 

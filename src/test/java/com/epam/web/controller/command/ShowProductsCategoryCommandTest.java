@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.controller.command.product.ShowProductsCategoryCommand;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.product.ProductBuilder;
@@ -21,13 +22,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ShowCategoryProductsCommandTest {
+public class ShowProductsCategoryCommandTest {
 
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private ProductService productService = mock(ProductService.class);
 
-    private ShowCategoryProductsCommand categoryProductsCommand = new ShowCategoryProductsCommand(productService);
+    private ShowProductsCategoryCommand categoryProductsCommand = new ShowProductsCategoryCommand(productService);
 
     @Test
     @Ignore

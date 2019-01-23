@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.user;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
@@ -16,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
-public class UserRegistrationCommand implements Command {
-    private static final Logger logger = Logger.getLogger(UserRegistrationCommand.class);
+public class RegisterUserCommand implements Command {
+    private static final Logger logger = Logger.getLogger(RegisterUserCommand.class);
     private UserService userService;
 
-    UserRegistrationCommand(UserService userService) {
+    RegisterUserCommand(UserService userService) {
         this.userService = userService;
     }
 

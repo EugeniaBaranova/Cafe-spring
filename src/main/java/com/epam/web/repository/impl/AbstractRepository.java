@@ -31,6 +31,8 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     private List<T> executeQuery(String query, List<Object> parameters) throws RepositoryException {
+
+        ResultSet resultSe = null;
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(query)
         ) {
             if (parameters != null) {
@@ -40,10 +42,10 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
                     parameterPosition++;
                 }
             }
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSe = preparedStatement.executeQuery();
             List<T> entities = new ArrayList<>();
-            while (resultSet.next()) {
-                T entity = getConverter().convert(resultSet);
+            while (resultSe.next()) {
+                T entity = getConverter().convert(resultSe);
                 entities.add(entity);
             }
             return entities;

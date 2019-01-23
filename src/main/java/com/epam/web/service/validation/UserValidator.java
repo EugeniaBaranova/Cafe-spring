@@ -3,6 +3,7 @@ package com.epam.web.service.validation;
 import com.epam.web.entity.user.User;
 import com.epam.web.entity.validation.Error;
 import com.epam.web.entity.validation.ValidationResult;
+import com.epam.web.utils.StringUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,8 +15,7 @@ public class UserValidator extends AbstractValidator<User> {
 
     private static final String NAME_PATTERN = "^[a-zA-Zа-яА-Я ]{5,30}$";
     private static final String LOGIN_PATTERN = "^[a-zA-Zа-яА-Я0-9 ]{5,30}$";
-    private static final String EMAIL_PATTERN = "^(([^<>()[\\]\\\\.,;:\\s@\\\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-    private static final String PASSWORD_PATTERN = "^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/";
+    private static final String EMAIL_PATTERN = "([a-zA-Z0-9]+)(@)([a-zA-Z]+)(\\.)([a-zA-Z]){2,3}";
 
     public UserValidator() {
         result.add(checkForName());
@@ -59,14 +59,15 @@ public class UserValidator extends AbstractValidator<User> {
 
     private Function<User, Optional<Error>> checkForPassword() {
         return user -> {
-            Error error = new Error();
             String userPassword = user.getPassword();
-            error.setFieldName(LOGIN);
-            error.setFieldValue(userPassword);
-            if (isEmpty(userPassword, error, "registration.message.empty_password")
-                    || isNotMatch(userPassword, PASSWORD_PATTERN, error, "registration.message.password_not_like_regexp")) {
+            if(StringUtils.isNotEmpty(userPassword)
+                    && userPassword.length() < 6){
+                Error error = new Error();
+                error.setFieldName(LOGIN);
+                error.setFieldValue(userPassword);
                 return Optional.of(error);
             }
+
             return Optional.empty();
         };
     }

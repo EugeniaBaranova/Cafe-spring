@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.product;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestAttribute;
 import com.epam.web.controller.constant.RequestParameter;
@@ -11,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class AllShowCategoryProductsCommand implements Command {
+public class ShowAllByCategoryCommand implements Command {
 
     private ProductService productService;
 
-    AllShowCategoryProductsCommand(ProductService productService) {
+    ShowAllByCategoryCommand(ProductService productService) {
         this.productService = productService;
     }
 

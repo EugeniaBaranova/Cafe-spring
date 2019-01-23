@@ -7,7 +7,8 @@ import java.sql.Connection;
 public class TransactionUtils {
 
     public static void commit(Connection connection) {
-        doAction(con -> con.commit()
+        doAction(con -> {con.commit();
+        con.setAutoCommit(true);}
                 ,connection
                 ,"Exception while commit transaction");
     }

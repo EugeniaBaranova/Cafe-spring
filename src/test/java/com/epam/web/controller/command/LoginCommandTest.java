@@ -1,5 +1,6 @@
 package com.epam.web.controller.command;
 
+import com.epam.web.controller.command.user.LoginCommand;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.entity.user.User;
 import com.epam.web.entity.user.UserBuilder;

@@ -1,5 +1,7 @@
-package com.epam.web.controller.command;
+package com.epam.web.controller.command.cart;
 
+import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
 import com.epam.web.entity.product.Product;

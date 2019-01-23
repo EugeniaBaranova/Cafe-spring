@@ -12,4 +12,6 @@ public interface OrderService extends Service {
 
     Order makeOrder(OrderContext orderContext) throws ServiceException;
 
+    List<Order> getAllByUserId(Long userId) throws ServiceException;
+
 }

@@ -1,10 +1,13 @@
 package com.epam.web.controller.command.cart;
 
+import com.epam.web.config.annotation.UriCommand;
 import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandName;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestParameter;
 import com.epam.web.controller.constant.SessionAttribute;
 import com.epam.web.service.exception.ServiceException;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@UriCommand(name = CommandName.DELETE_FROM_CART)
+@Component
 public class DeleteFromCartCommand implements Command {
 
     @Override

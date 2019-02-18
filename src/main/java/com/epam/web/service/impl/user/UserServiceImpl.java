@@ -7,42 +7,45 @@ import com.epam.web.entity.validation.ValidationResult;
 import com.epam.web.repository.Repository;
 import com.epam.web.repository.RepositoryFactory;
 import com.epam.web.repository.UserRepository;
-import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.specification.user.CheckUniqueLoginAndEmailSpec;
 import com.epam.web.repository.specification.user.UserByLoginAndPasswordSpec;
 import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.service.impl.BaseServiceImpl;
-import com.epam.web.service.impl.product.ProductServiceImpl;
 import com.epam.web.service.validation.Validator;
 import com.epam.web.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+@Component
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class.getName());
 
-    public UserServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<User> validator) {
-        super(repositoryFactory, repositorySource, validator);
+    @Autowired
+    public UserServiceImpl(RepositoryFactory repositoryFactory,
+                           Validator<User> validator,
+                           Repository<User> mainRepository) {
+        super(repositoryFactory, validator, mainRepository);
     }
 
 
     @Override
     public Optional<User> login(String login, String password) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             if (login != null & password != null) {
                 String hashedPassword = encodePassword(password);
-                return getRepository(connection)
-                        .queryForSingleResult(
-                                new UserByLoginAndPasswordSpec(login, hashedPassword)
-                        );
+                return getMainRepository().queryForSingleResult(
+                        new UserByLoginAndPasswordSpec(login, hashedPassword));
             }
             return Optional.empty();
         } catch (Exception e) {
@@ -55,14 +58,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public SavingResult<User> register(User user) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             Optional<Set<Error>> validationError = validateUser(user);
             if (validationError.isPresent()) {
                 return new SavingResult<>(validationError.get());
             }
             String hashedPassword = encodePassword(user.getPassword());
             user.setPassword(hashedPassword);
-            User savedUser = getRepository(connection).add(user);
+            User savedUser = getMainRepository().add(user);
             return new SavingResult<>(savedUser);
         } catch (Exception e) {
             String errorMessage = getErrorFormatter()
@@ -113,16 +116,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     private boolean isNotUniqueUser(User user) throws RepositoryException, SQLException {
-        try (Connection connection = getRepositorySource().getConnection()) {
-            Repository<User> userRepository = getRepository(connection);
-            Optional<User> existsUser =
-                    userRepository
-                            .queryForSingleResult(
-                                    new CheckUniqueLoginAndEmailSpec(
-                                            user.getLogin(),
-                                            user.getEmail()));
-            return existsUser.isPresent();
-        }
+        Repository<User> userRepository = getMainRepository();
+        Optional<User> existsUser =
+                userRepository
+                        .queryForSingleResult(
+                                new CheckUniqueLoginAndEmailSpec(
+                                        user.getLogin(),
+                                        user.getEmail()));
+        return existsUser.isPresent();
     }
 
     private Optional<Set<Error>> validateUser(User user) throws RepositoryException, SQLException {
@@ -143,9 +144,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    protected Repository<User> getRepository(Connection connection) {
+    protected Repository<User> getRepository(DataSource dataSource) {
         return getRepositoryFactory()
                 .newInstance(UserRepository.class,
-                        connection);
+                        dataSource);
     }
 }

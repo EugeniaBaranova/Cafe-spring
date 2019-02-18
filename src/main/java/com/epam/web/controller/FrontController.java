@@ -4,11 +4,11 @@ import com.epam.web.controller.command.Command;
 import com.epam.web.controller.command.CommandFactory;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.RequestParameter;
-import com.epam.web.repository.impl.AbstractRepository;
 import com.epam.web.utils.ServletResponseUtils;
+import com.epam.web.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,6 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.epam.web.controller.command.CommandName.*;
 
 
 public class FrontController extends HttpServlet {
@@ -41,13 +47,13 @@ public class FrontController extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            if (!resp.isCommitted()){
+            if (!resp.isCommitted()) {
                 String command = req.getParameter(RequestParameter.COMMAND);
-                Command action = getCommandFactory().getCommand(command);
-                if(action != null){
+                Command action = commandFactory.getCommand(command);
+                if (action != null) {
                     CommandResult commandResult = action.execute(req, resp);
                     ServletResponseUtils.sendResponse(req, resp, commandResult, getServletContext());
-                }else {
+                } else {
                     resp.sendError(404);
                 }
             }
@@ -55,10 +61,6 @@ public class FrontController extends HttpServlet {
             logger.error("[process] Exception.", e);
             resp.sendError(500);
         }
-    }
-
-    private CommandFactory getCommandFactory() {
-        return commandFactory;
     }
 
     @Override

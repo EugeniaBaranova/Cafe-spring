@@ -5,7 +5,13 @@ import com.epam.web.repository.OrderRepository;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
 import com.epam.web.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,12 +21,15 @@ import java.util.List;
 
 import static com.epam.web.repository.converter.Fields.Order.*;
 
+@Component
 public class OrderRepositoryImpl extends AbstractRepository<Order> implements OrderRepository {
 
     private final static String TABLE_NAME = "`order`";
 
-    public OrderRepositoryImpl(Connection connection, Converter<Order> converter) {
-        super(connection, converter);
+    @Autowired
+    public OrderRepositoryImpl(@Qualifier("baseConnectionPool") DataSource dataSource,
+                               RowMapper<Order> rowMapper) {
+        super(dataSource, rowMapper);
     }
 
     @Override

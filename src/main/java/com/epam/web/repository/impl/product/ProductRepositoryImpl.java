@@ -6,7 +6,14 @@ import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.exception.RepositoryException;
 import com.epam.web.repository.impl.AbstractRepository;
 import com.epam.web.utils.SqlUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,20 +24,25 @@ import java.util.List;
 
 import static com.epam.web.repository.converter.Fields.Product.*;
 
+@Component
 public class ProductRepositoryImpl extends AbstractRepository<Product> implements ProductRepository {
 
     private final static String TABLE_NAME = "product";
 
-    public ProductRepositoryImpl(Connection connection, Converter<Product> converter) {
-        super(connection, converter);
+    @Autowired
+    public ProductRepositoryImpl(@Qualifier("baseConnectionPool")DataSource dataSource,
+                                 RowMapper<Product> rowMapper) {
+        super(dataSource, rowMapper);
     }
 
     @Override
     public Product update(Product entity) throws RepositoryException {
-        try (PreparedStatement pStatement = this.connection.prepareStatement(
-                getUpdateSql(entity))) {
-            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
-            readyPreparedStatement.executeUpdate();
+        String query = getUpdateSql(entity);
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                return getReadyPreparedStatement(entity, preparedStatement);
+            });
             return entity;
         } catch (Exception e) {
             throw new RepositoryException(e);

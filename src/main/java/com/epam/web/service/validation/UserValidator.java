@@ -4,6 +4,7 @@ import com.epam.web.entity.user.User;
 import com.epam.web.entity.validation.Error;
 import com.epam.web.entity.validation.ValidationResult;
 import com.epam.web.utils.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
@@ -11,6 +12,7 @@ import java.util.function.Function;
 import static com.epam.web.repository.converter.Fields.User.LOGIN;
 import static com.epam.web.repository.converter.Fields.User.NAME;
 
+@Component
 public class UserValidator extends AbstractValidator<User> {
 
     private static final String NAME_PATTERN = "^[a-zA-Zа-яА-Я ]{5,30}$";

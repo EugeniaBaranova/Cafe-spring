@@ -18,29 +18,37 @@ import com.epam.web.service.validation.Validator;
 import com.epam.web.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.*;
 
+@Component
 public class ProductServiceImpl extends BaseServiceImpl<Product> implements ProductService {
+
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ProductServiceImpl.class);
 
-    public ProductServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<Product> validator) {
-        super(repositoryFactory, repositorySource, validator);
+    @Autowired
+    public ProductServiceImpl(RepositoryFactory repositoryFactory,
+                              Validator<Product> validator,
+                              Repository<Product> repository) {
+        super(repositoryFactory, validator, repository);
     }
 
 
     @Override
     public List<Product> findByCategory(String productCategory, int currentPage, int countOnPage) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             if (isAvailableCategory(productCategory)) {
                 int offset = (currentPage * countOnPage) - countOnPage;
-                return getRepository(connection)
-                        .query(
-                                new ProductsByCategoryPaginationSpec(
-                                        productCategory,
-                                        countOnPage,
-                                        offset));
+                return getMainRepository().query(
+                        new ProductsByCategoryPaginationSpec(
+                                productCategory,
+                                countOnPage,
+                                offset));
             }
         } catch (Exception e) {
             logger.warn("[findByCategory] Exception while execution method");
@@ -54,9 +62,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findByCategory(String productCategory) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             if (isAvailableCategory(productCategory)) {
-                return getRepository(connection)
+                return getMainRepository()
                         .query(new ProductsByCategorySpec(productCategory));
             }
         } catch (Exception e) {
@@ -71,9 +79,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public int amountInCategory(String productCategory) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             if (isAvailableCategory(productCategory)) {
-                List<Product> products = getRepository(connection)
+                List<Product> products = getMainRepository()
                         .query(new ProductAmountInCategorySpec(productCategory));
                 if (products != null) {
                     return products.size();
@@ -91,8 +99,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public Optional<Product> findProduct(Long id) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
-            return getRepository(connection)
+        try {
+            return getMainRepository()
                     .queryForSingleResult(new ProductByIdSpec(id));
         } catch (Exception e) {
             logger.warn("[findProduct] Exception while execution method. Product : " + id);
@@ -107,7 +115,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     @Override
     public SavingResult<Product> addProduct(Product product) throws ServiceException {
 
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             logger.debug("[addProduct] Start to execute method. Product to save: " + product);
 
             ValidationResult validResult = getValidator().validate(product);
@@ -117,7 +125,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                 return new SavingResult<>(validResult.getErrors());
             }
 
-            Product savedProduct = getRepository(connection).add(product);
+            Product savedProduct = getMainRepository().add(product);
             logger.debug("[addProduct] Finish to execute method. Saved product:" + savedProduct);
             return new SavingResult<>(savedProduct);
         } catch (Exception e) {
@@ -132,13 +140,12 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public void deleteProduct(Long id) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             logger.debug("[deleteProduct] Start to remove product by id:{}" + id);
             Product product = new ProductBuilder()
                     .setId(id)
                     .build();
-            getRepository(connection)
-                    .remove(product);
+            getMainRepository().remove(product);
             logger.debug("[deleteProduct] Finish to remove product by id:" + id);
         } catch (Exception e) {
             logger.warn("[deleteProduct] Exception while execution method. Product id:" + id);
@@ -152,7 +159,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public SavingResult<Product> editProduct(Long id, Product product) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
+        try {
             logger.debug("[editProduct] Start to update product. product info:" + product);
             ValidationResult validResult = getValidator().validate(product);
             if (validResult.hasError()) {
@@ -160,8 +167,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
                 return new SavingResult<>(validResult.getErrors());
             }
 
-            Product updated = getRepository(connection).update(product);
-            logger.debug("[editProduct] Finish to update product. product info:"+ product);
+            Product updated = getMainRepository().update(product);
+            logger.debug("[editProduct] Finish to update product. product info:" + product);
             return new SavingResult<>(updated);
         } catch (Exception e) {
             logger.warn("[editProduct] Exception while execution method. Product id:" + id);
@@ -175,8 +182,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findAllByIdWithoutImage(Set<Long> productIds) {
-        try (Connection connection = getRepositorySource().getConnection()) {
-            return getRepository(connection)
+        try {
+            return getMainRepository()
                     .query(new ProductsWithoutImageByIdsSpec(productIds));
         } catch (Exception e) {
             logger.warn("[findAllByIdWithoutImage] Exception while execution method.");
@@ -186,8 +193,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
 
     @Override
     public List<Product> findAllById(Set<Long> productIds) throws ServiceException {
-        try (Connection connection = getRepositorySource().getConnection()) {
-            return getRepository(connection)
+        try {
+            return getMainRepository()
                     .query(new ProductByIds(productIds));
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -206,11 +213,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product> implements Prod
     }
 
     @Override
-    protected Repository<Product> getRepository(Connection connection) {
+    protected Repository<Product> getRepository(DataSource dataSource) {
         return getRepositoryFactory()
                 .newInstance(
                         ProductRepository.class,
-                        connection);
+                        dataSource);
     }
 
 

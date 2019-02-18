@@ -1,6 +1,8 @@
 package com.epam.web.controller.command.product;
 
+import com.epam.web.config.annotation.UriCommand;
 import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandName;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.SessionAttribute;
@@ -17,6 +19,9 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +33,8 @@ import java.util.Set;
 
 import static com.epam.web.controller.constant.RequestParameter.*;
 
+@UriCommand(name = CommandName.ADD_NEW_PRODUCT)
+@Component
 public class AddProductCommand implements Command {
 
     private static final String IMAGE_CONTENT_TYPE = "image/jpeg";
@@ -35,7 +42,8 @@ public class AddProductCommand implements Command {
 
     private ProductService productService;
 
-    public AddProductCommand(ProductService productService) {
+    @Autowired
+    public AddProductCommand(@Qualifier("productServiceImpl") ProductService productService) {
         this.productService = productService;
     }
 

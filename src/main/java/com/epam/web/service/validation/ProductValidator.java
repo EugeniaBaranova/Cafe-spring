@@ -3,6 +3,7 @@ package com.epam.web.service.validation;
 import com.epam.web.entity.product.Product;
 import com.epam.web.entity.validation.Error;
 import com.epam.web.entity.validation.ValidationResult;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -10,6 +11,7 @@ import java.util.function.Function;
 
 import static com.epam.web.repository.converter.Fields.Product.*;
 
+@Component
 public class ProductValidator extends AbstractValidator<Product> {
 
     private static final String NAME_AND_DESCRIPTION_PATTERN = "^[a-zA-Zа-яА-Я0-9()\\-\\_., ]{5,30}$";

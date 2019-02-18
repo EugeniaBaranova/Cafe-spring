@@ -1,6 +1,8 @@
 package com.epam.web.controller.command.user;
 
+import com.epam.web.config.annotation.UriCommand;
 import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandName;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestParameter;
@@ -12,17 +14,25 @@ import com.epam.web.entity.validation.Error;
 import com.epam.web.service.UserService;
 import com.epam.web.service.exception.ServiceException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
+@UriCommand(name = CommandName.REGISTRATION)
+@Component
 public class RegisterUserCommand implements Command {
+
     private static final Logger logger = Logger.getLogger(RegisterUserCommand.class);
+
     private UserService userService;
 
-    public RegisterUserCommand(UserService userService) {
+    @Autowired
+    public RegisterUserCommand(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
     }
 

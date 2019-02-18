@@ -8,7 +8,14 @@ import com.epam.web.repository.specification.Specification;
 import com.epam.web.utils.SqlUtils;
 import com.epam.web.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,36 +28,26 @@ import java.util.Optional;
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     private static final Logger logger = Logger.getLogger(AbstractRepository.class);
     private static final int FIRST_LIST_ELEMENT = 0;
-    private Converter<T> converter;
-    protected Connection connection;
+    private RowMapper<T> rowMapper;
+    protected JdbcTemplate jdbcTemplate;
 
 
-    public AbstractRepository(Connection connection, Converter<T> converter) {
-        this.converter = converter;
-        this.connection = connection;
+    public AbstractRepository(DataSource dataSource, RowMapper<T> rowMapper) {
+        this.rowMapper = rowMapper;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     private List<T> executeQuery(String query, List<Object> parameters) throws RepositoryException {
 
         logger.debug("[executeQuery] Start to execute method. Query :" + query);
-        try (PreparedStatement preparedStatement = this.connection.prepareStatement(query)
-        ) {
-            if (parameters != null) {
-                int parameterPosition = 1;
-                for (Object parameter : parameters) {
-                    preparedStatement.setObject(parameterPosition, parameter);
-                    parameterPosition++;
-                }
-            }
-            ResultSet resultSe = preparedStatement.executeQuery();
+        try {
             List<T> entities = new ArrayList<>();
-            while (resultSe.next()) {
-                T entity = getConverter().convert(resultSe);
-                entities.add(entity);
+            if (parameters != null) {
+                entities = jdbcTemplate.query(query, rowMapper, parameters.toArray());
             }
             logger.debug("[executeQuery] Finish to execute method");
             return entities;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.warn("[executeQuery] SQL Exception while execution method");
             throw new RepositoryException(e.getMessage(), e);
         }
@@ -65,27 +62,25 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         return Optional.empty();
     }
 
-
     @Override
     public T add(T entity) throws RepositoryException {
-
         String query = SqlUtils.getInsertStatement(getTable(), getFields());
         logger.debug("[add] Start to execute method. Query :" + query);
-        try (PreparedStatement pStatement = this.connection.prepareStatement(
-                query,
-                PreparedStatement.RETURN_GENERATED_KEYS)) {
-            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
-            logger.debug("[add] Prepared statement ready for query:" + query);
-            int affectedRows = readyPreparedStatement.executeUpdate();
+        try {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            int affectedRows = jdbcTemplate.update(
+                    connection -> {
+                        PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+                        return AbstractRepository.this.getReadyPreparedStatement(entity, preparedStatement);
+                    },
+                    keyHolder);
+
             if (entity.getId() == null) {
-                if (affectedRows != 0) {
-                    try (ResultSet generatedKeys = readyPreparedStatement.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            entity.setId(generatedKeys.getLong(1));
-                            logger.debug("[add] Generated id :" + entity.getId());
-                            return entity;
-                        }
-                    }
+                Number generatedKeys = keyHolder.getKey();
+                if (affectedRows != 0 && generatedKeys != null) {
+                    entity.setId(generatedKeys.longValue());
+                    logger.debug("[add] Generated id :" + entity.getId());
+                    return entity;
                 }
             }
             return entity;
@@ -96,10 +91,10 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     @Override
-    public void remove(T object) throws RepositoryException {
-        try (PreparedStatement pStatement = connection.prepareStatement(SqlUtils.getDeleteStatement(getTable()))) {
-            pStatement.setLong(1, object.getId());
-            pStatement.executeUpdate();
+    public void remove(T entity) throws RepositoryException {
+        String query = SqlUtils.getDeleteStatement(getTable());
+        try {
+            jdbcTemplate.update(query, entity.getId());
         } catch (Exception e) {
             throw new RepositoryException(e);
         }
@@ -108,10 +103,12 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     @Override
     public T update(T entity) throws RepositoryException {
         Long id = entity.getId();
-        try (PreparedStatement pStatement = this.connection.prepareStatement(
-                SqlUtils.getUpdateStatement(getTable(), id, getFields()))) {
-            PreparedStatement readyPreparedStatement = getReadyPreparedStatement(entity, pStatement);
-            readyPreparedStatement.executeUpdate();
+        String query = SqlUtils.getUpdateStatement(getTable(), id, getFields());
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                return getReadyPreparedStatement(entity, preparedStatement);
+            });
             return entity;
         } catch (Exception e) {
             throw new RepositoryException(e);
@@ -143,8 +140,4 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     public abstract List<String> getFields();
 
     public abstract String getTable();
-
-    private Converter<T> getConverter() {
-        return converter;
-    }
 }

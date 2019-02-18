@@ -5,7 +5,13 @@ import com.epam.web.repository.UserRepository;
 import com.epam.web.repository.converter.Converter;
 import com.epam.web.repository.impl.AbstractRepository;
 import com.epam.web.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,10 +19,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class UserRepositoryImpl extends AbstractRepository<User> implements UserRepository {
 
-    public UserRepositoryImpl(Connection connection, Converter<User> converter) {
-        super(connection, converter);
+    private final static String TABLE_NAME = "user";
+
+    @Autowired
+    public UserRepositoryImpl(@Qualifier("baseConnectionPool")DataSource dataSource,
+                              RowMapper<User> rowMapper) {
+        super(dataSource, rowMapper);
     }
 
     @Override
@@ -51,7 +62,7 @@ public class UserRepositoryImpl extends AbstractRepository<User> implements User
 
     @Override
     public String getTable() {
-        return "user";
+        return TABLE_NAME;
     }
 }
 

@@ -15,7 +15,15 @@ import com.epam.web.service.exception.ServiceException;
 import com.epam.web.service.impl.BaseServiceImpl;
 import com.epam.web.service.validation.Validator;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -25,13 +33,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
 
     private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
-    public OrderServiceImpl(RepositoryFactory repositoryFactory, RepositorySource repositorySource, Validator<Order> validator) {
-        super(repositoryFactory, repositorySource, validator);
+    private DataSourceTransactionManager dataSourceTransactionManager;
 
+    @Autowired
+    public OrderServiceImpl(RepositoryFactory repositoryFactory,
+                            Validator<Order> validator,
+                            Repository<Order> repository,
+                            DataSourceTransactionManager dataSourceTransactionManager) {
+        super(repositoryFactory, validator, repository);
+        this.dataSourceTransactionManager = dataSourceTransactionManager;
     }
 
 
@@ -40,17 +55,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         logger.debug("[makeOrder] Start to execute method. Order info : " + orderContext);
 
         User customer = orderContext.getCustomer();
-        Connection connection = getRepositorySource().getConnection();
+        DataSource dataSource = dataSourceTransactionManager.getDataSource();
+        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(transactionDefinition);
         try {
             logger.debug("[makeOrder] Begin transaction. Customer :" + customer.getId());
-            TransactionUtils.begin(connection);
+            //TODO how to begin?
 
             ProductRepository productRepository = getRepositoryFactory()
-                    .newInstance(ProductRepository.class, connection);
+                    .newInstance(ProductRepository.class, dataSource);
             OrderRepository orderRepository = getRepositoryFactory()
-                    .newInstance(OrderRepository.class, connection);
+                    .newInstance(OrderRepository.class, dataSource);
             OrderItemRepository orderItemRepository = getRepositoryFactory()
-                    .newInstance(OrderItemRepository.class, connection);
+                    .newInstance(OrderItemRepository.class, dataSource);
             List<Product> products = orderContext.getProducts();
             if (products != null) {
                 Map<Product, Integer> productCountMap
@@ -78,26 +95,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 this.updateProductAmounts(productCountMap, productRepository);
                 logger.debug("[makeOrder] Finish to update product Amount. Customer :" + customer.getId());
 
-                TransactionUtils.commit(connection);
+                dataSourceTransactionManager.commit(transactionStatus);
                 return savedOrder;
             }
             return null;
         } catch (Exception e) {
             logger.warn("[makeOrder] Exception while execute transaction. Do Roll back. Customer :" + customer.getId());
-            TransactionUtils.rollBack(connection);
+            dataSourceTransactionManager.rollback(transactionStatus);
             logger.warn("[makeOrder] Roll back done. Customer :" + customer.getId());
             throw new ServiceException("Exception while execution method. Customer :" + customer.getId());
         } finally {
             logger.debug("[makeOrder] Finish to execute method. Close transaction. Customer :" + customer.getId());
-            TransactionUtils.close(connection);
+            //TODO how to close?
         }
     }
 
     @Override
     public List<Order> getAllByUserId(Long userId) throws ServiceException {
 
-        try (Connection connection = getRepositorySource().getConnection()) {
-            return getRepository(connection)
+        try {
+            return getMainRepository()
                     .query(new GetAllOrdersSpec(userId));
         } catch (Exception e) {
             logger.warn("[getAllByUserId] Exception while execution service method");
@@ -154,10 +171,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
-    protected Repository<Order> getRepository(Connection connection) {
+    protected Repository<Order> getRepository(DataSource dataSource) {
         return getRepositoryFactory()
                 .newInstance(OrderRepository.class,
-                        connection);
+                        dataSource);
     }
 
 

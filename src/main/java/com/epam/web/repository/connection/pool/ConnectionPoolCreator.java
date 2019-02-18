@@ -4,6 +4,7 @@ import com.epam.web.repository.connection.DatabasePropertyName;
 import com.epam.web.repository.connection.RepositorySource;
 import com.epam.web.repository.exception.ConnectionPoolException;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,27 +14,22 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 
+@Component
 public class ConnectionPoolCreator {
 
     private static final Logger logger = Logger.getLogger(ConnectionPoolCreator.class);
 
     private static final String PROPERTIES_FILE_NAME = "database-access.properties";
 
-    private static final ConnectionPoolCreator instance = new ConnectionPoolCreator();
-
     private Properties properties = new Properties();
 
-    private ConnectionPoolCreator() {
+    public ConnectionPoolCreator() {
     }
 
-    public static ConnectionPoolCreator getInstance() {
-        return instance;
-    }
-
-    public void createConnections(BlockingQueue<Connection> connectionPool, int count, RepositorySource connectionPoolKeeper) {
+    public void createConnections(BlockingQueue<Connection> connectionPool, int count, RepositorySource repositorySource) {
         try {
             for (int i = 0; i < count; i++) {
-                connectionPool.put(createSingleConnection(connectionPoolKeeper));
+                connectionPool.put(createSingleConnection(repositorySource));
             }
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
@@ -41,13 +37,13 @@ public class ConnectionPoolCreator {
         }
     }
 
-    public Connection createSingleConnection(RepositorySource connectionPoolKeeper) {
+    public Connection createSingleConnection(RepositorySource repositorySource) {
         try {
             return new ConnectionWrapper(DriverManager.getConnection(
                     properties.getProperty(DatabasePropertyName.URL),
                     properties.getProperty(DatabasePropertyName.LOGIN),
                     properties.getProperty(DatabasePropertyName.PASSWORD)),
-                    connectionPoolKeeper);
+                    repositorySource);
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new ConnectionPoolException(e.getMessage(), e);

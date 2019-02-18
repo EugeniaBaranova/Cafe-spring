@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!--<context:component-scan base-package="com.epam.web.config"/>-->
+
+<!--    &lt;!&ndash;Repository Factory&ndash;&gt;
+
+    <bean class="com.epam.web.repository.RepositoryFactory" id="repositoryFactory"/>
+
+    &lt;!&ndash;Validators&ndash;&gt;
+
+    <bean class="com.epam.web.service.validation.UserValidator" id="userValidator"/>
+
+    <bean class="com.epam.web.service.validation.ProductValidator" id="productValidator"/>
+
+    <bean class="com.epam.web.service.validation.OrderItemValidator" id="orderItemValidator"/>
+
+    <bean class="com.epam.web.service.validation.OrderValidator" id="orderValidator"/>
+
+    &lt;!&ndash;Services&ndash;&gt;
+
+    <bean class="com.epam.web.service.impl.user.UserServiceImpl" id="userServiceImpl">
+        <constructor-arg name="repositoryFactory" ref="repositoryFactory"/>
+        <constructor-arg name="validator" ref="userValidator"/>
+    </bean>
+
+    <bean class="com.epam.web.service.impl.product.ProductServiceImpl" id="productServiceImpl">
+        <constructor-arg name="repositoryFactory" ref="repositoryFactory"/>
+        <constructor-arg name="validator" ref="productValidator"/>
+    </bean>
+
+    <bean class="com.epam.web.service.impl.order.OrderServiceImpl" id="orderServiceImpl">
+        <constructor-arg name="repositoryFactory" ref="repositoryFactory"/>
+        <constructor-arg name="validator" ref="orderValidator"/>
+    </bean>
+
+    <bean class="com.epam.web.service.impl.cart.CartServiceImpl" id="cartServiceImpl"/>
+
+    &lt;!&ndash;Cart Commands&ndash;&gt;
+
+    <bean class="com.epam.web.controller.command.cart.AddToCartCommand" id="add_to_cart"/>
+
+    <bean class="com.epam.web.controller.command.cart.ChangeCartItemCountCommand" id="change_cart_count">
+        <constructor-arg name="cartService" ref="cartServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.cart.DeleteFromCartCommand" id="delete_from_cart"/>
+
+    <bean class="com.epam.web.controller.command.cart.ShowCartCommand" id="show_cart">
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    &lt;!&ndash;Order Commands&ndash;&gt;
+
+    <bean class="com.epam.web.controller.command.order.MakeOrderCommand" id="make_order">
+        <constructor-arg name="orderService" ref="orderServiceImpl"/>
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.order.ShowOrdersCommand" id="show_orders">
+        <constructor-arg name="orderService" ref="orderServiceImpl"/>
+    </bean>
+
+    &lt;!&ndash;Product Commands&ndash;&gt;
+
+    <bean class="com.epam.web.controller.command.product.AddProductCommand" id="add_product">
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.product.ShowAllByCategoryCommand" id="showAllByCategoryCommand">
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.product.ShowProductCommand" id="show_product">
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.product.ShowProductsCategoryCommand" id="show_category_products">
+        <constructor-arg name="productService" ref="productServiceImpl"/>
+    </bean>
+
+    &lt;!&ndash;User Commands&ndash;&gt;
+
+    <bean class="com.epam.web.controller.command.user.LoginCommand" id="log_in">
+        <constructor-arg name="userService" ref="userServiceImpl"/>
+    </bean>
+
+    <bean class="com.epam.web.controller.command.user.LogoutCommand" id="log_out"/>
+
+    <bean class="com.epam.web.controller.command.user.RegisterUserCommand" id="registration">
+        <constructor-arg name="userService" ref="userServiceImpl"/>
+    </bean>-->
+
+</beans>

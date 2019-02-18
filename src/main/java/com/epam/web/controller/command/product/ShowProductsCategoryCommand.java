@@ -1,6 +1,8 @@
 package com.epam.web.controller.command.product;
 
+import com.epam.web.config.annotation.UriCommand;
 import com.epam.web.controller.command.Command;
+import com.epam.web.controller.command.CommandName;
 import com.epam.web.controller.command.CommandResult;
 import com.epam.web.controller.constant.Pages;
 import com.epam.web.controller.constant.RequestAttribute;
@@ -9,12 +11,17 @@ import com.epam.web.entity.product.Product;
 import com.epam.web.service.ProductService;
 import com.epam.web.service.exception.ServiceException;
 import com.epam.web.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+@UriCommand(name = CommandName.SHOW_CATEGORY_PRODUCTS)
+@Component
 public class ShowProductsCategoryCommand implements Command {
 
     private static final int COUNT_ON_PAGE = 8;
@@ -22,7 +29,8 @@ public class ShowProductsCategoryCommand implements Command {
 
     private ProductService productService;
 
-    public ShowProductsCategoryCommand(ProductService productService) {
+    @Autowired
+    public ShowProductsCategoryCommand(@Qualifier("productServiceImpl") ProductService productService) {
         this.productService = productService;
     }
 

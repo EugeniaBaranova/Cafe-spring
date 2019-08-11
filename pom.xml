@@ -104,6 +104,20 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <verbose>true</verbose>
+          <fork>true</fork>
+          <executable>C:\Program Files\Java\jdk1.8.0_201\bin\javac</executable>
+          <compilerVersion>1.8</compilerVersion>
+        </configuration>
+      </plugin>
+
+
     </plugins>
   </build>
 </project>
